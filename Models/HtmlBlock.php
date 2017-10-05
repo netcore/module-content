@@ -1,0 +1,38 @@
+<?php
+
+namespace Modules\Content\Models;
+
+use Dimsav\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Content\Traits\SyncTranslations;
+use Modules\Content\Translations\HtmlBlockTranslation;
+
+class HtmlBlock extends Model
+{
+    
+    use Translatable, SyncTranslations;
+
+    /**
+     * @var string
+     */
+    protected $table = 'netcore__html_blocks';
+    
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        
+    ];
+    
+    /**
+     * @var string
+     */
+    public $translationModel = HtmlBlockTranslation::class;
+    
+    /**
+     * @var array
+     */
+    public $translatedAttributes = [
+        'content'
+    ];
+}
