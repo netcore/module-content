@@ -20,7 +20,7 @@ class ContentController extends Controller
     {
         $sections = Section::orderBy('order')->get();
         $channels = Channel::orderBy('name')->get();
-        return view($this->viewNamespace . '.index', compact('sections', 'channels'));
+        return view($this->viewNamespace . '.index.index', compact('sections', 'channels'));
     }
 
 }

@@ -41,4 +41,12 @@ class Entry extends Model
     public $translatedAttributes = [
         'slug'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function contentBlocks()
+    {
+        return $this->morphMany(ContentBlock::class, 'contentable');
+    }
 }
