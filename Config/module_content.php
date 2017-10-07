@@ -32,5 +32,17 @@ return [
             'frontend_template' => 'module_content.widgets.gallery_slider.frontend',
             'backend_template'  => 'module_content.widgets.gallery_slider.backend'
         ]
+    ],
+    
+    'admin_panel' => [
+        'views' => [
+            'extends' => 'layouts.admin',
+            'section' => 'layouts.content'
+        ],
+        'translations' => [
+            'index' => [
+                'actions' => 'Actions',
+            ]
+        ]
     ]
 ];

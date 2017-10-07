@@ -155,6 +155,7 @@ class ExampleDataTableSeeder extends Seeder
         // Entries
         $entries = array_get($item, 'entries', []);
         foreach($entries as $item) {
+            $item['channel_id'] = $channel->id;
             $this->createEntry($item, $section);
         }
 

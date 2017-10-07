@@ -21,10 +21,10 @@ class MenuTableSeeder extends Seeder
             'leftAdminMenu' => [
                 [
                     'name'   => 'Content',
-                    'icon'   => 'ion-ios-people',
+                    'icon'   => 'ion-ios-paper',
                     'type'   => 'route',
-                    'value'  => 'content::pages.index',
-                    'active_resolver' => 'content::pages.*',
+                    'value'  => 'content::content.index',
+                    'active_resolver' => 'content::content.*',
                     'module' => 'Content'
                 ]
             ]

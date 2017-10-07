@@ -39,4 +39,12 @@ class Channel extends Model
     public $translatedAttributes = [
         'slug'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function entries()
+    {
+        return $this->hasMany(Entry::class);
+    }
 }
