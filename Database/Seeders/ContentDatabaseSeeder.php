@@ -17,5 +17,6 @@ class ContentDatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call(MenuTableSeeder::class);
+        $this->call(ExampleDataTableSeeder::class);
     }
 }

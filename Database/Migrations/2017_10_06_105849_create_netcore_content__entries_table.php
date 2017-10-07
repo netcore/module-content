@@ -35,11 +35,11 @@ class CreateNetcoreContentEntriesTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('entry_id');
-            $table->foreign('entry_id')->references('id')->on('netcore_content__entries')->onDelete('restrict');
+            $table->foreign('entry_id')->references('id')->on('netcore_content__entries')->onDelete('cascade');
+
+            $table->string('locale')->index();
 
             $table->string('slug');
-
-            $table->timestamps();
         });
     }
 

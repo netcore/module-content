@@ -45,10 +45,11 @@ class ContentServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('content.php'),
+            __DIR__ . '/../Config/module_content.php' => config_path('module_content.php'),
         ], 'config');
+
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'content'
+            __DIR__ . '/../Config/module_content.php', 'content'
         );
     }
 
@@ -61,7 +62,7 @@ class ContentServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/content');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
             $sourcePath => $viewPath
@@ -84,7 +85,7 @@ class ContentServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'content');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'content');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'content');
         }
     }
 
@@ -94,7 +95,7 @@ class ContentServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             app(Factory::class)->load(__DIR__ . '/Database/factories');
         }
     }

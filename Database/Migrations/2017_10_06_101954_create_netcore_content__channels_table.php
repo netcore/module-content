@@ -17,8 +17,8 @@ class CreateNetcoreContentChannelsTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('section_id')->unsigned();
-            $table->foreign('section_id')->references('id')->on('netcore_content__sections');
+            $table->integer('section_id')->unsigned()->nullable();
+            $table->foreign('section_id')->references('id')->on('netcore_content__sections')->onDelete('restrict');
 
             $table->string('name'); // How channel appears in ACP. Shouldnt be translatable.
             $table->boolean('is_active')->default(0);
@@ -32,11 +32,11 @@ class CreateNetcoreContentChannelsTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('channel_id');
-            $table->foreign('channel_id')->references('id')->on('netcore_content__channels')->onDelete('restrict');
+            $table->foreign('channel_id')->references('id')->on('netcore_content__channels')->onDelete('cascade');
+
+            $table->string('locale')->index();
 
             $table->string('slug');
-
-            $table->timestamps();
         });
     }
 
