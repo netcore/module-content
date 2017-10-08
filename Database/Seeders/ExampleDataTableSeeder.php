@@ -8,6 +8,7 @@ use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\Section;
 use Netcore\Translator\Models\Language;
+use Netcore\Translator\Helpers\TransHelper;
 
 class ExampleDataTableSeeder extends Seeder
 {
@@ -194,7 +195,8 @@ class ExampleDataTableSeeder extends Seeder
      */
     private function translateKeyValuePairsToAllLocales($keyValuePairs)
     {
-        $locales = $this->getLocales();
+        $locales = collect(TransHelper::getAllLanguages())->pluck('iso_code');
+
         $result = [];
 
         foreach ($keyValuePairs as $key => $value) {
@@ -210,20 +212,5 @@ class ExampleDataTableSeeder extends Seeder
         }
 
         return $result;
-    }
-
-    /**
-     * @return array
-     */
-    private function getLocales()
-    {
-        $locales = [];
-        if (Schema::hasTable('languages')) {
-            $locales = Language::pluck('iso_code');
-        }
-
-        $locales = $locales ? $locales : ['lv', 'ru', 'en'];
-
-        return $locales;
     }
 }
