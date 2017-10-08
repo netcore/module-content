@@ -38,7 +38,7 @@
                     //order: [[1, "asc"]],
                     columns: [
 
-                        { data: 'name', name: 'name', orderable: true, searchable: false, class: 'width-250'},
+                        { data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
                         { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
                         { data: 'content', name: 'content', orderable: false, searchable: false, class: ''},
                         { data: 'updated_at', name: 'updated_at', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'},

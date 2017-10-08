@@ -3,6 +3,7 @@
 namespace Modules\Content\Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
@@ -19,6 +20,11 @@ class ExampleDataTableSeeder extends Seeder
      */
     public function run()
     {
+
+        DB::table('netcore_content__entries')->delete();
+        DB::table('netcore_content__channels')->delete();
+        DB::table('netcore_content__sections')->delete();
+        
         $sections = [
             'Blogs'        => [
                 [
@@ -172,16 +178,14 @@ class ExampleDataTableSeeder extends Seeder
     {
         $itemName = array_get($item, 'name');
 
-        $entryData = array_except($item, ['type', 'translations']);
+        $entryData = array_except($item, ['type', 'name', 'translations']);
         $entryData['section_id'] = $section->id;
 
-        $entry = Entry::updateOrCreate([
-            'name' => $itemName
-        ], $entryData);
-
+        $entry = Entry::forceCreate($entryData);
 
         $entryTranslations = $this->translateKeyValuePairsToAllLocales([
-            'slug' => $itemName
+            'slug' => $itemName,
+            'title' => $itemName,
         ]);
 
         $entry->updateTranslations($entryTranslations);

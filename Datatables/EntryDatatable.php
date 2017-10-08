@@ -19,6 +19,9 @@ trait EntryDatatable
         $query = $this->getQuery();
 
         return datatables()->of($query)
+            ->editColumn('title', function ($entry) {
+                return view('content::module_content.entries.tds.title', compact('entry'))->render();
+            })
             ->editColumn('slug', function ($entry) {
                 return view('content::module_content.entries.tds.slug', compact('entry'))->render();
             })
@@ -35,7 +38,7 @@ trait EntryDatatable
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
-            ->rawColumns(['action', 'slug', 'is_active'])
+            ->rawColumns(['action', 'title', 'slug', 'is_active'])
             ->toJson();
     }
 

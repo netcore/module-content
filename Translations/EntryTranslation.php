@@ -16,6 +16,7 @@ class EntryTranslation extends Model
      * @var array
      */
     protected $fillable = [
+        'title',
         'slug',
         'locale' // This is very important
     ];

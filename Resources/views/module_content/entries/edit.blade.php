@@ -36,9 +36,8 @@
     {!! Form::model($entry, ['url' => crudify_route('update', $entry), 'method' => 'PUT']) !!}
 
         <div class="p-x-1">
-            {{--
-            --}}
 
+            {{--
             @php
             $fields = ['name' => 'text'];
             @endphp
@@ -47,7 +46,7 @@
                 <fieldset class="form-group form-group-lg{{$errors->has($field) ? ' form-message-light has-error has-validation-error' : ''}}">
                     <label for="{{$field}}">{{title_case(str_replace('_', ' ', $field))}}</label>
 
-                    <?php
+                    @php
                     $attributes = ['id' => $field, 'class' => 'form-control', 'autocomplete' => 'off' ];
 
                     if( $type == 'password' ){
@@ -65,7 +64,8 @@
                     else {
                         echo Form::$type($field, null, $attributes);
                     }
-                    ?>
+                    @endphp
+
                     @if ($errors->has($field))
                         <div id="validation-message-light-error" class="form-message validation-error">
                             @foreach ($errors->get($field) as $message)
@@ -75,6 +75,7 @@
                     @endif
                 </fieldset>
             @endforeach
+            --}}
 
             @include('crud::nav_tabs')
 
@@ -83,13 +84,28 @@
                 @foreach($languages as $language)
                     <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ $language->iso_code }}">
 
-                        <div class="form-group{{ $errors->has('slug') ? ' has-error' : '' }}">
-                            <label>Slug</label>
-                            <div class="">
-                                {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control']) !!}
-                                <span class="help-block">
-                                    If the field is left empty, slug will be generated automatically
-                                </span>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+                                    <label>Title</label>
+                                    <div class="">
+                                        {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control']) !!}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group{{ $errors->has('slug') ? ' has-error' : '' }}">
+                                    <label>Slug</label>
+                                    (Automatically generated if left empty)
+                                    <div class="">
+                                        {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control']) !!}
+                                        {{--
+                                        <span class="help-block">
+                                            If field is left empty, slug will be generated automatically
+                                        </span>
+                                        --}}
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

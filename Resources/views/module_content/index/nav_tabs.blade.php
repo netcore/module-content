@@ -62,7 +62,7 @@
                 >
                     <thead>
                     <tr>
-                        <th>Name</th>
+                        <th>Title</th>
                         <th>Slug</th>
                         <th>Content</th>
                         <th>Updated at</th>

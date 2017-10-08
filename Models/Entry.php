@@ -26,7 +26,6 @@ class Entry extends Model
     protected $fillable = [
         'channel_id',
         'section_id',
-        'name',
         'is_active'
     ];
 
@@ -39,6 +38,7 @@ class Entry extends Model
      * @var array
      */
     public $translatedAttributes = [
+        'title',
         'slug'
     ];
 
