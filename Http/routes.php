@@ -41,6 +41,11 @@ Route::group([
         'uses' => 'ChannelController@edit'
     ]);
 
+    Route::put('/content/channels/{channel}', [
+        'as' => 'channels.update',
+        'uses' => 'ChannelController@update'
+    ]);
+
     
     /**
      * Entries
@@ -50,7 +55,7 @@ Route::group([
         'as' => 'entries.pagination',
         'uses' => 'EntryController@pagination'
     ]);
-
+    
     Route::get('/content/entries/{entry}/edit', [
         'as' => 'entries.edit',
         'uses' => 'EntryController@edit'

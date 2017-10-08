@@ -16,10 +16,35 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
+    public function create()
+    {
+
+        return redirect()->back();
+
+        $languages = TransHelper::getAllLanguages();
+        return view('content::module_content.entries.create', compact('languages'));
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
     public function edit(Entry $entry)
     {
         $languages = TransHelper::getAllLanguages();
-        return view('content::module_content.entries.edit', compact('entry', 'languages'));
+
+        $widgetData = collect(config('module_content.widgets'))->map(function($widget){
+            return $widget;
+        });
+
+        $widgetOptions = collect($widgetData)->map(function($widget, $key){
+            return [
+                'name' => array_get($widget, 'name'),
+                'key' => $key
+            ];
+        })->pluck('name', 'key');
+
+        return view('content::module_content.entries.edit', compact('entry', 'languages', 'widgetData', 'widgetOptions'));
     }
 
     /**
