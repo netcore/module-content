@@ -55,7 +55,12 @@ Route::group([
         'as' => 'entries.edit',
         'uses' => 'EntryController@edit'
     ]);
-    
+
+    Route::put('/content/entries/{entry}', [
+        'as' => 'entries.update',
+        'uses' => 'EntryController@update'
+    ]);
+
     Route::get('/content/entries/create/{channel?}', [
         'as' => 'entries.create',
         'uses' => 'EntryController@create'
