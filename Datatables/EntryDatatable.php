@@ -19,18 +19,21 @@ trait EntryDatatable
         $query = $this->getQuery();
 
         return datatables()->of($query)
-            ->addColumn('action', function ($entry) {
-                return view('content::module_content.index.tds.action', compact('entry'))->render();
-            })
-            ->editColumn('is_active', function ($entry) {
-                return view('content::module_content.index.tds.is_active', compact('entry'))->render();
+            ->editColumn('slug', function ($entry) {
+                return view('content::module_content.entries.tds.slug', compact('entry'))->render();
             })
             ->editColumn('content', function ($entry) {
                 return str_limit($entry->content, 100);
             })
-            ->editColumn('updated_at', function ($advertisement) {
-                $updatedAt = $advertisement->updated_at;
+            ->editColumn('updated_at', function ($entry) {
+                $updatedAt = $entry->updated_at;
                 return $updatedAt ? $updatedAt->format('d.m.Y H:i') : '-';
+            })
+            ->editColumn('is_active', function ($entry) {
+                return view('content::module_content.entries.tds.is_active', compact('entry'))->render();
+            })
+            ->addColumn('action', function ($entry) {
+                return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
             ->rawColumns(['action', 'slug', 'is_active'])
             ->toJson();
@@ -49,6 +52,12 @@ trait EntryDatatable
         $query = Entry::with([
             'contentBlocks'
         ]);
+
+        if($channelId) {
+            $query->whereChannelId($channelId);
+        } else {
+            $query->whereNull('channel_id');
+        }
 
         return $query;
     }
