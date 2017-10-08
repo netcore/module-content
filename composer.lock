@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0a9a76dba2f29bfccdaade372c684cad",
-    "content-hash": "dce5b66fac0bb7a6a1dd8c7870f78b08",
+    "hash": "42fd40d72000d6793206004705d142f8",
+    "content-hash": "e1ad3eaa4c3f9c6a2e9afb10f0c588e5",
     "packages": [
         {
             "name": "dimsav/laravel-translatable",
@@ -625,12 +625,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/session.git",
-                "reference": "8909844657c5cc193a871ebb1677206bedda5fa2"
+                "reference": "36a4b585c3f56429c24849559a1890c0eed0c530"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/session/zipball/8909844657c5cc193a871ebb1677206bedda5fa2",
-                "reference": "8909844657c5cc193a871ebb1677206bedda5fa2",
+                "url": "https://api.github.com/repos/illuminate/session/zipball/36a4b585c3f56429c24849559a1890c0eed0c530",
+                "reference": "36a4b585c3f56429c24849559a1890c0eed0c530",
                 "shasum": ""
             },
             "require": {
@@ -667,7 +667,7 @@
             ],
             "description": "The Illuminate Session package.",
             "homepage": "https://laravel.com",
-            "time": "2017-09-20 12:28:16"
+            "time": "2017-10-07 14:24:02"
         },
         {
             "name": "illuminate/support",
@@ -675,12 +675,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "1ba158e88735668dfcad6a79f76ea8daa014cb33"
+                "reference": "b7c230bd0482eaef1cb78b63dce5c3aaa7c62f74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/1ba158e88735668dfcad6a79f76ea8daa014cb33",
-                "reference": "1ba158e88735668dfcad6a79f76ea8daa014cb33",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/b7c230bd0482eaef1cb78b63dce5c3aaa7c62f74",
+                "reference": "b7c230bd0482eaef1cb78b63dce5c3aaa7c62f74",
                 "shasum": ""
             },
             "require": {
@@ -724,7 +724,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2017-10-03 13:11:00"
+            "time": "2017-10-07 10:05:01"
         },
         {
             "name": "illuminate/translation",
@@ -871,57 +871,6 @@
                 "time"
             ],
             "time": "2017-02-06 22:02:47"
-        },
-        {
-            "name": "netcore/translations",
-            "version": "v1.0.27",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/netcore/translations.git",
-                "reference": "8b2092d446c49d2c6f911b619eeac3af9438d31d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/netcore/translations/zipball/8b2092d446c49d2c6f911b619eeac3af9438d31d",
-                "reference": "8b2092d446c49d2c6f911b619eeac3af9438d31d",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/cache": "^5.3",
-                "illuminate/console": "^5.3",
-                "illuminate/database": "^5.3",
-                "illuminate/routing": "^5.3",
-                "illuminate/support": "^5.3",
-                "illuminate/translation": "^5.3",
-                "rmccue/requests": "^1.7"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Netcore\\Translator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kristers Zariņš",
-                    "email": "kristerskz@gmail.com",
-                    "role": "developer"
-                }
-            ],
-            "description": "Laravel translations stored in database for easy CRUD",
-            "keywords": [
-                "cache",
-                "database",
-                "laravel"
-            ],
-            "time": "2017-10-04 15:45:50"
         },
         {
             "name": "psr/container",
