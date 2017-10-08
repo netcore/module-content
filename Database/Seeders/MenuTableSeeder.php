@@ -25,7 +25,8 @@ class MenuTableSeeder extends Seeder
                     'type'   => 'route',
                     'value'  => 'content::content.index',
                     'active_resolver' => 'content::content.*',
-                    'module' => 'Content'
+                    'module' => 'Content',
+                    'parameters' => json_encode([])
                 ]
             ]
         ];

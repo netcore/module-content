@@ -1,6 +1,11 @@
 @extends('admin::layouts.master')
 
 @section('scripts')
+    <style>
+    </style>
+@endsection
+
+@section('scripts')
     <script>
         /*
         $('.datepicker').datepicker();
