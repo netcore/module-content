@@ -1,6 +1,8 @@
 
 <div class="form-group">
+    {{--
     <label>Text</label>
+    --}}
     <div class="">
 
         @php
