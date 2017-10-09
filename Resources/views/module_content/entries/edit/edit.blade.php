@@ -7,15 +7,26 @@
 @section('scripts')
 
     <script>
+
         /**
          *
          * This object is populated with callback functions that should be
          * executed after certain types of widgets are added.
          *
-         * It gets populated down below where we include javascripts from $data['javascript']
+         * These are typically used for things like switchery, bootstrap tooltips, wysiwyg editors
          *
+         * Object gets populated down below where we include javascripts from $data['javascript']
         */
         var onWidgetAdded = {};
+
+        /**
+         *
+         * This object is populated with functions that known
+         * how to collect data from widgets for usage in backend.
+         *
+         * Object gets populated down below where we include javascripts from $data['javascript']
+         */
+        var widgetDataCollectors = {};
     </script>
 
     @foreach($widgetData as $data)
@@ -45,7 +56,14 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-lg btn-success m-t-3 pull-xs-right">Save</button>
+            <a
+                class="btn btn-lg btn-success m-t-3 pull-xs-right"
+                id="submit-button"
+                data-ajax="{{ route('content::entries.update', $entry) }}"
+                data-method="PUT"
+            >
+                Save
+            </a>
 
             <a href="{{ route('content::content.index') }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
                 Back

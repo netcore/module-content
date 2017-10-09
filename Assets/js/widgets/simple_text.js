@@ -9,8 +9,8 @@
  * switchery, bootstrap toolbars, etc.
  *
  */
-
 onWidgetAdded['simple_text'] = function() {
+
     console.log('Simple text widget has been added!');
 
     $('.summernote').summernote({
@@ -27,4 +27,18 @@ onWidgetAdded['simple_text'] = function() {
             ['insert', ['picture', 'link']]
         ]
     });
+};
+
+/**
+ *
+ * Function that you put into widgetDataCollectors object
+ * will be called to collect data from widget for usage in backend.
+ *
+ * widgetTr is <tr></tr> element that houses widget
+ * 
+ */
+widgetDataCollectors['simple_text'] = function(widgetTr) {
+    return [
+        'Simple text widget formatted'
+    ];
 };

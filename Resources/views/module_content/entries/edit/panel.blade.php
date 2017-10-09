@@ -33,24 +33,10 @@
                 </div>
 
                 <table
-                        class="table"
-                        id="widgets-table"
+                    class="table"
+                    id="widgets-table"
                 >
                     <tbody>
-
-                    @php
-                        $ids = [];
-                    @endphp
-
-                    @foreach( $ids as $id )
-                        <tr
-                                data-id="{{ $id }}"
-                        >
-                            <td class="handle">
-                                Widget here
-                            </td>
-                        </tr>
-                    @endforeach
                     </tbody>
                 </table>
 

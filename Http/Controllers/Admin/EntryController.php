@@ -73,6 +73,8 @@ class EntryController extends Controller
      */
     public function update(Entry $entry)
     {
-        return redirect()->back()->withSuccess('Page updated!', compact('entry'));
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

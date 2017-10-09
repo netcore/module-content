@@ -81,4 +81,42 @@ $(function() {
         });
     });
 
+    $('body').on('click', '#submit-button', function(){
+
+        var dataForBackend = $(this).closest('form').serializeArray();
+
+        dataForBackend['widgets'] = [];
+
+        $('#widgets-table tr').each(function(i, o){
+
+            var key = 'simple_text';
+            var collector = widgetDataCollectors[key];
+
+            var item = {
+                order: i,
+                widget: key
+            };
+
+            if(collector) {
+                item['data'] = collector($(this));
+            }
+
+            dataForBackend['widgets'].push(item);
+        });
+
+        // Post to backend
+        $.ajax({
+            url: $(this).data('ajax'),
+            type: $(this).data('method'),
+            data: dataForBackend,
+            dataType: 'json',
+            success: function (response) {
+                console.log('Success!');
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+    });
+
 });
