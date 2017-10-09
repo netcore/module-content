@@ -21,30 +21,34 @@ return [
 
     'widgets' => [
         [
-            'name'              => 'Simple text',
-            'key'               => 'simple_text',
-            'frontend_template' => 'content::module_content.widgets.simple_text.frontend',
-            'backend_template'  => 'content::module_content.widgets.simple_text.backend',
-            'javascript'        => 'simple_text.js'
+            'name'                => 'Simple text',
+            'key'                 => 'simple_text',
+            'frontend_template'   => 'content::module_content.widgets.simple_text.frontend',
+            'backend_template'    => 'content::module_content.widgets.simple_text.backend',
+            'backend_with_border' => false, // Depends on what kind of backend_template you have
+            'javascript'          => 'simple_text.js'
         ],
         [
-            'name'              => 'Testimonials',
-            'key'               => 'testimonials',
-            'frontend_template' => 'content::module_content.widgets.testimonials.frontend',
-            'backend_template'  => null
+            'name'                => 'Testimonials',
+            'key'                 => 'testimonials',
+            'frontend_template'   => 'content::module_content.widgets.testimonials.frontend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'backend_template'    => null
         ],
         [
-            'name'              => 'Employees',
-            'key'               => 'employees',
-            'frontend_template' => 'content::module_content.widgets.employees.frontend',
-            'backend_template'  => null
+            'name'                => 'Employees',
+            'key'                 => 'employees',
+            'frontend_template'   => 'content::module_content.widgets.employees.frontend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'backend_template'    => null
         ],
         [
-            'name'              => 'Gallery slider',
-            'key'               => 'gallery_slider',
-            'frontend_template' => 'content::module_content.widgets.gallery_slider.frontend',
-            'backend_template'  => 'content::module_content.widgets.gallery_slider.backend',
-            'javascript'        => 'gallery_slider.js'
+            'name'                => 'Gallery slider',
+            'key'                 => 'gallery_slider',
+            'frontend_template'   => 'content::module_content.widgets.gallery_slider.frontend',
+            'backend_template'    => 'content::module_content.widgets.gallery_slider.backend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'javascript'          => 'gallery_slider.js'
         ]
     ],
 

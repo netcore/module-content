@@ -50,7 +50,7 @@ $(function() {
             var template = data.backend_template || data.name;
             var html = '<tr data-id="'+id+'">';
             html += '<td>';
-            html += '<div class="template-container">';
+            html += '<div class="template-container ' + (data.backend_with_border ? 'with-border' : '') + '">';
 
             html += '<div class="template-container-header handle">';
             html += '<span class="fa fa-icon fa-arrows"></span>' ;

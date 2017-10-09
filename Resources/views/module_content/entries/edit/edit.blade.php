@@ -7,14 +7,15 @@
 @section('scripts')
 
     <script>
-        var onWidgetAdded = {
-            'simple_text' : function(){
-                console.log('Simple text added');
-            },
-            'testimonials' : function(){
-                console.log('Testimonials');
-            }
-        };
+        /**
+         *
+         * This object is populated with callback functions that should be
+         * executed after certain types of widgets are added.
+         *
+         * It gets populated down below where we include javascripts from $data['javascript']
+         *
+        */
+        var onWidgetAdded = {};
     </script>
 
     @foreach($widgetData as $data)
