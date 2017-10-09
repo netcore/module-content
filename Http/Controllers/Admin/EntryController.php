@@ -33,18 +33,38 @@ class EntryController extends Controller
     {
         $languages = TransHelper::getAllLanguages();
 
-        $widgetData = collect(config('module_content.widgets'))->map(function($widget){
+        $widgetData = $this->widgets();
+        $widgetOptions = collect(config('module_content.widgets'))->pluck('name', 'key');
+
+        return view('content::module_content.entries.edit.edit', compact(
+            'entry',
+            'languages',
+            'widgetData',
+            'widgetOptions'
+        ));
+    }
+
+    /**
+     * @return array
+     */
+    public function widgets()
+    {
+        $alteredWidgets = collect(config('module_content.widgets'))->map(function($widget){
+
+            $view = array_get($widget, 'backend_template');
+            if($view) {
+                $widget['backend_template'] = view($view)->render();
+            }
+
             return $widget;
         });
 
-        $widgetOptions = collect($widgetData)->map(function($widget, $key){
-            return [
-                'name' => array_get($widget, 'name'),
-                'key' => $key
-            ];
-        })->pluck('name', 'key');
+        $widgetData = [];
+        foreach($alteredWidgets as $alteredWidget) {
+            $widgetData[array_get($alteredWidget, 'key')] = $alteredWidget;
+        }
 
-        return view('content::module_content.entries.edit', compact('entry', 'languages', 'widgetData', 'widgetOptions'));
+        return $widgetData;
     }
 
     /**

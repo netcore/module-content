@@ -30,11 +30,6 @@ Route::group([
     /**
      * Channels
      */
-    
-    Route::get('/content/channels/{channel}', [
-        'as' => 'channels.show',
-        'uses' => 'ChannelController@show'
-    ]);
 
     Route::get('/content/channels/{channel}/edit', [
         'as' => 'channels.edit',
@@ -69,5 +64,10 @@ Route::group([
     Route::get('/content/entries/create/{channel?}', [
         'as' => 'entries.create',
         'uses' => 'EntryController@create'
+    ]);
+
+    Route::get('/content/entries/widgets', [
+        'as' => 'entries.widgets.index',
+        'uses' => 'EntryController@widgets'
     ]);
 });

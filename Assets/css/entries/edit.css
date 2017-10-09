@@ -1,0 +1,59 @@
+.width-150{
+    width: 150px;
+}
+
+.text-align-right{
+    text-align: right;
+}
+
+.handle{
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.handle:active{
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+#widgets-table tr{
+    border:none;
+}
+
+#widgets-table td{
+    border:none;
+}
+
+#widgets-container .template-container{
+    border: 1px solid #d6d6d6;
+    border-radius:3px;
+    padding:0px;
+}
+
+#widgets-container .template-container-header{
+    border-bottom: 1px solid #d6d6d6;
+    padding: 0px 7px;
+    background-color:lightgray;
+}
+
+#widgets-container .template-container-header a{
+    cursor:pointer;
+    position: relative;
+    top:0px;
+    left:0px;
+    display:inline-block;
+    width:50px;
+    text-align: center;
+    height:100%;
+}
+
+#widgets-container .template-container-header .fa-arrows{
+    margin-right:6px;
+}
+
+#widgets-container .template-container-body{
+    padding:7px;
+}

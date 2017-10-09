@@ -20,22 +20,36 @@ return [
     ],
 
     'widgets' => [
-        'testimonials'   => [
-            'frontend_template' => 'module_content.widgets.testimonials',
+        [
+            'name'              => 'Simple text',
+            'key'               => 'simple_text',
+            'frontend_template' => 'content::module_content.widgets.simple_text.frontend',
+            'backend_template'  => 'content::module_content.widgets.simple_text.backend',
+            'javascript'        => 'simple_text.js'
+        ],
+        [
+            'name'              => 'Testimonials',
+            'key'               => 'testimonials',
+            'frontend_template' => 'content::module_content.widgets.testimonials.frontend',
             'backend_template'  => null
         ],
-        'employees'      => [
-            'frontend_template' => 'module_content.widgets.gallery_slider',
+        [
+            'name'              => 'Employees',
+            'key'               => 'employees',
+            'frontend_template' => 'content::module_content.widgets.employees.frontend',
             'backend_template'  => null
         ],
-        'gallery_slider' => [
-            'frontend_template' => 'module_content.widgets.gallery_slider.frontend',
-            'backend_template'  => 'module_content.widgets.gallery_slider.backend'
+        [
+            'name'              => 'Gallery slider',
+            'key'               => 'gallery_slider',
+            'frontend_template' => 'content::module_content.widgets.gallery_slider.frontend',
+            'backend_template'  => 'content::module_content.widgets.gallery_slider.backend',
+            'javascript'        => 'gallery_slider.js'
         ]
     ],
-    
+
     'admin_panel' => [
-        'views' => [
+        'views'        => [
             'extends' => 'layouts.admin',
             'section' => 'layouts.content'
         ],
