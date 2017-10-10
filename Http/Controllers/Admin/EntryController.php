@@ -2,6 +2,7 @@
 
 namespace Modules\Content\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Models\Entry;
@@ -71,8 +72,55 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function update(Entry $entry)
+    public function update(Entry $entry, Request $request)
     {
+        $entryTranslations = $request->get('translations'); // slug, title
+        $contentBlocks = json_decode($request->get('widgets', null));
+        $contentBlocks = array_map(function($contentBlock){
+            return (array) $contentBlock;
+        }, $contentBlocks);
+        
+        // Save translations
+        $entry->updateTranslations($entryTranslations);
+
+        // Save widgets and their data
+        // 1. Put data in $entry->content_blocks table
+        // 1.1 Put data in additional tables, according to each specific widget
+
+        foreach($entry->contentBlocks as $oldContentBlock) {
+
+            $key = $oldContentBlock->widget;
+            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $backendWorker = array_get($config, 'backend_worker');
+
+            // Delete that in related tables
+            if($backendWorker AND method_exists($backendWorker, 'delete')) {
+                app($backendWorker)->delete($oldContentBlock);
+            }
+
+            $oldContentBlock->delete();
+        }
+
+        foreach($contentBlocks as $index => $contentBlock) {
+
+            $key = array_get($contentBlock, 'widget');
+            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $backendWorker = array_get($config, 'backend_worker');
+
+            $data = [];
+            if($backendWorker AND method_exists($backendWorker, 'store')) {
+                $data = app($backendWorker)->store($contentBlock);
+            }
+
+            $contentBlockData = [
+                'order'  => ($index+1),
+                'widget' => $key,
+                'data'   => json_encode($data)
+            ];
+
+            $entry->contentBlocks()->create($contentBlockData);
+        }
+
         return response()->json([
             'success' => true
         ]);

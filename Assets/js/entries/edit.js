@@ -48,7 +48,7 @@ $(function() {
 
             var id = '';
             var template = data.backend_template || data.name;
-            var html = '<tr data-id="'+id+'">';
+            var html = '<tr data-id="' + id + '" data-key="' + key + '">';
             html += '<td>';
             html += '<div class="template-container ' + (data.backend_with_border ? 'with-border' : '') + '">';
 
@@ -85,11 +85,11 @@ $(function() {
 
         var dataForBackend = $(this).closest('form').serializeArray();
 
-        dataForBackend['widgets'] = [];
+        var widgets = [];
 
         $('#widgets-table tr').each(function(i, o){
 
-            var key = 'simple_text';
+            var key = $(o).data('key');
             var collector = widgetDataCollectors[key];
 
             var item = {
@@ -101,7 +101,12 @@ $(function() {
                 item['data'] = collector($(this));
             }
 
-            dataForBackend['widgets'].push(item);
+            widgets.push(item);
+        });
+
+        dataForBackend.push({
+            name: 'widgets',
+            value: JSON.stringify(widgets)
         });
 
         // Post to backend

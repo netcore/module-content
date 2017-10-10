@@ -24,14 +24,14 @@
          * This object is populated with functions that known
          * how to collect data from widgets for usage in backend.
          *
-         * Object gets populated down below where we include javascripts from $data['javascript']
+         * Object gets populated down below where we include javascripts from $data['backend_javascript']
          */
         var widgetDataCollectors = {};
     </script>
 
     @foreach($widgetData as $data)
-        @if(isset($data['javascript']))
-            <script src="/assets/content/js/widgets/{{ $data['javascript'] }}"></script>
+        @if( array_get($data, 'backend_javascript') )
+            <script src="/assets/content/js/widgets/{{ array_get($data, 'backend_javascript') }}"></script>
         @endif
     @endforeach
 
