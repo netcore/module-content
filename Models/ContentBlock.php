@@ -3,6 +3,7 @@
 namespace Modules\Content\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\PassThroughs\ContentBlock\Compose;
 use Modules\Content\PassThroughs\ContentBlock\Config;
 
 class ContentBlock extends Model
@@ -48,4 +49,10 @@ class ContentBlock extends Model
     {
         return new Config($this);
     }
+
+    public function compose()
+    {
+        return new Compose($this);
+    }
+
 }

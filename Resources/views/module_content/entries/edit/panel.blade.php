@@ -38,24 +38,22 @@
                 >
                     <tbody>
                         @foreach($entry->contentBlocks as $contentBlock)
-                            @if($contentBlock->config->backend_template)
-                                @php
-                                    $templateData = [];
-                                @endphp
-                                @include('content::module_content.entries.partials.widget_tr_template', [
-                                    'id'         => $contentBlock->id,
-                                    'key'        => $contentBlock->config->key,
-                                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                                    'template'   => view($contentBlock->config->backend_template, $templateData)->render()
-                                ])
-                            @else
-                                @include('content::module_content.entries.partials.widget_tr_template', [
-                                    'id'         => $contentBlock->id,
-                                    'key'        => $contentBlock->config->key,
-                                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                                    'template'   => $contentBlock->config->name
-                                ])
-                            @endif
+
+                            @php
+                                $template = $contentBlock->config->name;
+                                if($contentBlock->config->backend_template) {
+                                    $template  = view(
+                                        $contentBlock->config->backend_template, $contentBlock->compose()->backend()
+                                    )->render();
+                                }
+                            @endphp
+
+                            @include('content::module_content.entries.partials.widget_tr_template', [
+                                'id'         => $contentBlock->id,
+                                'key'        => $contentBlock->config->key,
+                                'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                                'template'   => $template
+                            ])
                         @endforeach
                     </tbody>
                 </table>

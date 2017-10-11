@@ -40,6 +40,10 @@ $(function() {
         }
     };
 
+    var replaceAll = function(search, replacement, source) {
+        return source.split(search).join(replacement);
+    };
+
     $.get('/admin/content/entries/widgets', function(widgets){
 
         $('body').on('click', '#add-widget-button', function(){
@@ -49,22 +53,13 @@ $(function() {
             var id = '';
             var template = data.backend_template || data.name;
             
-            var html = '<tr data-id="' + id + '" data-key="' + key + '">';
-            html += '<td>';
-            html += '<div class="template-container ' + (data.backend_with_border ? 'with-border' : '') + '">';
+            var withBorder = data.backend_with_border ? 'with-border' : '';
 
-            html += '<div class="template-container-header handle">';
-            html += '<span class="fa fa-icon fa-arrows"></span>' ;
-            html += '<a class="delete-widget">Delete</a>' ;
-            html += '</div>';
-
-            html += '<div class="template-container-body">';
-            html += template;
-            html += '</div>';
-
-            html += '</div>';
-            html += '</td>';
-            html += '</tr>';
+            var html = $('#widget-tr-template').html();
+            html = replaceAll('{{ id }}', id, html);
+            html = replaceAll('{{ key }}', key, html);
+            html = replaceAll('{{ withBorder }}', withBorder, html);
+            html = replaceAll('{{ template }}', template, html);
 
             if( $('#widgets-table tbody tr').length ) {
                 $('#widgets-table tbody tr:last').after(html);
@@ -77,7 +72,8 @@ $(function() {
 
             var callable = onWidgetAdded[key];
             if(callable){
-                callable();
+                var widgetTr = $('#widgets-table tr:last');
+                callable(widgetTr);
             }
         });
     });
@@ -125,4 +121,14 @@ $(function() {
         });
     });
 
+    // On page load, initialize widgets
+    $('#widgets-table tr').each(function(index, widgetTr){
+
+        var key = $(widgetTr).data('key');
+
+        var callable = onWidgetAdded[key];
+        if(callable){
+            callable(widgetTr);
+        }
+    });
 });

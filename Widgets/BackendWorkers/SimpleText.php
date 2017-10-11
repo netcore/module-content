@@ -40,4 +40,25 @@ class SimpleText implements BackendWorkerInterface
     public function delete(ContentBlock $contentBlock)
     {
     }
+
+    /**
+     * 
+     * backendTemplateComposer() takes data from "data" column in content_blocks table
+     * and transforms to structure that will be injected in widget's backend template
+     * 
+     * For example, there might be ["gallery_id" => 1] in "data" column (content_blocks table)
+     * This function would do something like Gallery::find(array_get($data, 'gallery_id'))
+     * And then return it.
+     * 
+     * @param $data
+     * @return mixed
+     */
+    public function backendTemplateComposer(Array $data)
+    {
+        $value = 'Random <b>bold</b>';
+
+        return [
+            'value' => $value
+        ];
+    }
 }

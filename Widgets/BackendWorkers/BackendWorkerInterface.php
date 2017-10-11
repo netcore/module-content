@@ -9,4 +9,6 @@ interface BackendWorkerInterface
     public function store($contentBlock);
 
     public function delete(ContentBlock $contentBlock);
+    
+    public function backendTemplateComposer(Array $data);
 }

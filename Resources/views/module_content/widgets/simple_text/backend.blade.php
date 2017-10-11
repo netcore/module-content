@@ -1,15 +1,10 @@
+@php
+    $name = isset($name) ? $name : null;
+    $value = isset($value) ? $value : null;
+@endphp
 
 <div class="form-group no-margin-bottom">
-    {{--
-    <label>Text</label>
-    --}}
     <div class="">
-
-        @php
-            $name = null;
-            $value = null;
-        @endphp
-
         {!! Form::textarea(
             $name,
             $value,

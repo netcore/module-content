@@ -8,12 +8,12 @@
  * It's a good place to initialise things like summernote,
  * switchery, bootstrap toolbars, etc.
  *
+ * widgetTr is <tr></tr> element that houses widget
+ *
  */
-onWidgetAdded['simple_text'] = function() {
+onWidgetAdded['simple_text'] = function(widgetTr) {
 
-    console.log('Simple text widget has been added!');
-
-    $('.summernote').summernote({
+    $(widgetTr).find('.summernote').summernote({
         height: 300,
         focus: true,
         toolbar: [
