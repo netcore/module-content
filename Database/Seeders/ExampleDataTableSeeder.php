@@ -25,9 +25,9 @@ class ExampleDataTableSeeder extends Seeder
         DB::table('netcore_content__entries')->delete();
         DB::table('netcore_content__channels')->delete();
         DB::table('netcore_content__sections')->delete();
-        
+
         $sections = [
-            'Blogs'        => [
+            'Blogs' => [
                 [
                     'type'      => 'channel',
                     'name'      => 'News',
@@ -139,7 +139,8 @@ class ExampleDataTableSeeder extends Seeder
      * @param $section
      * @return mixed
      */
-    private function createChannel($item, $section){
+    private function createChannel($item, $section)
+    {
 
         $itemName = array_get($item, 'name');
 
@@ -162,7 +163,7 @@ class ExampleDataTableSeeder extends Seeder
 
         // Entries
         $entries = array_get($item, 'entries', []);
-        foreach($entries as $item) {
+        foreach ($entries as $item) {
             $item['channel_id'] = $channel->id;
             $this->createEntry($item, $section);
         }
@@ -185,22 +186,22 @@ class ExampleDataTableSeeder extends Seeder
         $entry = Entry::forceCreate($entryData);
 
         $entryTranslations = $this->translateKeyValuePairsToAllLocales([
-            'slug' => $itemName,
-            'title' => $itemName,
-            'content' => 'Example content'
+            'slug'    => $itemName,
+            'title'   => $itemName,
+            'content' => 'Example ' . strtolower($itemName)
         ]);
 
         $entry->updateTranslations($entryTranslations);
 
         $htmlBlock = HtmlBlock::create([]);
         $htmlBlock->storeTranslations($this->translateKeyValuePairsToAllLocales([
-            'content' => 'Example content'
+            'content' => 'Example ' . strtolower($itemName)
         ]));
 
         $entry->contentBlocks()->create([
-            'order' => 1,
+            'order'  => 1,
             'widget' => 'simple_text',
-            'data' => [
+            'data'   => [
                 'html_block_id' => $htmlBlock->id
             ]
         ]);
@@ -221,10 +222,13 @@ class ExampleDataTableSeeder extends Seeder
         foreach ($keyValuePairs as $key => $value) {
             foreach ($locales as $locale) {
 
+                $localizedValue = $value;
+                /*
                 $localizedValue = $value . ' ' . $locale;
                 if ($key == 'slug') {
                     $localizedValue = str_slug($value . '-' . $locale);
                 }
+                */
 
                 $result[$locale][$key] = $localizedValue;
             }

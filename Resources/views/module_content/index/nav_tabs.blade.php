@@ -45,11 +45,11 @@
             --}}
 
             <div class="above-table">
-                <a href="{{ route('content::channels.edit', $channel) }}" class="btn btn-primary btn-xs">
+                <a {{-- href="{{ route('content::channels.edit', $channel) }}" --}} class="btn btn-primary btn-xs disabled">
                     Edit channel
                 </a>
 
-                <a href="{{ route('content::entries.create', $channel) }}" class="btn btn-success btn-xs">
+                <a {{-- href="{{ route('content::entries.create', $channel) }}" --}} class="btn btn-success btn-xs disabled">
                     Add new page
                 </a>
             </div>
