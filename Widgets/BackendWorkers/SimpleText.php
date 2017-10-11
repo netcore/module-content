@@ -4,6 +4,7 @@ namespace Modules\Content\Widgets\BackendWorkers;
 
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\HtmlBlock;
+use Netcore\Translator\Helpers\TransHelper;
 
 class SimpleText implements BackendWorkerInterface
 {
@@ -59,9 +60,11 @@ class SimpleText implements BackendWorkerInterface
      */
     public function backendTemplateComposer(Array $data)
     {
+        $languages = TransHelper::getAllLanguages();
         $value = 'Random <b>bold</b>';
 
         return [
+            'languages' => $languages,
             'value' => $value
         ];
     }

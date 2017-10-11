@@ -12,7 +12,7 @@
 
             <div class="template-container-header handle">
                 <span class="fa fa-icon fa-arrows"></span>
-                <a class="delete-widget">Delete</a>
+                <a class="delete-widget" style="left: {{ count($languages) * 90 }}px;">Delete</a>
             </div>
 
             <div class="template-container-body">

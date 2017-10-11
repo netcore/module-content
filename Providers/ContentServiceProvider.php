@@ -25,6 +25,7 @@ class ContentServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->registerFactories();
+        $this->registerComposers();
     }
 
     /**
@@ -108,5 +109,18 @@ class ContentServiceProvider extends ServiceProvider
     public function provides()
     {
         return [];
+    }
+
+    /**
+     *
+     */
+    public function registerComposers()
+    {
+        $map = [
+        ];
+
+        foreach ($map as $view => $composerClass) {
+            view()->composer($view, $composerClass);
+        }
     }
 }

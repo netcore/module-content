@@ -1,7 +1,10 @@
-@include('crud::nav_tabs')
+
+@if(count($languages) > 1)
+    @include('crud::nav_tabs')
+@endif
 
 <!-- Tab panes -->
-<div class="tab-content">
+<div class="tab-content {{ count($languages) > 1 ? '' : 'no-padding' }}">
     @foreach($languages as $language)
         <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ $language->iso_code }}">
 

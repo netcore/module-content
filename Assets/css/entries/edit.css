@@ -2,6 +2,10 @@
     width: 150px;
 }
 
+.no-padding{
+    padding: 0px;
+}
+
 .text-align-right{
     text-align: right;
 }
@@ -30,12 +34,26 @@
 
 #widgets-container .template-container{
     padding:0px;
+    position:relative;
+}
+
+#widgets-container .language-tabs {
+    position: absolute;
+    z-index: 999;
+    top:0px;
+    left: 32px;
+}
+
+#widgets-container .language-tabs li a{
+    height: 25px;
+    line-height: 1;
 }
 
 #widgets-container .template-container-header{
     border-bottom: 1px solid #d6d6d6;
     padding: 0px 7px;
     background-color:lightgray;
+    height: 25px;
 }
 
 #widgets-container .template-container-header a{
@@ -51,6 +69,7 @@
 
 #widgets-container .template-container-header .fa-arrows{
     margin-right:6px;
+    margin-top:6px;
 }
 
 #widgets-container .template-container-body{
@@ -65,3 +84,4 @@
 .no-margin-bottom{
     margin-bottom:0px !important;
 }
+

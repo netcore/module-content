@@ -54,8 +54,15 @@ class EntryController extends Controller
         $alteredWidgets = collect(config('module_content.widgets'))->map(function($widget){
 
             $view = array_get($widget, 'backend_template');
+            $worker = array_get($widget, 'backend_worker');
+
+            $composed = [];
+            if($worker) {
+                $composed = app($worker)->backendTemplateComposer([]);
+            }
+
             if($view) {
-                $widget['backend_template'] = view($view)->render();
+                $widget['backend_template'] = view($view, $composed)->render();
             }
 
             return $widget;
