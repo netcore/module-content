@@ -32,6 +32,7 @@ class EntryController extends Controller
      */
     public function edit(Entry $entry)
     {
+        $entry->load('contentBlocks');
         $languages = TransHelper::getAllLanguages();
 
         $widgetData = $this->widgets();
@@ -93,7 +94,7 @@ class EntryController extends Controller
             $config = collect(config('module_content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
 
-            // Delete that in related tables
+            // Delete data in related tables
             if($backendWorker AND method_exists($backendWorker, 'delete')) {
                 app($backendWorker)->delete($oldContentBlock);
             }

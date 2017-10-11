@@ -48,6 +48,7 @@ $(function() {
 
             var id = '';
             var template = data.backend_template || data.name;
+            
             var html = '<tr data-id="' + id + '" data-key="' + key + '">';
             html += '<td>';
             html += '<div class="template-container ' + (data.backend_with_border ? 'with-border' : '') + '">';

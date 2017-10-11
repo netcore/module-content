@@ -1,5 +1,5 @@
 
-<div class="form-group">
+<div class="form-group no-margin-bottom">
     {{--
     <label>Text</label>
     --}}

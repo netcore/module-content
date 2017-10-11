@@ -28,7 +28,7 @@
             {{-- Content blocks --}}
             <div id="widgets-container">
 
-                <div id="no-widgets">
+                <div id="no-widgets" {{ $entry->contentBlocks->count() ? 'hidden' : '' }}>
                     Currently there is no content. Please add at least one block!
                 </div>
 
@@ -37,6 +37,26 @@
                     id="widgets-table"
                 >
                     <tbody>
+                        @foreach($entry->contentBlocks as $contentBlock)
+                            @if($contentBlock->config->backend_template)
+                                @php
+                                    $templateData = [];
+                                @endphp
+                                @include('content::module_content.entries.partials.widget_tr_template', [
+                                    'id'         => $contentBlock->id,
+                                    'key'        => $contentBlock->config->key,
+                                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                                    'template'   => view($contentBlock->config->backend_template, $templateData)->render()
+                                ])
+                            @else
+                                @include('content::module_content.entries.partials.widget_tr_template', [
+                                    'id'         => $contentBlock->id,
+                                    'key'        => $contentBlock->config->key,
+                                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                                    'template'   => $contentBlock->config->name
+                                ])
+                            @endif
+                        @endforeach
                     </tbody>
                 </table>
 

@@ -35,6 +35,10 @@
         @endif
     @endforeach
 
+    <script id="widget-tr-template" type="text/template">
+        @include('content::module_content.entries.partials.widget_tr_template')
+    </script>
+
     <script src="/assets/content/js/entries/edit.js"></script>
 @endsection
 
