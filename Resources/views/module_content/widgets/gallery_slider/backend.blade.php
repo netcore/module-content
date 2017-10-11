@@ -1,4 +1,4 @@
 
-This is custom gallery slider template!
+Gallery slider will be implemented soon!
 <br>
 

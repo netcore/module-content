@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
+use Modules\Content\Models\HtmlBlock;
 use Modules\Content\Models\Section;
 use Netcore\Translator\Models\Language;
 use Netcore\Translator\Helpers\TransHelper;
@@ -27,25 +28,6 @@ class ExampleDataTableSeeder extends Seeder
         
         $sections = [
             'Blogs'        => [
-                [
-                    'type'      => 'channel',
-                    'name'      => 'Blog',
-                    'is_active' => 1,
-                    'entries'   => [
-                        [
-                            'name'      => 'First blogpost',
-                            'is_active' => 1,
-                        ],
-                        [
-                            'name'      => 'Second blogpost',
-                            'is_active' => 1,
-                        ],
-                        [
-                            'name'      => 'Third blogpost',
-                            'is_active' => 1,
-                        ]
-                    ]
-                ],
                 [
                     'type'      => 'channel',
                     'name'      => 'News',
@@ -80,6 +62,25 @@ class ExampleDataTableSeeder extends Seeder
                         ],
                         [
                             'name'      => 'Third report',
+                            'is_active' => 1,
+                        ]
+                    ]
+                ],
+                [
+                    'type'      => 'channel',
+                    'name'      => 'Blog',
+                    'is_active' => 1,
+                    'entries'   => [
+                        [
+                            'name'      => 'First blogpost',
+                            'is_active' => 1,
+                        ],
+                        [
+                            'name'      => 'Second blogpost',
+                            'is_active' => 1,
+                        ],
+                        [
+                            'name'      => 'Third blogpost',
                             'is_active' => 1,
                         ]
                     ]
@@ -186,9 +187,23 @@ class ExampleDataTableSeeder extends Seeder
         $entryTranslations = $this->translateKeyValuePairsToAllLocales([
             'slug' => $itemName,
             'title' => $itemName,
+            'content' => 'Example content'
         ]);
 
         $entry->updateTranslations($entryTranslations);
+
+        $htmlBlock = HtmlBlock::create([]);
+        $htmlBlock->storeTranslations($this->translateKeyValuePairsToAllLocales([
+            'content' => 'Example content'
+        ]));
+
+        $entry->contentBlocks()->create([
+            'order' => 1,
+            'widget' => 'simple_text',
+            'data' => [
+                'html_block_id' => $htmlBlock->id
+            ]
+        ]);
 
         return $entry;
     }

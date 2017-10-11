@@ -4,6 +4,7 @@ namespace Modules\Content\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Content\Composers\Admin\Entry\EntryTitle;
 
 class ContentServiceProvider extends ServiceProvider
 {
@@ -117,6 +118,7 @@ class ContentServiceProvider extends ServiceProvider
     public function registerComposers()
     {
         $map = [
+            //'content::module_content.entries.tds.title' => EntryTitle::class,
         ];
 
         foreach ($map as $view => $composerClass) {

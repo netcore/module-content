@@ -38,6 +38,7 @@ class CreateNetcoreContentEntriesTable extends Migration
 
             $table->string('title');
             $table->string('locale')->index();
+            $table->text('content');
 
             $table->string('slug');
         });

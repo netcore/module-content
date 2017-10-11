@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Models\Entry;
+use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
 use ReflectionClass;
 
@@ -51,17 +52,17 @@ class EntryController extends Controller
      */
     public function widgets()
     {
-        $alteredWidgets = collect(config('module_content.widgets'))->map(function($widget){
+        $alteredWidgets = collect(config('module_content.widgets'))->map(function ($widget) {
 
             $view = array_get($widget, 'backend_template');
             $worker = array_get($widget, 'backend_worker');
 
             $composed = [];
-            if($worker) {
+            if ($worker) {
                 $composed = app($worker)->backendTemplateComposer([]);
             }
 
-            if($view) {
+            if ($view) {
                 $widget['backend_template'] = view($view, $composed)->render();
             }
 
@@ -69,7 +70,7 @@ class EntryController extends Controller
         });
 
         $widgetData = [];
-        foreach($alteredWidgets as $alteredWidget) {
+        foreach ($alteredWidgets as $alteredWidget) {
             $widgetData[array_get($alteredWidget, 'key')] = $alteredWidget;
         }
 
@@ -77,58 +78,92 @@ class EntryController extends Controller
     }
 
     /**
+     *
+     * @TOOD - split this in smaller parts, extract out of Controller to some
+     * helper class
+     *
      * @param Entry $entry
      * @return mixed
      */
     public function update(Entry $entry, Request $request)
     {
-        $entryTranslations = $request->get('translations'); // slug, title
         $contentBlocks = json_decode($request->get('widgets', null));
-        $contentBlocks = array_map(function($contentBlock){
-            return (array) $contentBlock;
+        $contentBlocks = array_map(function ($contentBlock) {
+            return (array)$contentBlock;
         }, $contentBlocks);
-        
-        // Save translations
-        $entry->updateTranslations($entryTranslations);
 
         // Save widgets and their data
         // 1. Put data in $entry->content_blocks table
         // 1.1 Put data in additional tables, according to each specific widget
 
-        foreach($entry->contentBlocks as $oldContentBlock) {
+        foreach ($entry->contentBlocks as $oldContentBlock) {
 
             $key = $oldContentBlock->widget;
             $config = collect(config('module_content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
 
             // Delete data in related tables
-            if($backendWorker AND method_exists($backendWorker, 'delete')) {
+            if ($backendWorker AND method_exists($backendWorker, 'delete')) {
                 app($backendWorker)->delete($oldContentBlock);
             }
 
             $oldContentBlock->delete();
         }
 
-        foreach($contentBlocks as $index => $contentBlock) {
+        foreach ($contentBlocks as $index => $contentBlock) {
 
             $key = array_get($contentBlock, 'widget');
             $config = collect(config('module_content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
 
             $data = [];
-            if($backendWorker AND method_exists($backendWorker, 'store')) {
-                $frontendData = (array) array_get($contentBlock, 'data', []);
+            if ($backendWorker AND method_exists($backendWorker, 'store')) {
+                $frontendData = (array)array_get($contentBlock, 'data', []);
                 $data = app($backendWorker)->store($frontendData);
             }
 
             $contentBlockData = [
-                'order'  => ($index+1),
+                'order'  => ($index + 1),
                 'widget' => $key,
                 'data'   => $data
             ];
 
             $entry->contentBlocks()->create($contentBlockData);
         }
+
+        // @TODO Come up with a better way to store $entry->content
+
+        $entryTranslations = $request->get('translations'); // slug, title
+        $contentBlocks = $entry
+            ->contentBlocks()
+            ->whereWidget('simple_text')
+            ->get();
+
+        foreach ($contentBlocks as $contentBlock) {
+
+            $htmlBlockId = array_get($contentBlock->data, 'html_block_id', null);
+            info($htmlBlockId);
+            if (!$htmlBlockId) {
+                continue;
+            }
+
+            $htmlBlock = HtmlBlock::find($htmlBlockId);
+
+            if (!$htmlBlock) {
+                continue;
+            }
+
+            foreach ($htmlBlock->translations as $translation) {
+                if (!isset($entryTranslations[$translation->locale]['content'])) {
+                    $entryTranslations[$translation->locale]['content'] = '';
+                }
+
+                $entryTranslations[$translation->locale]['content'] .= $translation->content;
+            }
+        }
+
+        // Save translations
+        $entry->updateTranslations($entryTranslations);
 
         return response()->json([
             'success' => true

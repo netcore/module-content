@@ -5,6 +5,7 @@ namespace Modules\Content\Datatables;
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Content\Models\Entry;
 use Yajra\Datatables\Datatables;
+use Netcore\Translator\Helpers\TransHelper;
 
 trait EntryDatatable
 {
@@ -18,15 +19,20 @@ trait EntryDatatable
     {
         $query = $this->getQuery();
 
+        $languages = TransHelper::getAllLanguages();
+
         return datatables()->of($query)
-            ->editColumn('title', function ($entry) {
-                return view('content::module_content.entries.tds.title', compact('entry'))->render();
+            ->editColumn('title', function ($entry) use ($languages) {
+                return view('content::module_content.entries.tds.title', compact('entry', 'languages'))->render();
             })
-            ->editColumn('slug', function ($entry) {
-                return view('content::module_content.entries.tds.slug', compact('entry'))->render();
+            ->editColumn('slug', function ($entry) use ($languages) {
+                return view('content::module_content.entries.tds.slug', compact('entry', 'languages'))->render();
             })
-            ->editColumn('content', function ($entry) {
-                return str_limit($entry->content, 100);
+            ->editColumn('content', function ($entry) use ($languages) {
+                $language = $languages->first();
+                $translated = trans_model($entry, $language, 'content');
+                $stripped = strip_tags($translated);
+                return str_limit($stripped, 100);
             })
             ->editColumn('updated_at', function ($entry) {
                 $updatedAt = $entry->updated_at;

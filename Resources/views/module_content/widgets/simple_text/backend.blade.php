@@ -6,7 +6,7 @@
 @endif
 
 <!-- Tab panes -->
-<div class="tab-content">
+<div class="tab-content {{ count($languages) <= 1 ? 'no-padding' : '' }}">
     @foreach($languages as $language)
         <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="simple-text-{{ $language->iso_code }}">
 
@@ -17,10 +17,15 @@
 
             <div class="form-group no-margin-bottom">
                 <div class="">
+                    {{--
+                    Why do we have "hidden"?
+                    Otherwise client can see raw html in textarea before summernoet kicks in.
+                    --}}
                     {!! Form::textarea(
                         $name,
                         $value,
                         [
+                            'hidden',
                             'class' => 'summernote',
                             'data-language' => $language->iso_code
                         ]

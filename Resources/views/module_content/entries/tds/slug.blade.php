@@ -1,5 +1,9 @@
-@foreach($entry->translations as $translation)
-    <b>{{ strtoupper($translation->locale) }}:</b>
-    {{ $translation->slug }}
+@foreach($languages as $language)
+
+    @if($languages->count() > 1)
+        <b>{{ strtoupper($translation->locale) }}:</b>
+    @endif
+
+    {{ trans_model($entry, $language, 'slug') }}
     <br>
 @endforeach

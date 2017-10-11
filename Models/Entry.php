@@ -39,7 +39,8 @@ class Entry extends Model
      */
     public $translatedAttributes = [
         'title',
-        'slug'
+        'slug',
+        'content'
     ];
 
     /**

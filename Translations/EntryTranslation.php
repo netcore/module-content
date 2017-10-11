@@ -18,7 +18,8 @@ class EntryTranslation extends Model
     protected $fillable = [
         'title',
         'slug',
-        'locale' // This is very important
+        'locale', // This is very important
+        'content'
     ];
 
     /**

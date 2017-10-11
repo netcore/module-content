@@ -78,6 +78,44 @@ $(function() {
         });
     });
 
+    // Delete widget blocks
+    $('body').on('click', '.delete-widget', function(){
+
+        var closestTr = $(this).closest('tr');
+
+        swal({
+            title: 'Are you sure?',
+            text: 'Do you really want to remove this block?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            confirmButtonColor: "#DD6B55",
+            cancelButtonText: 'Cancel'
+        }).then(function() {
+            // Yes
+            $(closestTr).fadeOut(function(){
+                console.log('Callback');
+                $(this).remove();
+            });
+        }, function(dismiss) {
+            // Cancel
+        });
+    });
+
+    // On page load, initialize widgets
+    $('#widgets-table tr').each(function(index, widgetTr){
+
+        var key = $(widgetTr).data('key');
+
+        var callable = onWidgetAdded[key];
+        if(callable){
+            callable(widgetTr);
+        }
+    });
+
+    // After widgets have been initialised - init sortable
+    initSortable();
+
     $('body').on('click', '#submit-button', function(){
 
         var dataForBackend = $(this).closest('form').serializeArray();
@@ -113,22 +151,15 @@ $(function() {
             data: dataForBackend,
             dataType: 'json',
             success: function (response) {
-                console.log('Success!');
+
+                $.growl.notice({
+                    title : 'Success!',
+                    message : 'Data saved!'
+                });
             },
             error: function (xhr) {
                 console.log(xhr);
             }
         });
-    });
-
-    // On page load, initialize widgets
-    $('#widgets-table tr').each(function(index, widgetTr){
-
-        var key = $(widgetTr).data('key');
-
-        var callable = onWidgetAdded[key];
-        if(callable){
-            callable(widgetTr);
-        }
     });
 });
