@@ -27,47 +27,48 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Content blocks --}}
-            <div id="widgets-container">
-
-                <div id="no-widgets" {{ $entry->contentBlocks->count() ? 'hidden' : '' }}>
-                    Currently there is no content. Please add at least one block!
-                </div>
-
-                <table
-                    class="table"
-                    id="widgets-table"
-                >
-                    <tbody>
-                        @foreach($entry->contentBlocks as $contentBlock)
-
-                            @php
-                                $template = $contentBlock->config->name;
-                                if($contentBlock->config->backend_template) {
-                                    $template  = view(
-                                        $contentBlock->config->backend_template, $contentBlock->compose()->backend()
-                                    )->render();
-                                }
-                            @endphp
-
-                            @include('content::module_content.entries.partials.widget_tr_template', [
-                                'id'         => $contentBlock->id,
-                                'key'        => $contentBlock->config->key,
-                                'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                                'template'   => $template
-                            ])
-                        @endforeach
-                    </tbody>
-                </table>
-
-            </div>
-
-            {!! Form::select(null, $widgetOptions, null, [
-                'class' => 'form-control width-150 inline',
-                'id' => 'select-widget'
-            ]) !!}
-            <a class="btn btn-xs btn-success" id="add-widget-button">Add widget</a>
         </div>
     @endforeach
 </div>
+
+{{-- Content blocks --}}
+<div id="widgets-container">
+
+    <div id="no-widgets" {{ $entry->contentBlocks->count() ? 'hidden' : '' }}>
+        Currently there is no content. Please add at least one block!
+    </div>
+
+    <table
+            class="table"
+            id="widgets-table"
+    >
+        <tbody>
+        @foreach($entry->contentBlocks as $contentBlock)
+
+            @php
+                $template = $contentBlock->config->name;
+                if($contentBlock->config->backend_template) {
+                    $template  = view(
+                        $contentBlock->config->backend_template, $contentBlock->compose()->backend()
+                    )->render();
+                }
+            @endphp
+
+            @include('content::module_content.entries.partials.widget_tr_template', [
+                'id'         => $contentBlock->id,
+                'key'        => $contentBlock->config->key,
+                'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                'template'   => $template
+            ])
+        @endforeach
+        </tbody>
+    </table>
+
+</div>
+
+{!! Form::select(null, $widgetOptions, null, [
+    'class' => 'form-control width-150 inline',
+    'id' => 'select-widget'
+]) !!}
+
+<a class="btn btn-xs btn-success" id="add-widget-button">Add widget</a>

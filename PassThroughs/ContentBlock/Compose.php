@@ -32,9 +32,8 @@ class Compose extends PassThrough
         $templateData = [];
         $backendWorker = $contentBlock->config->backend_worker;
         if($backendWorker) {
-            $decoded = (array) json_decode( $contentBlock->data );
             $templateData = app($backendWorker)->backendTemplateComposer(
-                $decoded
+                $contentBlock->data
             );
         }
 

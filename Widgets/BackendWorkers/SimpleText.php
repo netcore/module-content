@@ -24,11 +24,16 @@ class SimpleText implements BackendWorkerInterface
      */
     public function store(Array $frontendData)
     {
-        //$htmlBlock = HtmlBlock::create([]);
-        //$htmlBlock->storeTranslations($frontendData);
+        $translations = (array) array_get($frontendData, 'translations', []);
+        $translations = array_map(function($translation){
+            return (array) $translation;
+        }, $translations);
+
+        $htmlBlock = HtmlBlock::create([]);
+        $htmlBlock->storeTranslations($translations);
         
         return [
-            //'html_block_id' => $htmlBlock->id
+            'html_block_id' => $htmlBlock->id
         ];
     }
 
@@ -44,6 +49,10 @@ class SimpleText implements BackendWorkerInterface
      */
     public function delete(ContentBlock $contentBlock)
     {
+        $htmlBlockId = array_get($contentBlock->data, 'html_block_id');
+        if($htmlBlockId) {
+            HtmlBlock::whereId($htmlBlockId)->delete();
+        }
     }
 
     /**
@@ -61,11 +70,21 @@ class SimpleText implements BackendWorkerInterface
     public function backendTemplateComposer(Array $data)
     {
         $languages = TransHelper::getAllLanguages();
-        $value = 'Random <b>bold</b>';
+        $translations = [];
+
+        $htmlBlockId = array_get($data, 'html_block_id', null);
+        if($htmlBlockId) {
+            $htmlBlock = HtmlBlock::find($htmlBlockId);
+            foreach($htmlBlock->translations as $translation) {
+                $translations[$translation->locale] = [
+                    'content' => $translation->content
+                ];
+            }
+        }
 
         return [
             'languages' => $languages,
-            'value' => $value
+            'translations' => $translations
         ];
     }
 }

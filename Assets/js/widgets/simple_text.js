@@ -39,9 +39,18 @@ onWidgetAdded['simple_text'] = function(widgetTr) {
  */
 widgetDataCollectors['simple_text'] = function(widgetTr) {
 
-    var content = $(widgetTr).find('textarea').val();
+    var translations = {};
+
+    $(widgetTr).find('.summernote').each(function(index, object){
+        var language = $(object).data('language');
+        var content = $(object).val();
+
+        translations[language] = {
+            'content': content
+        };
+    });
 
     return {
-        'content': content
+        'translations': translations
     };
 };

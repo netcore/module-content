@@ -1,7 +1,3 @@
-@php
-    $name = isset($name) ? $name : null;
-    $value = isset($value) ? $value : null;
-@endphp
 
 @if(count($languages) > 1)
     @include('crud::nav_tabs', [
@@ -14,12 +10,20 @@
     @foreach($languages as $language)
         <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="simple-text-{{ $language->iso_code }}">
 
+            @php
+                $name = isset($name) ? $name : null;
+                $value = array_get($translations, $language->iso_code . '.content');
+            @endphp
+
             <div class="form-group no-margin-bottom">
                 <div class="">
                     {!! Form::textarea(
                         $name,
                         $value,
-                        ['class' => 'summernote']
+                        [
+                            'class' => 'summernote',
+                            'data-language' => $language->iso_code
+                        ]
                     ) !!}
                 </div>
             </div>

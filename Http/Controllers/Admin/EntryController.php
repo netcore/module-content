@@ -124,7 +124,7 @@ class EntryController extends Controller
             $contentBlockData = [
                 'order'  => ($index+1),
                 'widget' => $key,
-                'data'   => json_encode($data)
+                'data'   => $data
             ];
 
             $entry->contentBlocks()->create($contentBlockData);
