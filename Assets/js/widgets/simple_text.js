@@ -38,7 +38,10 @@ onWidgetAdded['simple_text'] = function(widgetTr) {
  * 
  */
 widgetDataCollectors['simple_text'] = function(widgetTr) {
-    return [
-        'Simple text widget formatted'
-    ];
+
+    var content = $(widgetTr).find('textarea').val();
+
+    return {
+        'content': content
+    };
 };

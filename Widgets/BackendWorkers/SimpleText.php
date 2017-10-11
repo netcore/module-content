@@ -3,6 +3,7 @@
 namespace Modules\Content\Widgets\BackendWorkers;
 
 use Modules\Content\Models\ContentBlock;
+use Modules\Content\Models\HtmlBlock;
 
 class SimpleText implements BackendWorkerInterface
 {
@@ -20,10 +21,13 @@ class SimpleText implements BackendWorkerInterface
      * @param $contentBlock
      * @return array
      */
-    public function store($contentBlock)
+    public function store(Array $frontendData)
     {
+        //$htmlBlock = HtmlBlock::create([]);
+        //$htmlBlock->storeTranslations($frontendData);
+        
         return [
-            'something' => 'for data column'
+            //'html_block_id' => $htmlBlock->id
         ];
     }
 

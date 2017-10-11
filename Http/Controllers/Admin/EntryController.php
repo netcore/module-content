@@ -110,7 +110,8 @@ class EntryController extends Controller
 
             $data = [];
             if($backendWorker AND method_exists($backendWorker, 'store')) {
-                $data = app($backendWorker)->store($contentBlock);
+                $frontendData = (array) array_get($contentBlock, 'data', []);
+                $data = app($backendWorker)->store($frontendData);
             }
 
             $contentBlockData = [

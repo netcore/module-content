@@ -6,7 +6,7 @@ use Modules\Content\Models\ContentBlock;
 
 interface BackendWorkerInterface
 {
-    public function store($contentBlock);
+    public function store(Array $frontendData);
 
     public function delete(ContentBlock $contentBlock);
     
