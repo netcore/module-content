@@ -3,12 +3,12 @@
 namespace Modules\Content\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Crud\Traits\CRUDModel;
 
 class Section extends Model
 {
     
-    //@TODO: varbūt šis jāiekļauj Admin modulī
-    use \Modules\Crud\Traits\CrudifyModel;
+    use CRUDModel;
     
     /**
      * @var string

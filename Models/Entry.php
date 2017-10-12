@@ -6,14 +6,14 @@ use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\Traits\SyncTranslations;
 use Modules\Content\Translations\EntryTranslation;
+use Modules\Crud\Traits\CRUDModel;
 
 class Entry extends Model
 {
     
     use Translatable, SyncTranslations;
 
-    //@TODO: varbūt šis jāiekļauj Admin modulī
-    use \Modules\Crud\Traits\CrudifyModel;
+    use CRUDModel;
     
     /**
      * @var string

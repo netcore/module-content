@@ -6,6 +6,7 @@ use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\Traits\SyncTranslations;
 use Modules\Content\Translations\ChannelTranslation;
+use Modules\Crud\Traits\CRUDModel;
 
 class Channel extends Model
 {
@@ -13,7 +14,7 @@ class Channel extends Model
     use Translatable, SyncTranslations;
 
     //@TODO: varbūt šis jāiekļauj Admin modulī
-    use \Modules\Crud\Traits\CrudifyModel;
+    use CRUDModel;
 
     /**
      * @var string

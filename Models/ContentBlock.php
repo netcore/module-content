@@ -5,12 +5,12 @@ namespace Modules\Content\Models;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\ContentBlock\Compose;
 use Modules\Content\PassThroughs\ContentBlock\Config;
+use Modules\Crud\Traits\CRUDModel;
 
 class ContentBlock extends Model
 {
     
-    //@TODO: varbūt šis jāiekļauj Admin modulī
-    use \Modules\Crud\Traits\CrudifyModel;
+    use CRUDModel;
     
     /**
      * @var string
