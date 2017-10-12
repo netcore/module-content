@@ -49,7 +49,7 @@
                     Edit channel
                 </a>
 
-                <a {{-- href="{{ route('content::entries.create', $channel) }}" --}} class="btn btn-success btn-xs disabled">
+                <a href="{{ route('content::entries.create', $channel) }}" class="btn btn-success btn-xs">
                     Add new page
                 </a>
             </div>

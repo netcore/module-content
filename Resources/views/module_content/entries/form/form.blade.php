@@ -34,7 +34,11 @@
 {{-- Content blocks --}}
 <div id="widgets-container">
 
-    <div id="no-widgets" {{ $entry->contentBlocks->count() ? 'hidden' : '' }}>
+    <div id="no-widgets"
+        @if(isset($entry))
+        {{ $entry->contentBlocks->count() ? 'hidden' : '' }}
+        @endif
+    >
         Currently there is no content. Please add at least one block!
     </div>
 
@@ -43,24 +47,26 @@
             id="widgets-table"
     >
         <tbody>
-        @foreach($entry->contentBlocks as $contentBlock)
+        @if(isset($entry))
+            @foreach($entry->contentBlocks as $contentBlock)
 
-            @php
-                $template = $contentBlock->config->name;
-                if($contentBlock->config->backend_template) {
-                    $template  = view(
-                        $contentBlock->config->backend_template, $contentBlock->compose()->backend()
-                    )->render();
-                }
-            @endphp
+                @php
+                    $template = $contentBlock->config->name;
+                    if($contentBlock->config->backend_template) {
+                        $template  = view(
+                            $contentBlock->config->backend_template, $contentBlock->compose()->backend()
+                        )->render();
+                    }
+                @endphp
 
-            @include('content::module_content.entries.partials.widget_tr_template', [
-                'id'         => $contentBlock->id,
-                'key'        => $contentBlock->config->key,
-                'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                'template'   => $template
-            ])
-        @endforeach
+                @include('content::module_content.entries.form.widget_tr_template', [
+                    'id'         => $contentBlock->id,
+                    'key'        => $contentBlock->config->key,
+                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                    'template'   => $template
+                ])
+            @endforeach
+        @endif
         </tbody>
     </table>
 

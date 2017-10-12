@@ -11,14 +11,14 @@
 @section('content')
     @include('admin::_partials._messages')
 
-    {!! Form::model($entry, ['url' => crud_route('update', $entry), 'method' => 'PUT']) !!}
+    {!! Form::open(['url' => crud_route('store', $channelId), 'method' => 'POST']) !!}
 
         <div class="p-x-1">
 
             <div class="panel">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        Edit {{ $entry->title }}
+                        Create
                     </div>
                 </div>
                 <div class="panel-body">

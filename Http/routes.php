@@ -46,7 +46,7 @@ Route::group([
      * Entries
      */
 
-    Route::get('/content/entries/pagination/{channel?}', [
+    Route::get('/content/entries/pagination', [
         'as' => 'entries.pagination',
         'uses' => 'EntryController@pagination'
     ]);
@@ -61,9 +61,14 @@ Route::group([
         'uses' => 'EntryController@update'
     ]);
 
-    Route::get('/content/entries/create/{channel?}', [
+    Route::get('/content/entries/create/{channelId?}', [
         'as' => 'entries.create',
         'uses' => 'EntryController@create'
+    ]);
+
+    Route::post('/content/entries/{channelId?}', [
+        'as' => 'entries.store',
+        'uses' => 'EntryController@store'
     ]);
 
     Route::get('/content/entries/widgets', [

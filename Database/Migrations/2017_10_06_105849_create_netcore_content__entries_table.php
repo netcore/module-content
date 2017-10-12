@@ -36,11 +36,11 @@ class CreateNetcoreContentEntriesTable extends Migration
             $table->unsignedInteger('entry_id');
             $table->foreign('entry_id')->references('id')->on('netcore_content__entries')->onDelete('cascade');
 
-            $table->string('title');
+            $table->string('title')->default('');
             $table->string('locale')->index();
-            $table->text('content');
+            $table->text('content')->nullable();
 
-            $table->string('slug');
+            $table->string('slug')->default('');
         });
     }
 

@@ -145,9 +145,10 @@ $(function() {
         });
 
         // Post to backend
+        var form = $(this).closest('form');
         $.ajax({
-            url: $(this).data('ajax'),
-            type: $(this).data('method'),
+            url: $(form).attr('action'),
+            type: $(form).attr('method'),
             data: dataForBackend,
             dataType: 'json',
             success: function (response) {
@@ -156,6 +157,10 @@ $(function() {
                     title : 'Success!',
                     message : 'Data saved!'
                 });
+
+                if(response.redirect_to) {
+                    window.location.href = response.redirect_to;
+                }
             },
             error: function (xhr) {
                 console.log(xhr);
