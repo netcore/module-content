@@ -185,17 +185,19 @@ class ExampleDataTableSeeder extends Seeder
 
         $entry = Entry::forceCreate($entryData);
 
+        $exampleContent = 'We have been operating since 2009, and we already employ more than 250 professionals whose job it is to ensure everyone easily accessible and understandable daily financial services. At present, we have introduced and continue to develop advanced process management and automation systems, allowing us to significantly accelerate the examination of applications for customers and a reduction in lending-related financial risks, while providing fast, reliable and accurate lending services to our customers. In order to successfully serve all customers according to their needs and ensure high customer service standards, we manage the largest branch network in Latvia, which also offer Lombard and Western Union money transfer services.';
+
         $entryTranslations = $this->translateKeyValuePairsToAllLocales([
             'slug'    => $itemName,
             'title'   => $itemName,
-            'content' => 'Example ' . strtolower($itemName)
+            'content' => $exampleContent
         ]);
 
         $entry->updateTranslations($entryTranslations);
 
         $htmlBlock = HtmlBlock::create([]);
         $htmlBlock->storeTranslations($this->translateKeyValuePairsToAllLocales([
-            'content' => 'Example ' . strtolower($itemName)
+            'content' => $exampleContent
         ]));
 
         $entry->contentBlocks()->create([
