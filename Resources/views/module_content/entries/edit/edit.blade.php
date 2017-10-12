@@ -45,7 +45,7 @@
 @section('content')
     @include('admin::_partials._messages')
 
-    {!! Form::model($entry, ['url' => crudify_route('update', $entry), 'method' => 'PUT']) !!}
+    {!! Form::model($entry, ['url' => crud_route('update', $entry), 'method' => 'PUT']) !!}
 
         <div class="p-x-1">
 
