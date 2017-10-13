@@ -70,9 +70,20 @@
 
 </div>
 
-{!! Form::select(null, $widgetOptions, null, [
-    'class' => 'form-control width-150 inline',
-    'id' => 'select-widget'
-]) !!}
+<div class="pull-left">
+    {!! Form::select(null, $widgetOptions, null, [
+        'class' => 'form-control width-150 inline',
+        'id' => 'select-widget'
+    ]) !!}
 
-<a class="btn btn-xs btn-success" id="add-widget-button">Add widget</a>
+    <a class="btn btn-xs btn-success" id="add-widget-button">Add widget</a>
+</div>
+
+<div class="pull-right">
+    Active
+    <span class="hidden-switchery" hidden>
+        {!! Form::checkbox('is_active', 1, null, [
+            'class' => 'switchery'
+        ]) !!}
+    </span>
+</div>

@@ -109,6 +109,12 @@ $(function() {
     // After widgets have been initialised - init sortable
     initSortable();
 
+    // Init switchery
+    $('.switchery').each(function(i, switcher) {
+        new Switchery(switcher);
+        $(switcher).closest('.hidden-switchery').show();
+    });
+
     $('body').on('click', '#submit-button', function(){
 
         var dataForBackend = $(this).closest('form').serializeArray();

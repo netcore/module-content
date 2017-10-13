@@ -24,48 +24,35 @@ class Storage extends PassThrough
     }
 
     /**
-     * @param array $contentBlocks
-     * @param array $entryTranslations
+     * @param array $requestData
      * @return Entry
      */
-    public function update(Array $contentBlocks, Array $entryTranslations): Entry
+    public function update(Array $requestData): Entry
     {
         $entry = $this->entry;
+       
+        // Cast widgets to array
+        $contentBlocks = json_decode(array_get($requestData, 'widgets', null));
+        $contentBlocks = (array)array_map(function ($contentBlock) {
+            return (array)$contentBlock;
+        }, $contentBlocks);
 
-        $errors = $this->getErrors($contentBlocks);
-        
+        // Regular data
+        $entry->update([
+            'is_active' => array_has($requestData, 'is_active')
+        ]);
+
+        // Delete old widgets
         $this->deleteOldContentBlocks($entry);
 
+        // Store new widgets
         $this->storeNewContentBlocks($entry, $contentBlocks);
 
+        // Store translations
+        $entryTranslations = (array)array_get($requestData, 'translations', []);
         $this->storeEntryTranslation($entry, $entryTranslations);
 
         return $entry;
-    }
-
-    /**
-     * @param array $contentBlocks
-     * @return array
-     */
-    private function getErrors(Array $contentBlocks)
-    {
-        $errors = [];
-        
-        foreach ($contentBlocks as $index => $contentBlock) {
-
-            $key = array_get($contentBlock, 'widget');
-            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
-            $backendWorker = array_get($config, 'backend_worker');
-
-            // Delete data in related tables
-            if ($backendWorker) {
-                foreach( app($backendWorker)->getErrors($contentBlock) as $error ){
-                    $errors[] = $error;
-                }
-            }
-        }
-        
-        return $errors;
     }
 
     /**
@@ -132,7 +119,7 @@ class Storage extends PassThrough
             ->contentBlocks()
             ->whereWidget('simple_text')
             ->get();
-        
+
         $entryTranslations = [];
 
         foreach ($contentBlocks as $contentBlock) {

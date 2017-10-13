@@ -90,50 +90,33 @@ class EntryController extends Controller
      */
     public function store(EntryRequest $request, $channelId = null)
     {
-        $contentBlocks = json_decode($request->get('widgets', null));
-        $contentBlocks = (array) array_map(function ($contentBlock) {
-            return (array)$contentBlock;
-        }, $contentBlocks);
-
-        $entryTranslations = (array) $request->get('translations', []); // slug, title
+        $requestData = $request->all();
 
         $entryData = [];
-        if($channelId) {
+        if ($channelId) {
             $entryData = [
                 'channel_id' => $channelId
             ];
         }
 
         $entry = Entry::create($entryData);
-        $entry->storage()->update(
-            $contentBlocks,
-            $entryTranslations
-        );
+        $entry->storage()->update($requestData);
 
         return response()->json([
-            'success' => true,
+            'success'     => true,
             'redirect_to' => route('content::content.index')
         ]);
     }
 
     /**
-     * @param EntryRequest $entry
-     * @param Request $request
+     * @param EntryRequest $request
+     * @param Entry $entry
      * @return mixed
      */
-    public function update(EntryRequest $entry, Request $request)
+    public function update(EntryRequest $request, Entry $entry)
     {
-        $contentBlocks = json_decode($request->get('widgets', null));
-        $contentBlocks = (array) array_map(function ($contentBlock) {
-            return (array)$contentBlock;
-        }, $contentBlocks);
-        
-        $entryTranslations = (array) $request->get('translations', []); // slug, title
-        
-        $updatedEntry = $entry->storage()->update(
-            $contentBlocks, 
-            $entryTranslations
-        );
+        $requestData = $request->all();
+        $entry->storage()->update($requestData);
 
         return response()->json([
             'success' => true
