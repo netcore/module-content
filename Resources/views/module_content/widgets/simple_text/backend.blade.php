@@ -30,6 +30,8 @@
                             'data-language' => $language->iso_code
                         ]
                     ) !!}
+
+                    <span class="error-span" data-field="{{ $language->iso_code }}-content"></span>
                 </div>
             </div>
 

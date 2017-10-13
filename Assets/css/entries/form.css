@@ -56,6 +56,10 @@
     height: 25px;
 }
 
+#widgets-container .template-container-header.has-error{
+    background-color:#da3434;
+}
+
 #widgets-container .template-container-header a{
     cursor:pointer;
     position: relative;
@@ -65,6 +69,10 @@
     width:50px;
     text-align: center;
     height:100%;
+}
+
+#widgets-container .template-container-header.has-error a{
+    color:white;
 }
 
 #widgets-container .template-container-header .fa-arrows{

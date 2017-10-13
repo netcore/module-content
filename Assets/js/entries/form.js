@@ -146,7 +146,7 @@ $(function() {
         var form = $(this).closest('form');
 
         // Reset errors
-        $(form).find('.form-group.has-error').removeClass('has-error');
+        $(form).find('.has-error').removeClass('has-error');
         $(form).find('.error-span').text('');
 
         // Post to backend
@@ -172,7 +172,22 @@ $(function() {
                 $.each(errors, function(key, value){
 
                     if(key == 'widgets') {
+                        $.each(value, function(index, object){
+                            $.each(object, function(name, value){
 
+                                var splitted = name.split('.');
+                                var widgetBlockIndex = splitted[1]; // e.g. "0"
+                                var isoCode = splitted[2]; // e.g. "en"
+                                var field = splitted[3]; // e.g. "content"
+
+                                $('.template-container-header').eq(widgetBlockIndex)
+                                    .addClass('has-error');
+
+                                $('.template-container').eq(widgetBlockIndex)
+                                    .find('.error-span[data-field="' + isoCode + '-' + field + '"]')
+                                    .text(value);
+                            });
+                        });
                     } else {
                         var splitted = key.split('.');
 
@@ -188,6 +203,10 @@ $(function() {
                         $(formGroup).find('.error-span').text(value);
                     }
                 });
+
+                $('html, body').animate({
+                    scrollTop: $(".has-error:first").offset().top - 100
+                }, 500);
             }
         });
     });
