@@ -5,6 +5,7 @@ namespace Modules\Content\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
+use Modules\Content\Http\Requests\Admin\EntryRequest;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
@@ -83,11 +84,11 @@ class EntryController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param EntryRequest $request
      * @param null $channelId
      * @return mixed
      */
-    public function store(Request $request, $channelId = null)
+    public function store(EntryRequest $request, $channelId = null)
     {
         $contentBlocks = json_decode($request->get('widgets', null));
         $contentBlocks = (array) array_map(function ($contentBlock) {
@@ -104,21 +105,23 @@ class EntryController extends Controller
         }
 
         $entry = Entry::create($entryData);
-        $updatedEntry = $entry->storage()->update(
+        $entry->storage()->update(
             $contentBlocks,
             $entryTranslations
         );
 
         return response()->json([
-            'success' => true
+            'success' => true,
+            'redirect_to' => route('content::content.index')
         ]);
     }
 
     /**
-     * @param Entry $entry
+     * @param EntryRequest $entry
+     * @param Request $request
      * @return mixed
      */
-    public function update(Entry $entry, Request $request)
+    public function update(EntryRequest $entry, Request $request)
     {
         $contentBlocks = json_decode($request->get('widgets', null));
         $contentBlocks = (array) array_map(function ($contentBlock) {

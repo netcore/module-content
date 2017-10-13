@@ -31,24 +31,52 @@ class Storage extends PassThrough
     public function update(Array $contentBlocks, Array $entryTranslations): Entry
     {
         $entry = $this->entry;
+
+        $errors = $this->getErrors($contentBlocks);
         
-        // Save widgets and their data
-        // 1. Put data in $entry->content_blocks table
-        // 1.1 Put data in additional tables, according to each specific widget
+        $this->deleteOldContentBlocks($entry);
 
-        foreach ($entry->contentBlocks as $oldContentBlock) {
+        $this->storeNewContentBlocks($entry, $contentBlocks);
 
-            $key = $oldContentBlock->widget;
+        $this->storeEntryTranslation($entry, $entryTranslations);
+
+        return $entry;
+    }
+
+    /**
+     * @param array $contentBlocks
+     * @return array
+     */
+    private function getErrors(Array $contentBlocks)
+    {
+        $errors = [];
+        
+        foreach ($contentBlocks as $index => $contentBlock) {
+
+            $key = array_get($contentBlock, 'widget');
             $config = collect(config('module_content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
 
             // Delete data in related tables
-            if ($backendWorker AND method_exists($backendWorker, 'delete')) {
-                app($backendWorker)->delete($oldContentBlock);
+            if ($backendWorker) {
+                foreach( app($backendWorker)->getErrors($contentBlock) as $error ){
+                    $errors[] = $error;
+                }
             }
-
-            $oldContentBlock->delete();
         }
+        
+        return $errors;
+    }
+
+    /**
+     * @param Entry $entry
+     * @param array $contentBlocks
+     */
+    private function storeNewContentBlocks(Entry $entry, Array $contentBlocks)
+    {
+        // Save widgets and their data
+        // 1. Put data in $entry->content_blocks table
+        // 1.1 Put data in additional tables, according to each specific widget
 
         foreach ($contentBlocks as $index => $contentBlock) {
 
@@ -70,13 +98,42 @@ class Storage extends PassThrough
 
             $entry->contentBlocks()->create($contentBlockData);
         }
+    }
 
-        // @TODO Come up with a better way to store $entry->content
+    /**
+     * @param Entry $entry
+     */
+    private function deleteOldContentBlocks(Entry $entry)
+    {
+        foreach ($entry->contentBlocks as $oldContentBlock) {
+
+            $key = $oldContentBlock->widget;
+            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $backendWorker = array_get($config, 'backend_worker');
+
+            // Delete data in related tables
+            if ($backendWorker AND method_exists($backendWorker, 'delete')) {
+                app($backendWorker)->delete($oldContentBlock);
+            }
+
+            $oldContentBlock->delete();
+        }
+    }
+
+    /**
+     * @param Entry $entry
+     * @param array $entryTranslations
+     */
+    private function storeEntryTranslation(Entry $entry, Array $entryTranslations)
+    {
+        $entry->updateTranslations($entryTranslations);
 
         $contentBlocks = $entry
             ->contentBlocks()
             ->whereWidget('simple_text')
             ->get();
+        
+        $entryTranslations = [];
 
         foreach ($contentBlocks as $contentBlock) {
 
@@ -102,8 +159,5 @@ class Storage extends PassThrough
 
         // Save translations
         $entry->updateTranslations($entryTranslations);
-
-        return $entry;
     }
-
 }

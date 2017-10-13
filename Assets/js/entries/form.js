@@ -20,13 +20,6 @@ $(function() {
                         order.push( id );
                     }
                 });
-
-                //$.post($('#images-table').data('order-route'), { order : order }, function() {
-                //$.growl.notice({
-                //title : 'Veiksmīgi!',
-                //message : 'Secība saglabāta'
-                //});
-                //});
             }
         });
     };
@@ -144,8 +137,13 @@ $(function() {
             value: JSON.stringify(widgets)
         });
 
-        // Post to backend
         var form = $(this).closest('form');
+
+        // Reset errors
+        $(form).find('.form-group.has-error').removeClass('has-error');
+        $(form).find('.error-span').text('');
+
+        // Post to backend
         $.ajax({
             url: $(form).attr('action'),
             type: $(form).attr('method'),
@@ -163,7 +161,27 @@ $(function() {
                 }
             },
             error: function (xhr) {
-                console.log(xhr);
+                var errors = xhr.responseJSON.errors;
+
+                $.each(errors, function(key, value){
+
+                    if(key == 'widgets') {
+
+                    } else {
+                        var splitted = key.split('.');
+
+                        var htmlName = splitted[0];
+                        splitted.shift();
+
+                        $.each(splitted, function(i, string){
+                            htmlName += '[' + string + ']';
+                        });
+
+                        var formGroup = $('input[name="' + htmlName + '"]').closest('.form-group');
+                        $(formGroup).addClass('has-error');
+                        $(formGroup).find('.error-span').text(value);
+                    }
+                });
             }
         });
     });

@@ -88,3 +88,7 @@
 .note-editor.panel{
     margin-bottom:0px;
 }
+
+.error-span{
+    color:red;
+}
