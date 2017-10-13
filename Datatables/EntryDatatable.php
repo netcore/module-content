@@ -38,6 +38,10 @@ trait EntryDatatable
                 $updatedAt = $entry->updated_at;
                 return $updatedAt ? $updatedAt->format('d.m.Y H:i') : '-';
             })
+            ->editColumn('created_at', function ($entry) {
+                $createdAt = $entry->created_at;
+                return $createdAt ? $createdAt->format('d.m.Y H:i') : '-';
+            })
             ->editColumn('is_active', function ($entry) {
                 return view('content::module_content.entries.tds.is_active', compact('entry'))->render();
             })
@@ -60,7 +64,7 @@ trait EntryDatatable
 
         $query = Entry::with([
             'contentBlocks'
-        ]);
+        ])->orderBy('id', 'DESC');
 
         if($channelId) {
             $query->whereChannelId($channelId);

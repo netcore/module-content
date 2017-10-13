@@ -62,6 +62,7 @@
                 >
                     <thead>
                     <tr>
+                        <th>Created at</th>
                         <th>Title</th>
                         <th>Slug</th>
                         <th>Content</th>

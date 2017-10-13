@@ -1,5 +1,5 @@
 <input
-    class="single-entries-changeable-state"
+    class="changeable-state"
     type="checkbox"
     data-render="switchery"
     data-theme="default"
