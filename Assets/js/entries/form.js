@@ -33,6 +33,14 @@ $(function() {
         }
     };
 
+    var loadWysiwygOnPageload = function(){
+        var count = $('#widgets-table tr').length;
+        if(!count) {
+            $('#select-widget').val('simple_text');
+            $('#add-widget-button').trigger('click');
+        }
+    };
+
     var replaceAll = function(search, replacement, source) {
         return source.split(search).join(replacement);
     };
@@ -69,6 +77,9 @@ $(function() {
                 callable(widgetTr);
             }
         });
+
+        // On page load - show wysiwyg, if there are no widgets
+        loadWysiwygOnPageload();
     });
 
     // Delete widget blocks
@@ -87,7 +98,6 @@ $(function() {
         }).then(function() {
             // Yes
             $(closestTr).fadeOut(function(){
-                console.log('Callback');
                 $(this).remove();
             });
         }, function(dismiss) {
@@ -113,6 +123,13 @@ $(function() {
     $('.switchery').each(function(i, switcher) {
         new Switchery(switcher);
         $(switcher).closest('.hidden-switchery').show();
+    });
+
+    // Slug generation
+    $('body').on('keyup', 'input.title', function(){
+        var title = $(this).val();
+        var slug = Netcore.slugify(title);
+        $(this).closest('.tab-pane').find('input.slug').val(slug);
     });
 
     $('body').on('click', '#submit-button', function(){

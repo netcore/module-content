@@ -12,7 +12,7 @@
                 <div class="col-xs-6">
                     <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                         <label>Title</label>
-                        {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control']) !!}
+                        {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control title']) !!}
                         <span class="error-span"></span>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                     <div class="form-group{{ $errors->has('slug') ? ' has-error' : '' }}">
                         <label>Slug</label>
                         (Automatically generated if left empty)
-                        {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control']) !!}
+                        {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control slug']) !!}
                         <span class="error-span"></span>
                     </div>
                 </div>
