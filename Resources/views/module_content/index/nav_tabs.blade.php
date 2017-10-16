@@ -38,12 +38,6 @@
             class="tab-pane {{ $loop->first ? 'active' : '' }}"
             id="channel-{{ $channel->name }}"
         >
-            {{--
-            <div class="loader">
-                <span class="fa fa-icon fa-gear fa-spin"></span> Loading...
-            </div>
-            --}}
-
             <div class="above-table">
                 <a {{-- href="{{ route('content::channels.edit', $channel) }}" --}} class="btn btn-primary btn-xs disabled">
                     Edit channel
@@ -85,12 +79,6 @@
         class="tab-pane {{ $channels->count() == 0 ? 'active' : '' }}"
         id="single-entries"
     >
-        {{--
-        <div class="loader">
-            <span class="fa fa-icon fa-gear fa-spin"></span> Loading...
-        </div>
-        --}}
-
         <div class="above-table">
             <a href="{{ route('content::entries.create') }}" class="btn btn-success btn-xs">
                 Add new page
@@ -105,7 +93,8 @@
             >
                 <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Created at</th>
+                    <th>Title</th>
                     <th>Slug</th>
                     <th>Content</th>
                     <th>Updated at</th>
