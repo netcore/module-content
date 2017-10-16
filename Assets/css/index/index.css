@@ -1,6 +1,15 @@
+
+#nav-tabs-container{
+    position: relative;
+}
+
 .above-table{
     margin-bottom: 10px;
     text-align: right;
+    position:absolute;
+    top:5px;
+    right:7px;
+    width:300px;
 }
 
 .width-100{ width: 100px; }

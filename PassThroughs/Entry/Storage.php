@@ -43,27 +43,28 @@ class Storage extends PassThrough
         ]);
 
         // Delete old widgets
-        $this->deleteOldContentBlocks($entry);
+        $this->deleteOldContentBlocks();
 
         // Store new widgets
-        $this->storeNewContentBlocks($entry, $contentBlocks);
+        $this->storeNewContentBlocks($contentBlocks);
 
         // Store translations
         $entryTranslations = (array)array_get($requestData, 'translations', []);
-        $this->storeEntryTranslation($entry, $entryTranslations);
+        $this->storeEntryTranslation($entryTranslations);
 
         return $entry;
     }
 
     /**
-     * @param Entry $entry
      * @param array $contentBlocks
      */
-    private function storeNewContentBlocks(Entry $entry, Array $contentBlocks)
+    private function storeNewContentBlocks(Array $contentBlocks)
     {
         // Save widgets and their data
         // 1. Put data in $entry->content_blocks table
         // 1.1 Put data in additional tables, according to each specific widget
+
+        $entry = $this->entry;
 
         foreach ($contentBlocks as $index => $contentBlock) {
 
@@ -88,10 +89,11 @@ class Storage extends PassThrough
     }
 
     /**
-     * @param Entry $entry
+     *
      */
-    private function deleteOldContentBlocks(Entry $entry)
+    public function deleteOldContentBlocks()
     {
+        $entry = $this->entry;
         foreach ($entry->contentBlocks as $oldContentBlock) {
 
             $key = $oldContentBlock->widget;
@@ -108,11 +110,11 @@ class Storage extends PassThrough
     }
 
     /**
-     * @param Entry $entry
      * @param array $entryTranslations
      */
-    private function storeEntryTranslation(Entry $entry, Array $entryTranslations)
+    private function storeEntryTranslation(Array $entryTranslations)
     {
+        $entry = $this->entry;
         $entry->updateTranslations($entryTranslations);
 
         $contentBlocks = $entry

@@ -34,6 +34,33 @@ class EntryController extends Controller
     }
 
     /**
+     * @param EntryRequest $request
+     * @param null $channelId
+     * @return mixed
+     */
+    public function store(EntryRequest $request, $channelId = null)
+    {
+        $requestData = $request->all();
+
+        $entryData = [];
+        if ($channelId) {
+            $entryData = [
+                'channel_id' => $channelId
+            ];
+        }
+
+        $entry = Entry::create($entryData);
+        $entry->storage()->update($requestData);
+
+        session()->flash('success', 'Page has been stored!');
+
+        return response()->json([
+            'success'     => true,
+            'redirect_to' => route('content::content.index')
+        ]);
+    }
+
+    /**
      * @param Entry $entry
      * @return mixed
      */
@@ -51,6 +78,24 @@ class EntryController extends Controller
             'widgetData',
             'widgetOptions'
         ));
+    }
+
+    /**
+     * @param EntryRequest $request
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function update(EntryRequest $request, Entry $entry)
+    {
+        $requestData = $request->all();
+        $entry->storage()->update($requestData);
+
+        session()->flash('success', 'Page has been updated!');
+
+        return response()->json([
+            'success'     => true,
+            'redirect_to' => route('content::content.index')
+        ]);
     }
 
     /**
@@ -84,39 +129,16 @@ class EntryController extends Controller
     }
 
     /**
-     * @param EntryRequest $request
-     * @param null $channelId
-     * @return mixed
-     */
-    public function store(EntryRequest $request, $channelId = null)
-    {
-        $requestData = $request->all();
-
-        $entryData = [];
-        if ($channelId) {
-            $entryData = [
-                'channel_id' => $channelId
-            ];
-        }
-
-        $entry = Entry::create($entryData);
-        $entry->storage()->update($requestData);
-
-        return response()->json([
-            'success'     => true,
-            'redirect_to' => route('content::content.index')
-        ]);
-    }
-
-    /**
-     * @param EntryRequest $request
      * @param Entry $entry
      * @return mixed
      */
-    public function update(EntryRequest $request, Entry $entry)
+    public function destroy(Entry $entry)
     {
-        $requestData = $request->all();
-        $entry->storage()->update($requestData);
+        // Delete content blocks
+        $entry->storage()->deleteOldContentBlocks();
+
+        // Delete entry itself
+        $entry->delete();
 
         return response()->json([
             'success' => true

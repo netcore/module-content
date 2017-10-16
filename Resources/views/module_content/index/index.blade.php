@@ -27,6 +27,10 @@
         </h1>
     </div>
 
-    @include('content::module_content.index.nav_tabs')
+    @include('admin::_partials._messages')
+
+    <div id="nav-tabs-container">
+        @include('content::module_content.index.nav_tabs')
+    </div>
 
 @endsection

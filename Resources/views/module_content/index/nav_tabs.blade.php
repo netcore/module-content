@@ -53,6 +53,7 @@
                     class="table table-bordered datatable"
                     data-ajax="{{ route('content::entries.pagination') }}?channel_id={{ $channel->id }}"
                     data-caption="Pages in {{ $channel->name }}"
+                    id="channel-{{ $channel->id }}-datatable"
                 >
                     <thead>
                     <tr>
@@ -90,6 +91,7 @@
                 class="table table-bordered datatable"
                 data-ajax="{{ route('content::entries.pagination') }}"
                 data-caption="Single pages"
+                id="single-entries-datatable"
             >
                 <thead>
                 <tr>

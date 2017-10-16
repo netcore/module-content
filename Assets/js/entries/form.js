@@ -156,14 +156,13 @@ $(function() {
             data: dataForBackend,
             dataType: 'json',
             success: function (response) {
-
-                $.growl.notice({
-                    title : 'Success!',
-                    message : 'Data saved!'
-                });
-
                 if(response.redirect_to) {
                     window.location.href = response.redirect_to;
+                } else {
+                    $.growl.notice({
+                        title : 'Success!',
+                        message : 'Data saved!'
+                    });
                 }
             },
             error: function (xhr) {

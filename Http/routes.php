@@ -61,6 +61,11 @@ Route::group([
         'uses' => 'EntryController@update'
     ]);
 
+    Route::delete('/content/entries/{entry}', [
+        'as' => 'entries.destroy',
+        'uses' => 'EntryController@destroy'
+    ]);
+
     Route::get('/content/entries/create/{channelId?}', [
         'as' => 'entries.create',
         'uses' => 'EntryController@create'

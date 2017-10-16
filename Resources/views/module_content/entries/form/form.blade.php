@@ -82,7 +82,7 @@
 <div class="pull-right">
     Active
     <span class="hidden-switchery" hidden>
-        {!! Form::checkbox('is_active', 1, null, [
+        {!! Form::checkbox('is_active', 1, (isset($entry) ? null : 1), [
             'class' => 'switchery'
         ]) !!}
     </span>
