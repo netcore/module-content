@@ -30,7 +30,7 @@ class Storage extends PassThrough
     public function update(Array $requestData): Entry
     {
         $entry = $this->entry;
-       
+
         // Cast widgets to array
         $contentBlocks = json_decode(array_get($requestData, 'widgets', null));
         $contentBlocks = (array)array_map(function ($contentBlock) {
@@ -116,20 +116,22 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
-        $entryTranslations = array_map(function($translations){
+        $entryTranslations = collect($entryTranslations)->map(function ($translations, $locale) {
 
-            if( strlen(array_get($translations, 'slug')) == 0 ) {
-                $translations['slug'] = str_slug(
+            if (strlen(array_get($translations, 'slug')) == 0) {
+                $slug = str_slug(
                     array_get($translations, 'title')
                 );
             } else {
-                $translations['slug'] = str_slug(
+                $slug = str_slug(
                     array_get($translations, 'slug')
                 );
             }
 
+            $translations['slug'] = $this->uniqueSlug($slug, $locale);
+
             return $translations;
-        }, $entryTranslations);
+        })->toArray();
 
         $entry->updateTranslations($entryTranslations);
 
@@ -165,4 +167,41 @@ class Storage extends PassThrough
         // Save translations
         $entry->updateTranslations($entryTranslations);
     }
+
+    /**
+     * @param $originalSlug
+     * @param $locale
+     * @return mixed
+     */
+    private function uniqueSlugCount($originalSlug, $locale)
+    {
+        return Entry::join('netcore_content__entry_translations', 'netcore_content__entries.id', '=',
+            'netcore_content__entry_translations.entry_id')
+            ->where('netcore_content__entry_translations.slug', $originalSlug)
+            ->where('netcore_content__entry_translations.locale', $locale)
+            ->count();
+    }
+
+    /**
+     * @param $originalSlug
+     * @param $locale
+     * @return string
+     */
+    private function uniqueSlug($originalSlug, $locale)
+    {
+        $slug = $originalSlug;
+
+        $count = $this->uniqueSlugCount($originalSlug, $locale);
+        if ($count) {
+            $slug = $originalSlug . '-' . $count;
+        }
+
+        while ($this->uniqueSlugCount($slug, $locale) > 0) {
+            $count++;
+            $slug = $originalSlug . '-' . $count;
+        }
+
+        return $slug;
+    }
+
 }
