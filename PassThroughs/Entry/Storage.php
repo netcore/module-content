@@ -116,7 +116,7 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
-        $entryTranslations = collect($entryTranslations)->map(function ($translations, $locale) {
+        $entryTranslations = collect($entryTranslations)->map(function ($translations, $locale) use ($entry) {
 
             if (strlen(array_get($translations, 'slug')) == 0) {
                 $slug = str_slug(
@@ -128,7 +128,8 @@ class Storage extends PassThrough
                 );
             }
 
-            $translations['slug'] = $this->uniqueSlug($slug, $locale);
+            $channelId = $entry->channel_id;
+            $translations['slug'] = $this->uniqueSlug($slug, $locale, $channelId);
 
             return $translations;
         })->toArray();
@@ -171,32 +172,36 @@ class Storage extends PassThrough
     /**
      * @param $originalSlug
      * @param $locale
+     * @param $channelId
      * @return mixed
      */
-    private function uniqueSlugCount($originalSlug, $locale)
+    private function uniqueSlugCount($originalSlug, $locale, $channelId)
     {
         return Entry::join('netcore_content__entry_translations', 'netcore_content__entries.id', '=',
             'netcore_content__entry_translations.entry_id')
             ->where('netcore_content__entry_translations.slug', $originalSlug)
             ->where('netcore_content__entry_translations.locale', $locale)
+            ->where('netcore_content__entries.channel_id', $channelId)
             ->count();
     }
 
     /**
      * @param $originalSlug
      * @param $locale
+     * @param $channelId
      * @return string
      */
-    private function uniqueSlug($originalSlug, $locale)
+    private function uniqueSlug($originalSlug, $locale, $channelId)
     {
         $slug = $originalSlug;
 
-        $count = $this->uniqueSlugCount($originalSlug, $locale);
+        $count = $this->uniqueSlugCount($originalSlug, $locale, $channelId);
         if ($count) {
+            $count++; // This will generate test and test-2, not test and test-1
             $slug = $originalSlug . '-' . $count;
         }
 
-        while ($this->uniqueSlugCount($slug, $locale) > 0) {
+        while ($this->uniqueSlugCount($slug, $locale, $channelId) > 0) {
             $count++;
             $slug = $originalSlug . '-' . $count;
         }
