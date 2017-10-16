@@ -1,6 +1,8 @@
 
 @if(count($languages) > 1)
-    @include('crud::nav_tabs')
+    @include('crud::nav_tabs', [
+        'idPrefix' => 'basic-data-'
+    ])
 @endif
 
 <!-- Tab panes -->

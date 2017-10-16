@@ -115,6 +115,22 @@ class Storage extends PassThrough
     private function storeEntryTranslation(Array $entryTranslations)
     {
         $entry = $this->entry;
+
+        $entryTranslations = array_map(function($translations){
+
+            if( strlen(array_get($translations, 'slug')) == 0 ) {
+                $translations['slug'] = str_slug(
+                    array_get($translations, 'title')
+                );
+            } else {
+                $translations['slug'] = str_slug(
+                    array_get($translations, 'slug')
+                );
+            }
+
+            return $translations;
+        }, $entryTranslations);
+
         $entry->updateTranslations($entryTranslations);
 
         $contentBlocks = $entry

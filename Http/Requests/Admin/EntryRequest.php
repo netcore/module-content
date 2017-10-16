@@ -33,7 +33,7 @@ class EntryRequest extends FormRequest
         $languagesInSystem = TransHelper::getAllLanguages();
         foreach ($languagesInSystem as $language) {
             $rules['translations.' . $language->iso_code . '.title'] = 'required';
-            $rules['translations.' . $language->iso_code . '.slug'] = 'required';
+            //$rules['translations.' . $language->iso_code . '.slug'] = 'required';
         }
 
         return $rules;
