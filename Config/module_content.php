@@ -2,6 +2,12 @@
 
 return [
 
+    'layouts' => [
+
+        'layouts.main' => 'Main layout',
+        'layouts.contacts' => 'Contacts layout'
+    ],
+
     'sections' => [
 
     ],

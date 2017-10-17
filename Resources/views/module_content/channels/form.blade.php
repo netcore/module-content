@@ -1,4 +1,20 @@
 
+@php
+    $fieldErrors = $errors->get('layout');
+@endphp
+
+<div class="form-group{{ $fieldErrors ? ' has-error' : '' }}">
+    <label>Layout</label>
+
+    {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control']) !!}
+
+    @foreach($fieldErrors as $error)
+        <span class="error-span">
+            {{ $error }}
+        </span>
+    @endforeach
+</div>
+
 @if(count($languages) > 1)
     @include('content::module_content.partials.language_tabs')
 @endif

@@ -5,6 +5,22 @@
     ])
 @endif
 
+@php
+    $fieldErrors = $errors->get('layout');
+@endphp
+
+<div class="form-group{{ $fieldErrors ? ' has-error' : '' }}">
+    <label>Layout</label>
+
+    {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control']) !!}
+
+    @foreach($fieldErrors as $error)
+        <span class="error-span">
+            {{ $error }}
+        </span>
+    @endforeach
+</div>
+
 <!-- Tab panes -->
 <div class="tab-content {{ count($languages) > 1 ? '' : 'no-padding' }}">
     @foreach($languages as $language)
@@ -12,14 +28,14 @@
 
             <div class="row">
                 <div class="col-xs-6">
-                    <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+                    <div class="form-group">
                         <label>Title</label>
                         {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control title']) !!}
                         <span class="error-span"></span>
                     </div>
                 </div>
                 <div class="col-xs-6">
-                    <div class="form-group{{ $errors->has('slug') ? ' has-error' : '' }}">
+                    <div class="form-group">
                         <label>Slug</label>
                         (Automatically generated if left empty)
                         {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control slug']) !!}

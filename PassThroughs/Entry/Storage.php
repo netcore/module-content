@@ -39,6 +39,9 @@ class Storage extends PassThrough
 
         // Regular data
         $entry->update([
+            'layout'    => array_get($requestData, 'layout'),
+
+            // Checkboxes user array_has
             'is_active' => array_has($requestData, 'is_active')
         ]);
 

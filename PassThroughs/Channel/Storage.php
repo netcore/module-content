@@ -26,9 +26,9 @@ class Storage extends PassThrough
     {
         $channel = $this->channel;
 
-        //$channel->update(
-            //array_only($requestData, ['is_active'])
-        //);
+        $channel->update(
+            array_only($requestData, ['layout'])
+        );
 
         $channelTranslations = array_get($requestData, 'translations', []);
 

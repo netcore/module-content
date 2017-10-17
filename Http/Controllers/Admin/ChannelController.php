@@ -26,7 +26,17 @@ class ChannelController extends Controller
     public function edit(Channel $channel)
     {
         $languages = TransHelper::getAllLanguages();
-        return view('content::module_content.channels.edit', compact('channel', 'languages'));
+
+        $layoutOptions = config('module_content.layouts', []);
+        if (!$channel->layout) {
+            $layoutOptions = [null => ''] + $layoutOptions;
+        }
+
+        return view('content::module_content.channels.edit', compact(
+            'channel',
+            'languages',
+            'layoutOptions'
+        ));
     }
 
     /**

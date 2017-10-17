@@ -26,6 +26,7 @@ class Channel extends Model
      * @var array
      */
     protected $fillable = [
+        'layout',
         'is_active'
     ];
 

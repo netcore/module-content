@@ -27,7 +27,8 @@ class Entry extends Model
     protected $fillable = [
         'channel_id',
         'section_id',
-        'is_active'
+        'is_active',
+        'layout'
     ];
 
     /**

@@ -25,11 +25,14 @@ class EntryController extends Controller
         $widgetData = $this->widgets();
         $widgetOptions = collect(config('module_content.widgets'))->pluck('name', 'key');
 
+        $layoutOptions = config('module_content.layouts', []);
+
         return view('content::module_content.entries.create.create', compact(
             'channelId',
             'languages',
             'widgetData',
-            'widgetOptions'
+            'widgetOptions',
+            'layoutOptions'
         ));
     }
 
@@ -72,11 +75,17 @@ class EntryController extends Controller
         $widgetData = $this->widgets();
         $widgetOptions = collect(config('module_content.widgets'))->pluck('name', 'key');
 
+        $layoutOptions = config('module_content.layouts', []);
+        if (!$entry->layout) {
+            $layoutOptions = [null => ''] + $layoutOptions;
+        }
+
         return view('content::module_content.entries.edit.edit', compact(
             'entry',
             'languages',
             'widgetData',
-            'widgetOptions'
+            'widgetOptions',
+            'layoutOptions'
         ));
     }
 
