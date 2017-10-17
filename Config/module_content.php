@@ -4,7 +4,7 @@ return [
 
     'layouts' => [
 
-        'layouts.main' => 'Main layout',
+        'layouts.main'     => 'Main layout',
         'layouts.contacts' => 'Contacts layout'
     ],
 
@@ -33,8 +33,39 @@ return [
             'backend_template'    => 'content::module_content.widgets.simple_text.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'simple_text.js',
-            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\SimpleText::class
+            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\SimpleText::class,
         ],
+        [
+            'name'                => 'Large slider',
+            'key'                 => 'large_slider',
+            'frontend_template'   => 'content::module_content.widgets.large_slider.frontend',
+            'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'backend_javascript'  => 'image_blocks.js',
+            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
+            'fields'              => ['image', 'title']
+        ],
+        [
+            'name'                => 'Statistics',
+            'key'                 => 'statistics',
+            'frontend_template'   => 'content::module_content.widgets.statistics.frontend',
+            'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'backend_javascript'  => 'image_blocks.js',
+            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
+            'fields'              => ['image', 'title', 'subtitle']
+        ],
+        [
+            'name'                => 'Our brands',
+            'key'                 => 'our_brands',
+            'frontend_template'   => 'content::module_content.widgets.our_brands.frontend',
+            'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
+            'backend_with_border' => true, // Depends on what kind of backend_template you have
+            'backend_javascript'  => 'image_blocks.js',
+            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
+            'fields'              => ['image']
+        ],
+        /*
         [
             'name'                => 'Testimonials',
             'key'                 => 'testimonials',
@@ -59,6 +90,7 @@ return [
             'backend_with_border' => true, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'gallery_slider.js'
         ]
+        */
     ],
 
     'admin_panel' => [

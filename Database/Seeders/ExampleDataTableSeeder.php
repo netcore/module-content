@@ -114,7 +114,7 @@ class ExampleDataTableSeeder extends Seeder
                     'is_active' => 1,
                 ],
                 [
-                    'layout'    => 'layouts.main',
+                    'layout'    => 'layouts.contacts',
                     'type'      => 'entry',
                     'name'      => 'Contacts',
                     'is_active' => 1,
