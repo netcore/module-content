@@ -18,7 +18,7 @@
             <div class="panel">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        Edit {{ $entry->title }}
+                        Edit page
                     </div>
                 </div>
                 <div class="panel-body">

@@ -145,21 +145,18 @@ class ExampleDataTableSeeder extends Seeder
         $itemName = array_get($item, 'name');
 
         // Basic data
-        $channelData = array_except($item, ['type', 'translations', 'entries']);
+        $channelData = array_except($item, ['name', 'type', 'translations', 'entries']);
         $channelData['section_id'] = $section->id;
 
-        $channel = Channel::updateOrCreate([
-            'name' => $itemName
-        ], $channelData);
-
+        $channel = Channel::create($channelData);
 
         // Translations
         $channelTranslations = $this->translateKeyValuePairsToAllLocales([
-            'slug' => $itemName
+            'slug' => $itemName,
+            'name' => $itemName
         ]);
 
         $channel->updateTranslations($channelTranslations);
-
 
         // Entries
         $entries = array_get($item, 'entries', []);
@@ -225,12 +222,9 @@ class ExampleDataTableSeeder extends Seeder
             foreach ($locales as $locale) {
 
                 $localizedValue = $value;
-                /*
-                $localizedValue = $value . ' ' . $locale;
                 if ($key == 'slug') {
-                    $localizedValue = str_slug($value . '-' . $locale);
+                    $localizedValue = str_slug($value);
                 }
-                */
 
                 $result[$locale][$key] = $localizedValue;
             }

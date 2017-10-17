@@ -7,12 +7,12 @@
             class="{{ $loop->first ? 'active' : '' }}"
         >
             <a
-                href="#channel-{{ $channel->name }}"
-                aria-controls="channel-{{ $channel->name }}"
+                href="#channel-{{ $channel->id }}"
+                aria-controls="channel-{{ $channel->id }}"
                 role="tab"
                 data-toggle="tab"
             >
-                {{ $channel->name }}
+                {{ trans_model($channel, $firstLanguage, 'name') }}
             </a>
         </li>
     @endforeach
@@ -36,10 +36,10 @@
         <div
             role="tabpanel"
             class="tab-pane {{ $loop->first ? 'active' : '' }}"
-            id="channel-{{ $channel->name }}"
+            id="channel-{{ $channel->id }}"
         >
             <div class="above-table">
-                <a {{-- href="{{ route('content::channels.edit', $channel) }}" --}} class="btn btn-primary btn-xs disabled">
+                <a href="{{ route('content::channels.edit', $channel) }}" class="btn btn-primary btn-xs">
                     Edit channel
                 </a>
 
@@ -52,7 +52,7 @@
                 <table
                     class="table table-bordered datatable"
                     data-ajax="{{ route('content::entries.pagination') }}?channel_id={{ $channel->id }}"
-                    data-caption="Pages in {{ $channel->name }}"
+                    data-caption="Pages in {{ trans_model($channel, $firstLanguage, 'name') }}"
                     id="channel-{{ $channel->id }}-datatable"
                 >
                     <thead>

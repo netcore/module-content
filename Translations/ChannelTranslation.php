@@ -17,6 +17,7 @@ class ChannelTranslation extends Model
      */
     protected $fillable = [
         'slug',
+        'name',
         'locale' // This is very important
     ];
 

@@ -3,6 +3,7 @@
 namespace Modules\Content\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller;
+use Modules\Content\Http\Requests\Admin\ChannelRequest;
 use Modules\Content\Models\Channel;
 use Netcore\Translator\Helpers\TransHelper;
 
@@ -30,10 +31,16 @@ class ChannelController extends Controller
 
     /**
      * @param Channel $channel
+     * @param ChannelRequest $request
      * @return mixed
      */
-    public function update(Channel $channel)
+    public function update(Channel $channel, ChannelRequest $request)
     {
-        return redirect()->back()->withSuccess('Channel updated!', compact('channel'));
+        $requestData = $request->all();
+        $channel->storage()->update($requestData);
+
+        return redirect()->route('content::content.index')
+            ->withSuccess('Channel has been updated!');
     }
+
 }

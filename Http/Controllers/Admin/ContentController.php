@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Section;
+use Netcore\Translator\Helpers\TransHelper;
 
 class ContentController extends Controller
 {
@@ -18,9 +19,13 @@ class ContentController extends Controller
 
     public function index()
     {
-        $sections = Section::orderBy('order')->get();
-        $channels = Channel::orderBy('name')->get();
-        return view($this->viewNamespace . '.index.index', compact('sections', 'channels'));
+        $languages = TransHelper::getAllLanguages();
+        $firstLanguage = $languages->first();
+        $channels = Channel::orderBy('id')->get();
+        return view($this->viewNamespace . '.index.index', compact(
+            'channels',
+            'firstLanguage'
+        ));
     }
 
 }

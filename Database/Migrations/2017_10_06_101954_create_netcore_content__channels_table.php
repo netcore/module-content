@@ -20,7 +20,6 @@ class CreateNetcoreContentChannelsTable extends Migration
             $table->integer('section_id')->unsigned()->nullable();
             $table->foreign('section_id')->references('id')->on('netcore_content__sections')->onDelete('restrict');
 
-            $table->string('name'); // How channel appears in ACP. Shouldnt be translatable.
             $table->boolean('is_active')->default(0);
 
             $table->softDeletes();
@@ -37,6 +36,7 @@ class CreateNetcoreContentChannelsTable extends Migration
             $table->string('locale')->index();
 
             $table->string('slug');
+            $table->string('name');
         });
     }
 

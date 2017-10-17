@@ -5,6 +5,7 @@ namespace Modules\Content\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Content\Composers\Admin\Entry\EntryTitle;
+use Modules\Content\Composers\Admin\Partials\LanguageTabs;
 
 class ContentServiceProvider extends ServiceProvider
 {
@@ -119,6 +120,7 @@ class ContentServiceProvider extends ServiceProvider
     {
         $map = [
             //'content::module_content.entries.tds.title' => EntryTitle::class,
+            'content::module_content.partials.language_tabs' => LanguageTabs::class
         ];
 
         foreach ($map as $view => $composerClass) {

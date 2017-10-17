@@ -1,46 +1,32 @@
 @extends('admin::layouts.master')
 
 @section('scripts')
-    <style>
-    </style>
+    <script src="/assets/content/js/channels/form.js"></script>
 @endsection
 
-@section('scripts')
-    <script>
-    </script>
+@section('styles')
+    <link rel="stylesheet" href="/assets/content/css/channels/form.css">
 @endsection
 
 @section('content')
+
+    {{--
     @include('admin::_partials._messages')
+    --}}
 
     {!! Form::model($channel, ['url' => crud_route('update', $channel), 'method' => 'PUT']) !!}
 
         <div class="p-x-1">
 
-            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                <label>Name</label>
-                <div class="">
-                    {!! Form::text('name', null, ['class' => 'form-control']) !!}
-                </div>
-            </div>
-
-            @include('crud::nav_tabs')
-
-            <!-- Tab panes -->
-            <div class="tab-content">
-                @foreach($languages as $language)
-                    <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ $language->iso_code }}">
-
-                        <div class="form-group{{ $errors->has('slug') ? ' has-error' : '' }}">
-                            <label>Slug</label>
-                            (Automatically generated if left empty)
-                            <div class="">
-                                {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($channel) ? $channel : null), $language, 'slug'), ['class' => 'form-control']) !!}
-                            </div>
-                        </div>
-
+            <div class="panel">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Edit channel
                     </div>
-                @endforeach
+                </div>
+                <div class="panel-body">
+                    @include('content::module_content.channels.form')
+                </div>
             </div>
 
             <button type="submit" class="btn btn-lg btn-success m-t-3 pull-xs-right">Save</button>

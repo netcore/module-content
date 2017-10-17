@@ -4,6 +4,7 @@ namespace Modules\Content\Models;
 
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\PassThroughs\Channel\Storage;
 use Modules\Content\Traits\SyncTranslations;
 use Modules\Content\Translations\ChannelTranslation;
 use Modules\Crud\Traits\CRUDModel;
@@ -25,7 +26,6 @@ class Channel extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
         'is_active'
     ];
 
@@ -38,7 +38,8 @@ class Channel extends Model
      * @var array
      */
     public $translatedAttributes = [
-        'slug'
+        'slug',
+        'name'
     ];
 
     /**
@@ -47,5 +48,13 @@ class Channel extends Model
     public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * @return Storage
+     */
+    public function storage()
+    {
+        return new Storage($this);
     }
 }
