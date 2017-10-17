@@ -32,16 +32,20 @@ class ExampleDataTableSeeder extends Seeder
                     'type'      => 'channel',
                     'name'      => 'News',
                     'is_active' => 1,
+                    'layout'    => 'layouts.main',
                     'entries'   => [
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'First news entry',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Second news entry',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Third news entry',
                             'is_active' => 1,
                         ]
@@ -51,16 +55,20 @@ class ExampleDataTableSeeder extends Seeder
                     'type'      => 'channel',
                     'name'      => 'Reports',
                     'is_active' => 1,
+                    'layout'    => 'layouts.main',
                     'entries'   => [
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'First report',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Second report',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Third report',
                             'is_active' => 1,
                         ]
@@ -70,16 +78,20 @@ class ExampleDataTableSeeder extends Seeder
                     'type'      => 'channel',
                     'name'      => 'Blog',
                     'is_active' => 1,
+                    'layout'    => 'layouts.main',
                     'entries'   => [
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'First blogpost',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Second blogpost',
                             'is_active' => 1,
                         ],
                         [
+                            'layout'    => 'layouts.main',
                             'name'      => 'Third blogpost',
                             'is_active' => 1,
                         ]
@@ -90,16 +102,19 @@ class ExampleDataTableSeeder extends Seeder
 
             'Static pages' => [
                 [
+                    'layout'    => 'layouts.main',
                     'type'      => 'entry',
                     'name'      => 'Homepage',
                     'is_active' => 1,
                 ],
                 [
+                    'layout'    => 'layouts.main',
                     'type'      => 'entry',
                     'name'      => 'About us',
                     'is_active' => 1,
                 ],
                 [
+                    'layout'    => 'layouts.main',
                     'type'      => 'entry',
                     'name'      => 'Contacts',
                     'is_active' => 1,
