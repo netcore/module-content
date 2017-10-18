@@ -142,6 +142,22 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
     });
 
     $('body').on('click', '.add-new-image-block-submit', function(){
+
+        var valid = true;
+        $(this).closest('.add-new-container').find('input').each(function(index, input){
+            var value = $(input).val();
+            if(!value) {
+                $(input).closest('.form-group').addClass('has-error');
+                $(input).closest('.form-group').find('.error-span').text('Field is required');
+                valid = false;
+            } else {
+                $(input).closest('.form-group').removeClass('remove-error');
+                $(input).closest('.form-group').find('.error-span').text('');
+            }
+        });
+
+        if(!valid){ return; }
+
         addNewRow(this);
         clearAddNewImageBlockForm(this);
     });

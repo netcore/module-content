@@ -22,6 +22,7 @@
                     <td class="padding-5">
                         <div class="form-group no-margin">
                             <input type="file" name="html-block-images[]" id="" class="form-control form-input inline">
+                            <span class="error-span"></span>
                         </div>
                     </td>
                 </tr>
@@ -34,6 +35,7 @@
                     <td class="padding-5">
                         <div class="form-group no-margin">
                             <input type="text" data-name="{{ $field }}" class="form-control">
+                            <span class="error-span"></span>
                         </div>
                     </td>
                 </tr>
