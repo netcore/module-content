@@ -90,18 +90,50 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         return source.split(search).join(replacement);
     };
 
+    var initSortable = function(table){
+
+        // Orderable shop images
+        $(table).sortable({
+            containerSelector: '.image-blocks-table',
+            itemPath : '> tbody',
+            itemSelector : '.image-blocks-tr',
+            handle : '.image-blocks-handle',
+            onDrop : function($item, container, _super, event) {
+
+                console.log('widgets-x drop');
+
+                $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+                $("body").removeClass(container.group.options.bodyClass);
+
+                var order = [];
+                var id;
+
+                $.each( $(container.el).find('tr'), function (i, tr) {
+                    if( id = $(tr).data('id') ) {
+                        order.push( id );
+                    }
+                });
+            }
+        });
+    };
+
+    // Init sortable on page load
+    $('.image-blocks-table').each(function(index, table){
+        initSortable(table);
+    });
+
     var addNewRow = function(btn){
 
         var modelId = randomString();
 
         // Add new row
-        var html = '<tr class="fade-out-' + modelId + '" data-id="' + modelId + '">';
+        var html = '<tr class="fade-out-' + modelId + ' image-blocks-tr" data-id="' + modelId + '">';
 
         var actionsTemplate = $('#image-block-actions-template').html();
         actionsTemplate = replaceAll('modelId', modelId, actionsTemplate);
 
         // Handler for dragndrop
-        html += '<td class="text-align-center vertical-align-middle">';
+        html += '<td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle width-50">';
         html += '<span class="fa fa-icon fa-arrows"></span>';
         html += '</td>';
 
@@ -130,6 +162,9 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         html += '</tr>';
 
         $(btn).closest('.template-container-body').find('.image-blocks-table tr:last').after(html);
+
+        var table = $(btn).closest('.template-container-body').find('.image-blocks-table');
+        initSortable(table);
     };
 
     $('body').on('click', '.add-new-image-block-button', function(){

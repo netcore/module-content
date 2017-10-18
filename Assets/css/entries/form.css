@@ -19,14 +19,14 @@
     text-align: right;
 }
 
-.handle{
+.cursor-dragndrop{
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
 }
 
-.handle:active{
+.cursor-dragndrop:active{
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;

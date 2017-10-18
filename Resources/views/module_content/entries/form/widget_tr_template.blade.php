@@ -6,11 +6,11 @@
     $template   = isset($template) ? $template : '{{ template }}';
 @endphp
 
-<tr data-id="{{ $id }}" data-key="{{ $key }}">
+<tr data-id="{{ $id }}" data-key="{{ $key }}" class="widget-tr">
     <td>
         <div class="template-container {{ $withBorder }}">
 
-            <div class="template-container-header handle">
+            <div class="template-container-header cursor-dragndrop widget-tr-handle">
                 <span class="fa fa-icon fa-arrows"></span>
                 <a class="delete-widget" style="left: {{ (count($languages)-1) * 90 }}px;">Delete</a>
             </div>

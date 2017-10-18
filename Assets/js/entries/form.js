@@ -3,10 +3,10 @@ $(function() {
     var initSortable = function(){
         // Orderable shop images
         $('#widgets-table').sortable({
-            containerSelector: 'table',
+            containerSelector: '#widgets-table',
             itemPath : '> tbody',
-            itemSelector : 'tr',
-            handle : '.handle',
+            itemSelector : '.widget-tr',
+            handle : '.widget-tr-handle',
             onDrop : function($item, container, _super, event) {
 
                 $item.removeClass(container.group.options.draggedClass).removeAttr("style");
