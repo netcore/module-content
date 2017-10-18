@@ -5,14 +5,6 @@
     </a>
 
     <table class="add-new-image-block-table" hidden>
-        {{--
-        <tr>
-            <td></td>
-            <th class="padding-5">
-                Add new:
-            </th>
-        </tr>
-        --}}
         @foreach($fields as $field => $value)
             @if($field == 'image')
                 <tr>
@@ -21,43 +13,30 @@
                     </td>
                     <td class="padding-5">
                         <div class="form-group no-margin">
-                            <input type="file" name="html-block-images[]" id="" class="form-control form-input inline">
+                            <input type="file" data-name="html-block-images[]" data-field="{{ $field }}" class="form-control form-input inline">
                             <span class="error-span"></span>
                         </div>
                     </td>
                 </tr>
-            @endif
-            @if($field != 'image')
-                <tr>
-                    <td class="text-align-right">
-                        {{ ucfirst($field) }}:
-                    </td>
-                    <td class="padding-5">
-                        <div class="form-group no-margin">
-                            <input type="text" data-name="{{ $field }}" class="form-control">
-                            <span class="error-span"></span>
-                        </div>
-                    </td>
-                </tr>
-            @endif
-        @endforeach
-
-        {{-- Image should be last of all fields
-        @foreach($fields as $field => $value)
-            @if($field == 'image')
-                <tr>
-                    <td class="text-align-right">
-                        {{ ucfirst($field) }}:
-                    </td>
-                    <td class="padding-5">
-                        <div class="form-group no-margin">
-                            <input type="file" name="html-block-images[]" id="" class="form-control form-input inline">
-                        </div>
-                    </td>
-                </tr>
+            @else
+                @foreach($languages as $language)
+                    <tr>
+                        <td class="text-align-right">
+                            {{ ucfirst($field) }}
+                            @if(count($languages) > 1)
+                                {{ strtoupper($language->iso_code) }}
+                            @endif
+                        </td>
+                        <td class="padding-5">
+                            <div class="form-group no-margin">
+                                <input type="text" data-field="{{ $field }}" data-locale="{{ $language->iso_code }}" data-name="translations[{{ $field }}][{{ $language->iso_code }}]" class="form-control">
+                                <span class="error-span"></span>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
             @endif
         @endforeach
-        --}}
         <tr>
             <td></td>
             <td class="padding-5 text-align-right">

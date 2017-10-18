@@ -138,10 +138,11 @@ $(function() {
 
         var widgets = [];
 
-        $('#widgets-table tr').each(function(i, o){
+        $('#widgets-table .widget-tr').each(function(i, o){
 
             var key = $(o).data('key');
-            var collector = widgetDataCollectors[key];
+            var javascriptKey = $(o).data('javascript-key');
+            var collector = widgetDataCollectors[javascriptKey];
 
             var item = {
                 order: i,

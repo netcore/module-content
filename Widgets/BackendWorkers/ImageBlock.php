@@ -8,6 +8,11 @@ use Netcore\Translator\Helpers\TransHelper;
 class ImageBlock implements BackendWorkerInterface
 {
     /**
+     * @var string "recreate" || "update"
+     */
+    public $action = 'update';
+
+    /**
      * @var array
      */
     private $config = [];
@@ -70,7 +75,7 @@ class ImageBlock implements BackendWorkerInterface
      * in "galleries" table
      *
      * @param $frontendData
-     * @return array
+     * @return Array
      */
     public function store(Array $frontendData): Array
     {
@@ -87,6 +92,30 @@ class ImageBlock implements BackendWorkerInterface
             'html_block_id' => $htmlBlock->id
         ];
         */
+    }
+
+    /**
+     *
+     * update() method needs to return data that will be json encoded
+     * and put into "data" column in "content_blocks" table
+     *
+     * Additionally, it should put data in any other related tables.
+     * For example, if we have widget "gallery_slider", we might store
+     * ["gallery_id" => 1] in "data" column and put any actual data
+     * in "galleries" table
+     *
+     * @param $frontendData
+     * @return Array
+     */
+    public function update(Array $frontendData): Array
+    {
+        return; // @TODO
+
+        $blocks = (array) array_get($frontendData, 'blocks', []);
+        foreach($blocks as $block){
+            $block = (array) $block;
+            // @TOOD we need html_block_id
+        }
     }
 
     /**

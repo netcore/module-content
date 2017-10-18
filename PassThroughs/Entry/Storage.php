@@ -76,9 +76,19 @@ class Storage extends PassThrough
             $backendWorker = array_get($config, 'backend_worker');
 
             $data = [];
-            if ($backendWorker AND method_exists($backendWorker, 'store')) {
-                $frontendData = (array)array_get($contentBlock, 'data', []);
-                $data = app($backendWorker)->store($frontendData);
+            if($backendWorker) {
+                $backendWorker = new $backendWorker($config);
+                $action = $backendWorker->action;
+
+                if($action == 'recreate') {
+                    $frontendData = (array)array_get($contentBlock, 'data', []);
+                    $data = $backendWorker->store($frontendData);
+                }
+
+                if($action == 'update') {
+                    $frontendData = (array)array_get($contentBlock, 'data', []);
+                    $data = $backendWorker->update($frontendData);
+                }
             }
 
             $contentBlockData = [
@@ -101,14 +111,19 @@ class Storage extends PassThrough
 
             $key = $oldContentBlock->widget;
             $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+
             $backendWorker = array_get($config, 'backend_worker');
 
-            // Delete data in related tables
-            if ($backendWorker AND method_exists($backendWorker, 'delete')) {
-                app($backendWorker)->delete($oldContentBlock);
-            }
+            if($backendWorker) {
+                $backendWorker = new $backendWorker($config);
+                $action = $backendWorker->action;
 
-            $oldContentBlock->delete();
+                if($action == 'recreate') {
+                    // Delete data in related tables
+                    $backendWorker->delete($oldContentBlock);
+                    $oldContentBlock->delete();
+                }
+            }
         }
     }
 

@@ -20,25 +20,38 @@
                 <span class="fa fa-icon fa-arrows"></span>
             </td>
             @foreach($fields as $field => $value)
-                <td class="{{ $field == 'image' ? 'text-align-center width-75' : '' }}">
 
-                    @if($field == 'image')
+                @php
+                    $value = '';
+                    if($field != 'image') {
+                        $value = [];
+                        foreach($languages as $language) {
+                            $value[$language->iso_code] = trans_model($model, $language, $field);
+                        }
+                        $value = json_encode($value);
+                    }
+                @endphp
+
+                @if($field == 'image')
+                    <td class="text-align-center width-75" data-value="{{ $value }}" data-field="{{ $field }}">
                         @if($model->image)
                             <img
-                                    src="{{ $model->image->url() }}"
-                                    alt="Image"
-                                    class="img-responsive width-50"
+                                src="{{ $model->image->url() }}"
+                                alt="Image"
+                                class="img-responsive width-50"
                             >
                         @endif
-                    @else
+                    </td>
+                @else
+                    <td class="field" data-value="{{ $value }}" data-field="{{ $field }}">
                         @foreach($languages as $language)
                             @if(count($languages) > 1)
                                 {{ strtoupper($language->iso_code) }}:
                             @endif
                             {{ trans_model($model, $languages->first(), $field) }}
                         @endforeach
-                    @endif
-                </td>
+                    </td>
+                @endif
             @endforeach
             <td style="text-align:center;vertical-align:middle;">
                 @include('content::module_content.widgets.image_blocks.backend_actions', [

@@ -33,6 +33,7 @@ return [
             'backend_template'    => 'content::module_content.widgets.simple_text.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'simple_text.js',
+            'javascript_key'      => 'simple_text',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\SimpleText::class,
         ],
         [
@@ -42,6 +43,7 @@ return [
             'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'image_blocks.js',
+            'javascript_key'      => 'image_blocks',
             'backend_css'         => 'image_blocks.css',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
             'fields'              => ['image', 'title']
@@ -53,6 +55,7 @@ return [
             'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'image_blocks.js',
+            'javascript_key'      => 'image_blocks',
             'backend_css'         => 'image_blocks.css',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
             'fields'              => ['image', 'title', 'subtitle']
@@ -64,6 +67,7 @@ return [
             'backend_template'    => 'content::module_content.widgets.image_blocks.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'image_blocks.js',
+            'javascript_key'      => 'image_blocks',
             'backend_css'         => 'image_blocks.css',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
             'fields'              => ['image']

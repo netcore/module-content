@@ -32,7 +32,8 @@ class AreWidgetsValid implements Rule
             $backendWorker = array_get($config, 'backend_worker');
             
             if ($backendWorker) {
-                foreach( app($backendWorker)->getErrors($widget) as $key => $error ){
+                $backendWorker = new $backendWorker($config);
+                foreach( $backendWorker->getErrors($widget) as $key => $error ){
                     $this->errors[$key] = $error;
                 }
             }

@@ -76,10 +76,11 @@
                 @endphp
 
                 @include('content::module_content.entries.form.widget_tr_template', [
-                    'id'         => $contentBlock->id,
-                    'key'        => $contentBlock->config->key,
-                    'withBorder' => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                    'template'   => $template
+                    'id'            => $contentBlock->id,
+                    'key'           => $contentBlock->config->key,
+                    'javascriptKey' => $contentBlock->config->javascript_key,
+                    'withBorder'    => $contentBlock->config->backend_with_border ? 'with-border' : '',
+                    'template'      => $template
                 ])
             @endforeach
         @endif

@@ -42,23 +42,33 @@ onWidgetAdded['image_blocks'] = function(widgetTr) {
  */
 widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
-    return {};
-    /*
-    var translations = {};
+    var blocks = [];
 
-    $(widgetTr).find('.summernote').each(function(index, object){
-        var language = $(object).data('language');
-        var content = $(object).val();
+    $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
 
-        translations[language] = {
-            'content': content
-        };
+        var id = $(tr).data('id');
+        var order = (index+1);
+        var attributes = {};
+
+        $(tr).find('td.field').each(function(i, td){
+
+            var attribute = $(td).data('field');
+            var value = $(td).data('value');
+
+            attributes[attribute] = value;
+        });
+
+        blocks.push({
+            'id': id,
+            'order': order,
+            'attributes': attributes
+        });
     });
 
     return {
-        'translations': translations
+        'html_block_id': $(widgetTr).data('html_block_id'), // @TODO
+        'blocks': blocks
     };
-    */
 };
 
 (function(){
@@ -122,6 +132,59 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         initSortable(table);
     });
 
+    var getFieldsJsonValue = function(btn){
+
+        var translatableFields = [];
+        var regularFields = [];
+        $(btn).closest('.add-new-container').find('input').each(function(index, input){
+
+            var field = $(input).data('field');
+
+            var locale = $(input).data('locale');
+            if(locale) {
+                translatableFields.push(field);
+            } else {
+                regularFields.push(field);
+            }
+        });
+
+        var fieldsJsonValue = {};
+
+        $(translatableFields).each(function(i, field){
+
+            var jsonValue = {};
+
+            $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
+
+                var locale = $(input).data('locale');
+                var field = $(input).data('field');
+                var value = $(input).val();
+
+                if( jsonValue[locale] === undefined ) {
+                    jsonValue[locale] = {};
+                }
+
+                jsonValue[locale][field] = value;
+            });
+
+            fieldsJsonValue[field] = jsonValue;
+        });
+
+        $(regularFields).each(function(i, field){
+
+            var jsonValue = {};
+
+            $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
+                var value = $(input).val();
+                jsonValue['value'] = value;
+            });
+
+            fieldsJsonValue[field] = jsonValue;
+        });
+
+        return fieldsJsonValue;
+    };
+
     var addNewRow = function(btn){
 
         var modelId = randomString();
@@ -138,11 +201,16 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         html += '</td>';
 
         // For each input - one td
+        var fieldsJsonValue = getFieldsJsonValue(btn);
+
         $(btn).closest('.add-new-container').find('input').each(function(index, input){
+
             var value = $(input).val();
             var type = $(input).attr('type');
+            var field = $(input).data('field');
+            var jsonValue = JSON.stringify(fieldsJsonValue[field]);
 
-            html += '<td>';
+            html += '<td class="field" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '">';
 
             if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
                 html += value;
