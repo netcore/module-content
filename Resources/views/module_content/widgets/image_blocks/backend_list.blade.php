@@ -41,24 +41,17 @@
                 </td>
             @endforeach
             <td style="text-align:center;vertical-align:middle;">
-                <a
-                        class="btn btn-xs btn-danger confirm-action"
-                        data-title="Confirmation"
-                        data-text="Do you really want to delete this block?"
-                        data-confirm-button-text="Delete"
-                        {{--
-                            Should be without ajax
-                            data-method="DELETE"
-                            data-href="{{ route('admin.advertisements.images.destroy', [$advertisement, $model]) }}"
-                        --}}
-                        data-success-title="Success"
-                        data-success-text="Block was deleted"
-                        data-fade-out-selector=".fade-out-{{ $model->id }}"
-                >
-                    Delete
-                </a>
+                @include('content::module_content.widgets.image_blocks.backend_actions', [
+                    'modelId' => $model->id
+                ])
             </td>
         </tr>
     @endforeach
     </tbody>
 </table>
+
+<script type="text/template" id="image-block-actions-template">
+    @include('content::module_content.widgets.image_blocks.backend_actions', [
+        'modelId' => 'modelId'
+    ])
+</script>

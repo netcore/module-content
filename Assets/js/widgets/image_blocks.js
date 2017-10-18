@@ -62,5 +62,87 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 };
 
 (function(){
-    console.log('Image block code');
+
+    var randomString = function() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    };
+
+    var clearAddNewImageBlockForm = function(btn){
+        // Revert "Add" button
+        $(btn).closest('.add-new-container').find('.add-new-image-block-button').show();
+
+        // Empty input fields
+        $(btn).closest('.add-new-container').find('.add-new-image-block-table input').each(function(index, input){
+            $(input).val(null);
+        });
+
+        // Hide form
+        $(btn).closest('.add-new-container').find('.add-new-image-block-table').hide();
+    };
+
+    var replaceAll = function(search, replacement, source) {
+        return source.split(search).join(replacement);
+    };
+
+    var addNewRow = function(btn){
+
+        var modelId = randomString();
+
+        // Add new row
+        var html = '<tr class="fade-out-' + modelId + '" data-id="' + modelId + '">';
+
+        var actionsTemplate = $('#image-block-actions-template').html();
+        actionsTemplate = replaceAll('modelId', modelId, actionsTemplate);
+
+        // Handler for dragndrop
+        html += '<td class="text-align-center vertical-align-middle">';
+        html += '<span class="fa fa-icon fa-arrows"></span>';
+        html += '</td>';
+
+        // For each input - one td
+        $(btn).closest('.add-new-container').find('input').each(function(index, input){
+            var value = $(input).val();
+            var type = $(input).attr('type');
+
+            html += '<td>';
+
+            if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
+                html += value;
+            } else if( type === 'file' && value ) {
+                var src = URL.createObjectURL( input.files[0] );
+                html += '<img class="img-responsive width-50" src="' + src + '">';
+            }
+
+            html += '</td>';
+        });
+
+        // Actions
+        html += '<td class="text-align-center vertical-align-middle">';
+        html += actionsTemplate;
+        html += '</td>';
+
+        html += '</tr>';
+
+        $(btn).closest('.template-container-body').find('.image-blocks-table tr:last').after(html);
+    };
+
+    $('body').on('click', '.add-new-image-block-button', function(){
+        $(this).hide();
+        $(this).closest('.add-new-container').find('.add-new-image-block-table').fadeIn();
+    });
+
+    $('body').on('click', '.add-new-image-block-cancel', function(){
+        clearAddNewImageBlockForm(this);
+    });
+
+    $('body').on('click', '.add-new-image-block-submit', function(){
+        addNewRow(this);
+        clearAddNewImageBlockForm(this);
+    });
 })();
