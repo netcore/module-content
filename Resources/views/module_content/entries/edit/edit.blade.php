@@ -1,7 +1,7 @@
 @extends('admin::layouts.master')
 
 @section('styles')
-    <link rel="stylesheet" href="/assets/content/css/entries/form.css">
+    @include('content::module_content.entries.form.styles')
 @endsection
 
 @section('scripts')

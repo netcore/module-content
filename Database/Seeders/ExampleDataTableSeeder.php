@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
+use Modules\Content\Models\ImageBlock;
 use Modules\Content\Models\Section;
 use Netcore\Translator\Models\Language;
 use Netcore\Translator\Helpers\TransHelper;
@@ -21,6 +22,8 @@ class ExampleDataTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('netcore_content__html_blocks')->delete();
+        DB::table('netcore_content__image_blocks')->delete();
 
         DB::table('netcore_content__entries')->delete();
         DB::table('netcore_content__channels')->delete();
@@ -207,6 +210,7 @@ class ExampleDataTableSeeder extends Seeder
 
         $entry->updateTranslations($entryTranslations);
 
+        // Simple text
         $htmlBlock = HtmlBlock::create([]);
         $htmlBlock->storeTranslations($this->translateKeyValuePairsToAllLocales([
             'content' => $exampleContent
@@ -217,6 +221,73 @@ class ExampleDataTableSeeder extends Seeder
             'widget' => 'simple_text',
             'data'   => [
                 'html_block_id' => $htmlBlock->id
+            ]
+        ]);
+
+        // Image blocks
+        $imageBlock = ImageBlock::create([]);
+        $imageBlock->storeTranslations($this->translateKeyValuePairsToAllLocales([
+            'title'    => 'Some title',
+            'subtitle' => 'Subtitle'
+        ]));
+
+        $imageBlockItems = [
+            [
+                'order' => 1,
+                'image' => resource_path('seed_images/widgets/statistics/pawn-loans.svg'),
+                'translations' => $this->translateKeyValuePairsToAllLocales([
+                    'title' => '43%',
+                    'subtitle' => 'Pawn loans'
+                ])
+            ],
+            [
+                'order' => 2,
+                'image' => resource_path('seed_images/widgets/statistics/consumer-loans.svg'),
+                'translations' => $this->translateKeyValuePairsToAllLocales([
+                    'title' => '57%',
+                    'subtitle' => 'Consumer loans'
+                ])
+            ],
+            [
+                'order' => 3,
+                'image' => resource_path('seed_images/widgets/statistics/total-numbers.svg'),
+                'translations' => $this->translateKeyValuePairsToAllLocales([
+                    'title' => '2 100 100+',
+                    'subtitle' => 'Total number of loans issued'
+                ])
+            ],
+            [
+                'order' => 4,
+                'image' => resource_path('seed_images/widgets/statistics/growth-in-net-loans.svg'),
+                'translations' => $this->translateKeyValuePairsToAllLocales([
+                    'title' => '55%',
+                    'subtitle' => 'Growth in net loans y-o-y, 2016E'
+                ])
+            ]
+        ];
+
+        foreach($imageBlockItems as $imageBlockItemData) {
+
+            $image = array_get($imageBlockItemData, 'image');
+            $imageCopy = str_replace('.svg', str_random(5) . '_copy.svg', $image);
+            copy($image, $imageCopy);
+
+            $imageBlockItemData['image'] = $imageCopy;
+
+            $imageBlockItem = $imageBlock->items()->create(
+                array_only($imageBlockItemData, ['order', 'image' ]) // todo add image
+            );
+
+            $imageBlockItem->storeTranslations(
+                array_get($imageBlockItemData, 'translations', [])
+            );
+        }
+
+        $entry->contentBlocks()->create([
+            'order'  => 2,
+            'widget' => 'statistics',
+            'data'   => [
+                'image_block_id' => $imageBlock->id
             ]
         ]);
 

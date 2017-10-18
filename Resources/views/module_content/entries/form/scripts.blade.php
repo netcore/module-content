@@ -21,14 +21,22 @@
     var widgetDataCollectors = {};
 </script>
 
-@foreach($widgetData as $data)
-    @if( array_get($data, 'backend_javascript') )
-        <script src="/assets/content/js/widgets/{{ array_get($data, 'backend_javascript') }}"></script>
-    @endif
+@php
+    $jsFiles = [];
+    foreach($widgetData as $data) {
+        $file = array_get($data, 'backend_javascript');
+        if( $file && !in_array($file, $jsFiles) ) {
+            $jsFiles[] = $file;
+        }
+    }
+@endphp
+
+@foreach($jsFiles as $file)
+    <script src="/assets/content/js/widgets/{{ $file }}"></script>
 @endforeach
 
 <script id="widget-tr-template" type="text/template">
-        @include('content::module_content.entries.form.widget_tr_template')
+    @include('content::module_content.entries.form.widget_tr_template')
 </script>
 
 <script src="/assets/content/js/entries/form.js"></script>

@@ -37,7 +37,10 @@ class ContentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Load stapler (it is not shipped with package auto-discovery)
+        $this->app->register(
+            \Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class
+        );
     }
 
     /**

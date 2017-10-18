@@ -28,13 +28,14 @@ class Config extends PassThrough
      */
     public function __get($name)
     {
-        return array_get($this->fromConfig(), $name);
+        return array_get($this->all(), $name);
     }
 
     /**
      * @return mixed
      */
-    private function fromConfig() {
+    public function all()
+    {
         $config = collect(config('module_content.widgets'))->where('key', $this->contentBlock->widget)->first();
         return $config;
     }

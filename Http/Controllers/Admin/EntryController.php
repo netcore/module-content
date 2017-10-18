@@ -119,7 +119,8 @@ class EntryController extends Controller
 
             $composed = [];
             if ($worker) {
-                $composed = app($worker)->backendTemplateComposer([]);
+                $worker = new $worker($widget);
+                $composed = $worker->backendTemplateComposer([]);
             }
 
             if ($view) {

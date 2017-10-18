@@ -7,6 +7,20 @@ use Netcore\Translator\Helpers\TransHelper;
 
 class ImageBlock implements BackendWorkerInterface
 {
+    /**
+     * @var array
+     */
+    private $config = [];
+
+    /**
+     * ImageBlock constructor.
+     *
+     * @param $config
+     */
+    public function __construct($config)
+    {
+        $this->config = $config;
+    }
 
     /**
      *
@@ -125,10 +139,19 @@ class ImageBlock implements BackendWorkerInterface
             }
         }
 
-        return [
-            'imageBlock'   => $imageBlock,
-            'languages'    => $languages,
-            'translations' => $translations
-        ];
+        $configuredFields = array_get($this->config, 'fields');
+        $fields = [];
+        if($imageBlock) {
+            foreach($configuredFields as $configuredField) {
+                $fields[$configuredField] = object_get($imageBlock, $configuredField);
+            }
+        }
+
+        return compact(
+            'imageBlock',
+            'languages',
+            'translations',
+            'fields'
+        );
     }
 }

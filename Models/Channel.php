@@ -5,7 +5,7 @@ namespace Modules\Content\Models;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\Channel\Storage;
-use Modules\Content\Traits\SyncTranslations;
+use Modules\Admin\Traits\SyncTranslations;
 use Modules\Content\Translations\ChannelTranslation;
 use Modules\Crud\Traits\CRUDModel;
 
