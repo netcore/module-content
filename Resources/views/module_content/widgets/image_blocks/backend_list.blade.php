@@ -7,7 +7,7 @@
         @foreach($fields as $field => $value)
             <th {{ $field == 'image' ? 'text-align-center' : '' }}>{{ ucfirst($field) }}</th>
         @endforeach
-        <th>Actions</th>
+        <th class="text-align-center">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -53,7 +53,7 @@
                     </td>
                 @endif
             @endforeach
-            <td style="text-align:center;vertical-align:middle;">
+            <td style="text-align:center;vertical-align:middle;width:150px;">
                 @include('content::module_content.widgets.image_blocks.backend_actions', [
                     'modelId' => $model->id
                 ])
