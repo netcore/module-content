@@ -80,24 +80,34 @@ class Storage extends PassThrough
                 $backendWorker = new $backendWorker($config);
                 $action = $backendWorker->action;
 
-                if($action == 'recreate') {
-                    $frontendData = (array)array_get($contentBlock, 'data', []);
-                    $data = $backendWorker->store($frontendData);
-                }
-
                 if($action == 'update') {
                     $frontendData = (array)array_get($contentBlock, 'data', []);
                     $data = $backendWorker->update($frontendData);
+
+                    /*
+                    $contentBlockData = [
+                        'order'  => ($index + 1),
+                        'widget' => $key,
+                        'data'   => $data
+                    ];
+
+                    $entry->contentBlocks()->create($contentBlockData);
+                    */
+                }
+
+                if($action == 'recreate') {
+                    $frontendData = (array)array_get($contentBlock, 'data', []);
+                    $data = $backendWorker->store($frontendData);
+
+                    $contentBlockData = [
+                        'order'  => ($index + 1),
+                        'widget' => $key,
+                        'data'   => $data
+                    ];
+
+                    $entry->contentBlocks()->create($contentBlockData);
                 }
             }
-
-            $contentBlockData = [
-                'order'  => ($index + 1),
-                'widget' => $key,
-                'data'   => $data
-            ];
-
-            $entry->contentBlocks()->create($contentBlockData);
         }
     }
 

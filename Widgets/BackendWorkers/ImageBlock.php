@@ -109,7 +109,7 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function update(Array $frontendData): Array
     {
-        return; // @TODO
+        return []; // @TODO
 
         $blocks = (array) array_get($frontendData, 'blocks', []);
         foreach($blocks as $block){

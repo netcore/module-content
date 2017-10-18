@@ -110,8 +110,6 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             handle : '.image-blocks-handle',
             onDrop : function($item, container, _super, event) {
 
-                console.log('widgets-x drop');
-
                 $item.removeClass(container.group.options.draggedClass).removeAttr("style");
                 $("body").removeClass(container.group.options.bodyClass);
 

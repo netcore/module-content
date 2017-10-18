@@ -62,8 +62,8 @@ $(function() {
             html = replaceAll('{{ withBorder }}', withBorder, html);
             html = replaceAll('{{ template }}', template, html);
 
-            if( $('#widgets-table tbody tr').length ) {
-                $('#widgets-table tbody tr:last').after(html);
+            if( $('#widgets-table tbody .widget-tr').length ) {
+                $('#widgets-table tbody .widget-tr:last').after(html);
             } else {
                 $('#widgets-table tbody').html(html);
             }
@@ -73,7 +73,7 @@ $(function() {
 
             var callable = onWidgetAdded[key];
             if(callable){
-                var widgetTr = $('#widgets-table tr:last');
+                var widgetTr = $('#widgets-table .widget-tr:last');
                 callable(widgetTr);
             }
         });
