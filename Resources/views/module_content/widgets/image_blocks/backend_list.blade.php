@@ -9,9 +9,9 @@
 >
     <thead>
     <tr>
-        <th>Reorder</th>
+        <th class="width-50">Reorder</th>
         @foreach($fields as $field => $value)
-            <th {{ $field == 'image' ? 'text-align-center' : '' }}>{{ ucfirst($field) }}</th>
+            <th class="{{ $field == 'image' ? 'text-align-center width-75' : '' }}">{{ ucfirst($field) }}</th>
         @endforeach
         <th class="text-align-center width-150">Actions</th>
     </tr>
@@ -67,6 +67,14 @@
                 </td>
             </tr>
         @endforeach
+
+        @if( !$imageBlock->items->count() )
+            <tr class="no-blocks-tr">
+                <td colspan="100" class="text-align-center">
+                    No items added...
+                </td>
+            </tr>
+        @endif
     @else
         <tr class="no-blocks-tr">
             <td colspan="100" class="text-align-center">

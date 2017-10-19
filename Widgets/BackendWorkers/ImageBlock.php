@@ -194,7 +194,7 @@ class ImageBlock implements BackendWorkerInterface
         $imageBlock->items()->whereIn('id', $deletableItemIds)->delete();
 
         return [
-            'image_block_id' => $imageBlockId
+            'image_block_id' => $imageBlock->id
         ];
     }
 
@@ -237,7 +237,7 @@ class ImageBlock implements BackendWorkerInterface
 
         $imageBlockId = array_get($data, 'image_block_id', null);
         $imageBlock = \Modules\Content\Models\ImageBlock::find($imageBlockId);
-        if ($imageBlockId) {
+        if ($imageBlock) {
             foreach ($imageBlock->translations as $translation) {
                 $translations[$translation->locale] = [
                     'title'    => $translation->title,
