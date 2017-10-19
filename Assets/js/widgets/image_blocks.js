@@ -46,7 +46,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
     $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
 
-        var id = $(tr).data('id');
+        var imageBlockItemId = $(tr).data('image-block-item-id');
         var order = (index+1);
         var attributes = {};
 
@@ -59,14 +59,14 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         });
 
         blocks.push({
-            'id': id,
+            'imageBlockItemId': imageBlockItemId,
             'order': order,
             'attributes': attributes
         });
     });
 
     return {
-        'html_block_id': $(widgetTr).data('html_block_id'), // @TODO
+        'imageBlockId': $(widgetTr).find('.image-blocks-table').data('image-block-id'),
         'blocks': blocks
     };
 };
@@ -188,7 +188,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         var modelId = randomString();
 
         // Add new row
-        var html = '<tr class="fade-out-' + modelId + ' image-blocks-tr" data-id="' + modelId + '">';
+        var html = '<tr class="fade-out-' + modelId + ' image-blocks-tr" data-image-block-item-id="' + modelId + '">';
 
         var actionsTemplate = $('#image-block-actions-template').html();
         actionsTemplate = replaceAll('modelId', modelId, actionsTemplate);

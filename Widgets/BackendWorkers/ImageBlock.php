@@ -109,13 +109,71 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function update(Array $frontendData): Array
     {
-        return []; // @TODO
+        $imageBlockId = array_get($frontendData, 'imageBlockId');
 
-        $blocks = (array) array_get($frontendData, 'blocks', []);
-        foreach($blocks as $block){
-            $block = (array) $block;
-            // @TOOD we need html_block_id
+        if (is_numeric($imageBlockId)) {
+            // Real id. Already exists in DB.
+            $imageBlock = \Modules\Content\Models\ImageBlock::with('items')->find($imageBlockId);
+        } else {
+            // $imageBlockId is random string, something like "Mfjxi"
+            $imageBlock = \Modules\Content\Models\ImageBlock::create([]);
+            // todo - translatable title
         }
+
+        $languages = TransHelper::getAllLanguages();
+        $blocks = (array)array_get($frontendData, 'blocks', []);
+
+        foreach ($blocks as $index => $block) {
+
+            $block = (array)$block;
+            $attributes = (array)array_get($block, 'attributes');
+
+            // Format ImageBlockItem translations
+            $imageBlockItemTranslations = [];
+            $fields = array_keys($attributes);
+            $locales = $languages->pluck('iso_code')->toArray();
+            foreach ($locales as $locale) {
+                foreach ($fields as $field) {
+                    $fieldData = (array)array_get($attributes, $field, []);
+                    $value = array_get($fieldData, $locale, '');
+                    $imageBlockItemTranslations[$locale][$field] = $value;
+                }
+            }
+
+            $imageBlockItemId = (int)array_get($block, 'imageBlockItemId');
+            if (is_numeric($imageBlockItemId)) {
+
+                // Real id. Already exists in DB.
+
+                $imageBlockItem = $imageBlock->items->where('id', $imageBlockItemId)->first();
+
+                if (!$imageBlockItem) {
+                    continue;
+                }
+
+                // Order
+                $imageBlockItem->update([
+                    'order' => ($index + 1)
+                ]);
+
+            } else {
+                // Create new entry
+                // $imageBlockItemId is random string, something like "Mfjxi"
+                $imageBlockItem = $imageBlock->items()->create([
+                    'order' => ($index + 1)
+                ]);
+            }
+
+            // Translations
+            $imageBlockItem->updateTranslations($imageBlockItemTranslations);
+
+            // Image
+            // todo
+        }
+
+        return [
+            'image_block_id' => $imageBlockId
+        ];
     }
 
     /**
@@ -170,8 +228,8 @@ class ImageBlock implements BackendWorkerInterface
 
         $configuredFields = array_get($this->config, 'fields');
         $fields = [];
-        if($imageBlock) {
-            foreach($configuredFields as $configuredField) {
+        if ($imageBlock) {
+            foreach ($configuredFields as $configuredField) {
                 $fields[$configuredField] = object_get($imageBlock, $configuredField);
             }
         }

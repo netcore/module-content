@@ -2,6 +2,7 @@
 
 namespace Modules\Content\PassThroughs\Entry;
 
+use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
 use Modules\Content\PassThroughs\PassThrough;
@@ -45,23 +46,77 @@ class Storage extends PassThrough
             'is_active' => array_has($requestData, 'is_active')
         ]);
 
-        // Delete old widgets
-        $this->deleteOldContentBlocks();
 
-        // Store new widgets
-        $this->storeNewContentBlocks($contentBlocks);
+        $existingContentBlockIds = $entry->contentBlocks()->pluck('id')->toArray();
+        $receivedContentBlockIds = [];
+
+        foreach ($contentBlocks as $index => $contentBlock) {
+
+            $contentBlockId = array_get($contentBlock, 'contentBlockId');
+            $widget = array_get($contentBlock, 'widget');
+
+            if (is_integer($contentBlockId)) {
+                // $contentBlockId is real id in DB.
+
+                $receivedContentBlockIds[] = $contentBlockId;
+
+                $existingContentBlock = $entry->contentBlocks()->find($contentBlockId);
+                if (!$existingContentBlock) {
+                    continue;
+                }
+
+                $existingContentBlock->update([
+                    'order' => ($index + 1)
+                ]);
+
+                $this->storeNewContentBlock($existingContentBlock, $contentBlock, $index);
+
+            } else {
+                // $contentBlockId is random string, something like "Mfjxi"
+
+                $newContentBlock = $entry->contentBlocks()->create([
+                    'widget' => $widget,
+                    'order'  => ($index + 1),
+                    'data'   => []
+                ]);
+
+                $this->storeNewContentBlock($newContentBlock, $contentBlock, $index);
+            }
+        }
+
+        // Delete blocks that we didnt receive
+        $deletableContentBlockIds = [];
+        foreach ($existingContentBlockIds as $existingContentBlockId) {
+            if (!in_array($existingContentBlockId, $receivedContentBlockIds)) {
+                $deletableContentBlockIds[] = $existingContentBlockId;
+            }
+        }
+
+        $deletableContentBlocks = $entry->contentBlocks()->whereIn('id', $deletableContentBlockIds)->get();
+        foreach ($deletableContentBlocks as $deletableContentBlock) {
+            $key = $deletableContentBlock->widget;
+            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $backendWorker = array_get($config, 'backend_worker');
+            if ($backendWorker) {
+                $backendWorker = new $backendWorker($config);
+                $backendWorker->delete($deletableContentBlock); // Delete data in related tables
+                $deletableContentBlock->delete();
+            }
+        }
 
         // Store translations
         $entryTranslations = (array)array_get($requestData, 'translations', []);
-        $this->storeEntryTranslation($entryTranslations);
+        $this->storeEntryTranslations($entryTranslations);
 
         return $entry;
     }
 
     /**
-     * @param array $contentBlocks
+     * @param ContentBlock $existingContentBlock
+     * @param array $contentBlock
+     * @param Int $index
      */
-    private function storeNewContentBlocks(Array $contentBlocks)
+    private function storeNewContentBlock(ContentBlock $existingContentBlock, Array $contentBlock, Int $index)
     {
         // Save widgets and their data
         // 1. Put data in $entry->content_blocks table
@@ -69,70 +124,41 @@ class Storage extends PassThrough
 
         $entry = $this->entry;
 
-        foreach ($contentBlocks as $index => $contentBlock) {
+        $key = array_get($contentBlock, 'widget');
+        $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+        $backendWorker = array_get($config, 'backend_worker');
 
-            $key = array_get($contentBlock, 'widget');
-            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
-            $backendWorker = array_get($config, 'backend_worker');
+        if ($backendWorker) {
+            $backendWorker = new $backendWorker($config);
+            $action = $backendWorker->action;
 
-            $data = [];
-            if($backendWorker) {
-                $backendWorker = new $backendWorker($config);
-                $action = $backendWorker->action;
+            if ($action == 'update') {
+                $frontendData = (array)array_get($contentBlock, 'data', []);
+                $data = $backendWorker->update($frontendData, $entry);
 
-                if($action == 'update') {
-                    $frontendData = (array)array_get($contentBlock, 'data', []);
-                    $data = $backendWorker->update($frontendData);
-
-                    /*
-                    $contentBlockData = [
-                        'order'  => ($index + 1),
-                        'widget' => $key,
-                        'data'   => $data
-                    ];
-
-                    $entry->contentBlocks()->create($contentBlockData);
-                    */
-                }
-
-                if($action == 'recreate') {
-                    $frontendData = (array)array_get($contentBlock, 'data', []);
-                    $data = $backendWorker->store($frontendData);
-
-                    $contentBlockData = [
-                        'order'  => ($index + 1),
-                        'widget' => $key,
-                        'data'   => $data
-                    ];
-
-                    $entry->contentBlocks()->create($contentBlockData);
-                }
+                $existingContentBlock->update([
+                    'order'  => ($index + 1),
+                    'widget' => $key,
+                    'data'   => $data
+                ]);
             }
-        }
-    }
 
-    /**
-     *
-     */
-    public function deleteOldContentBlocks()
-    {
-        $entry = $this->entry;
-        foreach ($entry->contentBlocks as $oldContentBlock) {
+            if ($action == 'recreate') {
 
-            $key = $oldContentBlock->widget;
-            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+                // Delete data in related tables
+                $backendWorker->delete($existingContentBlock);
+                $existingContentBlock->delete();
 
-            $backendWorker = array_get($config, 'backend_worker');
+                $frontendData = (array)array_get($contentBlock, 'data', []);
+                $data = $backendWorker->store($frontendData);
 
-            if($backendWorker) {
-                $backendWorker = new $backendWorker($config);
-                $action = $backendWorker->action;
+                $contentBlockData = [
+                    'order'  => ($index + 1),
+                    'widget' => $key,
+                    'data'   => $data
+                ];
 
-                if($action == 'recreate') {
-                    // Delete data in related tables
-                    $backendWorker->delete($oldContentBlock);
-                    $oldContentBlock->delete();
-                }
+                $entry->contentBlocks()->create($contentBlockData);
             }
         }
     }
@@ -140,7 +166,7 @@ class Storage extends PassThrough
     /**
      * @param array $entryTranslations
      */
-    private function storeEntryTranslation(Array $entryTranslations)
+    private function storeEntryTranslations(Array $entryTranslations)
     {
         $entry = $this->entry;
 

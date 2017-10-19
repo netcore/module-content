@@ -1,5 +1,6 @@
 <table
     class="table table-bordered image-blocks-table"
+    data-image-block-id="{{ $imageBlock->id }}"
 >
     <thead>
     <tr>
@@ -14,7 +15,7 @@
     @foreach( $imageBlock->items->sortBy('order') as $model )
         <tr
                 class="fade-out-{{ $model->id }} image-blocks-tr"
-                data-id="{{ $model->id }}"
+                data-image-block-item-id="{{ $model->id }}"
         >
             <td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle width-50">
                 <span class="fa fa-icon fa-arrows"></span>

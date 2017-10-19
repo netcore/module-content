@@ -16,7 +16,7 @@ $(function() {
                 var id;
 
                 $.each( $(container.el).find('tr'), function (i, tr) {
-                    if( id = $(tr).data('id') ) {
+                    if( id = $(tr).data('content-block-id') ) {
                         order.push( id );
                     }
                 });
@@ -45,20 +45,32 @@ $(function() {
         return source.split(search).join(replacement);
     };
 
+    var randomString = function() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    };
+
     $.get('/admin/content/entries/widgets', function(widgets){
 
         $('body').on('click', '#add-widget-button', function(){
             var key = $('#select-widget option:selected').val();
             var data = widgets[key];
 
-            var id = '';
+            var contentBlockId = randomString();
+            var javascriptKey = data.javascript_key;
             var template = data.backend_template || data.name;
-            
+
             var withBorder = data.backend_with_border ? 'with-border' : '';
 
             var html = $('#widget-tr-template').html();
-            html = replaceAll('{{ id }}', id, html);
+            html = replaceAll('{{ contentBlockId }}', contentBlockId, html);
             html = replaceAll('{{ key }}', key, html);
+            html = replaceAll('{{ javascriptKey }}', javascriptKey, html);
             html = replaceAll('{{ withBorder }}', withBorder, html);
             html = replaceAll('{{ template }}', template, html);
 
@@ -142,11 +154,13 @@ $(function() {
 
             var key = $(o).data('key');
             var javascriptKey = $(o).data('javascript-key');
+            var contentBlockId = $(o).data('contentBlockId');
             var collector = widgetDataCollectors[javascriptKey];
 
             var item = {
-                order: i,
-                widget: key
+                'order': i,
+                'widget': key,
+                'contentBlockId': contentBlockId
             };
 
             if(collector) {

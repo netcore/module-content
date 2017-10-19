@@ -103,7 +103,8 @@ class EntryController extends Controller
 
         return response()->json([
             'success'     => true,
-            'redirect_to' => route('content::content.index')
+            //'redirect_to' => route('content::content.index')
+            'redirect_to' => route('content::entries.edit', $entry)
         ]);
     }
 
