@@ -25,6 +25,7 @@ class CreateNetcoreContentEntriesTable extends Migration
 
             $table->string('layout')->nullable();
             $table->boolean('is_active')->default(0);
+            $table->boolean('is_homepage')->default(0);
 
             $table->softDeletes();
             $table->timestamps();

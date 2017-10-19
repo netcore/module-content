@@ -100,6 +100,14 @@
 </div>
 
 <div class="pull-right">
+
+    Homepage?
+    <span class="hidden-switchery" hidden style="margin-right:10px;">
+        {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 1), [
+            'class' => 'switchery'
+        ]) !!}
+    </span>
+
     Active
     <span class="hidden-switchery" hidden>
         {!! Form::checkbox('is_active', 1, (isset($entry) ? null : 1), [

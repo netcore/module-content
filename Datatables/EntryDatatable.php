@@ -42,13 +42,16 @@ trait EntryDatatable
                 $createdAt = $entry->created_at;
                 return $createdAt ? $createdAt->format('d.m.Y H:i') : '-';
             })
+            ->editColumn('is_homepage', function ($entry) {
+                return view('content::module_content.entries.tds.is_homepage', compact('entry'))->render();
+            })
             ->editColumn('is_active', function ($entry) {
                 return view('content::module_content.entries.tds.is_active', compact('entry'))->render();
             })
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
-            ->rawColumns(['action', 'title', 'slug', 'is_active'])
+            ->rawColumns(['action', 'title', 'slug', 'is_active', 'is_homepage'])
             ->toJson();
     }
 

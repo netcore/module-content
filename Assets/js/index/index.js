@@ -24,13 +24,14 @@ $(function() {
                 { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
                 { data: 'content', name: 'content', orderable: false, searchable: false, class: ''},
                 { data: 'updated_at', name: 'updated_at', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'},
+                { data: 'is_homepage', name: 'is_homepage', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'},
                 { data: 'is_active', name: 'is_active', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'},
                 { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
             ],
             drawCallback: function(){
 
                 // Init switchery
-                $('.changeable-state:visible').each(function(i, switcher) {
+                $('.changeable-state:visible, .regular-switchery').each(function(i, switcher) {
                     new Switchery(switcher);
                 });
             }

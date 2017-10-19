@@ -1,11 +1,22 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
 
-    @foreach($channels as $channel)
-        <li
-            role="presentation"
-            class="{{ $loop->first ? 'active' : '' }}"
+    <li
+        role="presentation"
+        class="active"
+    >
+        <a
+            href="#single-entries"
+            aria-controls="single-entries"
+            role="tab"
+            data-toggle="tab"
         >
+            Single pages
+        </a>
+    </li>
+
+    @foreach($channels as $channel)
+        <li role="presentation">
             <a
                 href="#channel-{{ $channel->id }}"
                 aria-controls="channel-{{ $channel->id }}"
@@ -16,17 +27,6 @@
             </a>
         </li>
     @endforeach
-
-    <li role="presentation">
-        <a
-            href="#single-entries"
-            aria-controls="single-entries"
-            role="tab"
-            data-toggle="tab"
-        >
-            Single pages
-        </a>
-    </li>
 </ul>
 
 <!-- Tab panes -->
@@ -35,7 +35,7 @@
     @foreach($channels as $channel)
         <div
             role="tabpanel"
-            class="tab-pane {{ $loop->first ? 'active' : '' }}"
+            class="tab-pane"
             id="channel-{{ $channel->id }}"
         >
             <div class="above-table">
@@ -62,6 +62,7 @@
                         <th>Slug</th>
                         <th>Content</th>
                         <th>Updated at</th>
+                        <th>Homepage?</th>
                         <th>Active</th>
                         <th>Actions</th>
                     </tr>
@@ -77,7 +78,7 @@
 
     <div
         role="tabpanel"
-        class="tab-pane {{ $channels->count() == 0 ? 'active' : '' }}"
+        class="tab-pane active"
         id="single-entries"
     >
         <div class="above-table">
@@ -100,6 +101,7 @@
                     <th>Slug</th>
                     <th>Content</th>
                     <th>Updated at</th>
+                    <th>Homepage?</th>
                     <th>Active</th>
                     <th>Actions</th>
                 </tr>

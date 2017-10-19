@@ -28,6 +28,7 @@ class Entry extends Model
         'channel_id',
         'section_id',
         'is_active',
+        'is_homepage',
         'layout'
     ];
 

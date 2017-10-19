@@ -53,13 +53,21 @@ class Storage extends PassThrough
         }, $contentBlocks);
 
         // Regular data
+        $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
             'layout'    => array_get($requestData, 'layout'),
 
             // Checkboxes user array_has
-            'is_active' => array_has($requestData, 'is_active')
+            'is_active' => array_has($requestData, 'is_active'),
+            'is_homepage' => $isHomepage
         ]);
 
+        // If this is homepage, then mark other pages as regular ones
+        if($isHomepage) {
+            Entry::where('id', '!=', $entry->id)->update([
+                'is_homepage' => 0
+            ]);
+        }
 
         $existingContentBlockIds = $entry->contentBlocks()->pluck('id')->toArray();
         $receivedContentBlockIds = [];
@@ -198,18 +206,15 @@ class Storage extends PassThrough
 
             $channelId = $entry->channel_id;
             $translations['slug'] = $this->uniqueSlug($slug, $locale, $channelId);
+            $translations['content'] = ''; // Default value
 
             return $translations;
         })->toArray();
-
-        $entry->updateTranslations($entryTranslations);
 
         $contentBlocks = $entry
             ->contentBlocks()
             ->whereWidget('simple_text')
             ->get();
-
-        $entryTranslations = [];
 
         foreach ($contentBlocks as $contentBlock) {
 

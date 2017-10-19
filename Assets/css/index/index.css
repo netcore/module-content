@@ -12,6 +12,14 @@
     width:300px;
 }
 
+.default-cursor{
+    cursor:default;
+}
+
+.default-cursor .switchery{
+    cursor:default;
+}
+
 .width-100{ width: 100px; }
 .width-150{ width: 150px; }
 .width-200{ width: 200px; }
