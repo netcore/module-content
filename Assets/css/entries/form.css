@@ -80,6 +80,12 @@
     height:100%;
 }
 
+#widgets-container .template-container-header span.no-drag{
+    /*
+    cursor:default;
+    */
+}
+
 #widgets-container .template-container-header.has-error a{
     color:white;
 }

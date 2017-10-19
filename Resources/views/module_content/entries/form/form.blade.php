@@ -80,7 +80,8 @@
                     'key'            => $contentBlock->config->key,
                     'javascriptKey'  => $contentBlock->config->javascript_key,
                     'withBorder'     => $contentBlock->config->backend_with_border ? 'with-border' : '',
-                    'template'       => $template
+                    'template'       => $template,
+                    'widgetName'     => $contentBlock->config->name
                 ])
             @endforeach
         @endif

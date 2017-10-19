@@ -63,6 +63,7 @@ $(function() {
 
             var contentBlockId = randomString();
             var javascriptKey = data.javascript_key;
+            var widgetName = data.name;
             var template = data.backend_template || data.name;
 
             var withBorder = data.backend_with_border ? 'with-border' : '';
@@ -73,6 +74,7 @@ $(function() {
             html = replaceAll('{{ javascriptKey }}', javascriptKey, html);
             html = replaceAll('{{ withBorder }}', withBorder, html);
             html = replaceAll('{{ template }}', template, html);
+            html = replaceAll('{{ widgetName }}', widgetName, html);
 
             if( $('#widgets-table tbody .widget-tr').length ) {
                 $('#widgets-table tbody .widget-tr:last').after(html);

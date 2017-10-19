@@ -5,6 +5,7 @@
     $javascriptKey  = isset($javascriptKey) ? $javascriptKey : '{{ javascriptKey }}';
     $withBorder     = isset($withBorder) ? $withBorder : '{{ withBorder }}';
     $template       = isset($template) ? $template : '{{ template }}';
+    $widgetName     = isset($widgetName) ? $widgetName : '{{ widgetName }}';
 @endphp
 
 <tr
@@ -18,7 +19,12 @@
 
             <div class="template-container-header cursor-dragndrop widget-tr-handle">
                 <span class="fa fa-icon fa-arrows"></span>
-                <a class="delete-widget" style="left: {{ (count($languages)-1) * 90 }}px;">Delete</a>
+
+                <span style="left: {{ (count($languages)-1) * 90 }}px;" class="no-drag">
+                    <span class="" style="width:auto;">{{ $widgetName }}</span>
+                    <a class="delete-widget">Delete</a>
+                </span>
+
             </div>
 
             <div class="template-container-body">
