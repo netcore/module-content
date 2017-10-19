@@ -64,6 +64,7 @@ class CreateNetcoreContentImageBlocksTable extends Migration
             $table->string('title')->default('');
             $table->string('subtitle')->default('');
             $table->text('content')->nullable();
+            $table->string('link')->default('');
             $table->text('json')->nullable();
         });
     }

@@ -63,6 +63,7 @@ class ImageBlockItem extends Model implements StaplerableInterface
         'title',
         'subtitle',
         'content',
+        'link',
         'json'
     ];
 

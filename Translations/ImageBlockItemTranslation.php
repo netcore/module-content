@@ -19,6 +19,7 @@ class ImageBlockItemTranslation extends Model
         'title',
         'subtitle',
         'content',
+        'link',
         'json',
         'locale' // This is very important
     ];

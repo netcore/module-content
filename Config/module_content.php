@@ -70,7 +70,7 @@ return [
             'javascript_key'      => 'image_blocks',
             'backend_css'         => 'image_blocks.css',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\ImageBlock::class,
-            'fields'              => ['image']
+            'fields'              => ['image', 'link']
         ],
         /*
         [
