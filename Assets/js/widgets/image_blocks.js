@@ -44,7 +44,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
     var blocks = [];
 
-    $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
+    $(widgetTr).find('.image-blocks-tr:visible').each(function(index, tr){
 
         var imageBlockItemId = $(tr).data('image-block-item-id');
         var order = (index+1);
@@ -158,11 +158,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 var field = $(input).data('field');
                 var value = $(input).val();
 
-                if( jsonValue[locale] === undefined ) {
-                    jsonValue[locale] = {};
-                }
-
-                jsonValue[locale][field] = value;
+                jsonValue[locale] = value;
             });
 
             fieldsJsonValue[field] = jsonValue;

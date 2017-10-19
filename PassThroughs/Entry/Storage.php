@@ -2,6 +2,7 @@
 
 namespace Modules\Content\PassThroughs\Entry;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
@@ -29,6 +30,19 @@ class Storage extends PassThrough
      * @return Entry
      */
     public function update(Array $requestData): Entry
+    {
+        $entry = DB::transaction(function () use ($requestData) {
+            return $this->transaction($requestData);
+        });
+
+        return $entry;
+    }
+
+    /**
+     * @param array $requestData
+     * @return Entry
+     */
+    private function transaction(Array $requestData): Entry
     {
         $entry = $this->entry;
 

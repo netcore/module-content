@@ -120,6 +120,9 @@ class ImageBlock implements BackendWorkerInterface
             // todo - translatable title
         }
 
+        $existingItemIds = $imageBlock->items()->pluck('id')->toArray();
+        $receivedItemIds = [];
+
         $languages = TransHelper::getAllLanguages();
         $blocks = (array)array_get($frontendData, 'blocks', []);
 
@@ -140,10 +143,11 @@ class ImageBlock implements BackendWorkerInterface
                 }
             }
 
-            $imageBlockItemId = (int)array_get($block, 'imageBlockItemId');
+            $imageBlockItemId = array_get($block, 'imageBlockItemId');
             if (is_numeric($imageBlockItemId)) {
 
                 // Real id. Already exists in DB.
+                $receivedItemIds[] = $imageBlockItemId;
 
                 $imageBlockItem = $imageBlock->items->where('id', $imageBlockItemId)->first();
 
@@ -157,6 +161,7 @@ class ImageBlock implements BackendWorkerInterface
                 ]);
 
             } else {
+
                 // Create new entry
                 // $imageBlockItemId is random string, something like "Mfjxi"
                 $imageBlockItem = $imageBlock->items()->create([
@@ -170,6 +175,23 @@ class ImageBlock implements BackendWorkerInterface
             // Image
             // todo
         }
+
+        // Delete items that we didnt receive
+        $deletableItemIds = [];
+        foreach ($existingItemIds as $existingItemId) {
+            if (!in_array($existingItemId, $receivedItemIds)) {
+                $deletableItemIds[] = $existingItemId;
+            }
+        }
+
+        $deletableItems = $imageBlock->items()->whereIn('id', $deletableItemIds)->get();
+        foreach ($deletableItems as $deletableItem) {
+            if ($deletableItem->image) {
+                $deletableItem->image = STAPLER_NULL;
+                $deletableItem->save();
+            }
+        }
+        $imageBlock->items()->whereIn('id', $deletableItemIds)->delete();
 
         return [
             'image_block_id' => $imageBlockId
