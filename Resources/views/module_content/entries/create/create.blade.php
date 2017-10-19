@@ -27,10 +27,8 @@
             </div>
 
             <a
-                class="btn btn-lg btn-success m-t-3 pull-xs-right disabled"
-                {{--
+                class="btn btn-lg btn-success m-t-3 pull-xs-right"
                 id="submit-button"
-                --}}
             >
                 Save
             </a>

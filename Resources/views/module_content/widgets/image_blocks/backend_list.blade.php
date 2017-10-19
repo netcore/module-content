@@ -41,12 +41,14 @@
 
                     @if($field == 'image')
                         <td class="text-align-center width-75" data-value="{{ $value }}" data-field="{{ $field }}">
-                            @if($model->image)
+                            @if($model->image_file_name)
                                 <img
                                     src="{{ $model->image->url() }}"
                                     alt="Image"
                                     class="img-responsive width-50"
                                 >
+                            @else
+                                No image
                             @endif
                         </td>
                     @else
