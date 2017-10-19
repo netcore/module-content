@@ -250,10 +250,9 @@ class ImageBlock implements BackendWorkerInterface
 
         $configuredFields = array_get($this->config, 'fields');
         $fields = [];
-        if ($imageBlock) {
-            foreach ($configuredFields as $configuredField) {
-                $fields[$configuredField] = object_get($imageBlock, $configuredField);
-            }
+        foreach ($configuredFields as $configuredField) {
+            $value = $imageBlock ? object_get($imageBlock, $configuredField) : '';
+            $fields[$configuredField] = $value;
         }
 
         return compact(

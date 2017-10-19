@@ -223,7 +223,15 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         html += '</tr>';
 
-        $(btn).closest('.template-container-body').find('.image-blocks-table tr:last').after(html);
+        var containerBody = $(btn).closest('.template-container-body');
+        $(containerBody).find('.image-blocks-table .no-blocks-tr').remove();
+        var countOfTrsInBody = $(containerBody).find('.image-blocks-table tbody tr').length;
+
+        if(countOfTrsInBody) {
+            $(containerBody).find('.image-blocks-table tbody tr:last').after(html);
+        } else {
+            $(containerBody).find('.image-blocks-table tbody').html(html);
+        }
 
         var table = $(btn).closest('.template-container-body').find('.image-blocks-table');
         initSortable(table);
