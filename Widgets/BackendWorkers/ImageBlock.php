@@ -2,6 +2,7 @@
 
 namespace Modules\Content\Widgets\BackendWorkers;
 
+use Illuminate\Support\Collection;
 use Modules\Content\Models\ContentBlock;
 use Netcore\Translator\Helpers\TransHelper;
 
@@ -18,6 +19,11 @@ class ImageBlock implements BackendWorkerInterface
     private $config = [];
 
     /**
+     * @var Collection
+     */
+    private $languages;
+
+    /**
      * ImageBlock constructor.
      *
      * @param $config
@@ -25,6 +31,7 @@ class ImageBlock implements BackendWorkerInterface
     public function __construct($config)
     {
         $this->config = $config;
+        $this->languages = TransHelper::getAllLanguages();
     }
 
     /**
@@ -117,7 +124,6 @@ class ImageBlock implements BackendWorkerInterface
         $existingItemIds = $imageBlock->items()->pluck('id')->toArray();
         $receivedItemIds = [];
 
-        $languages = TransHelper::getAllLanguages();
         $blocks = (array)array_get($frontendData, 'blocks', []);
 
         foreach ($blocks as $index => $block) {
@@ -128,7 +134,7 @@ class ImageBlock implements BackendWorkerInterface
             // Format ImageBlockItem translations
             $imageBlockItemTranslations = [];
             $fields = array_keys($attributes);
-            $locales = $languages->pluck('iso_code')->toArray();
+            $locales = $this->languages->pluck('iso_code')->toArray();
             foreach ($locales as $locale) {
                 foreach ($fields as $field) {
 
@@ -240,11 +246,13 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function backendTemplateComposer(Array $data): Array
     {
-        $languages = TransHelper::getAllLanguages();
+        $languages = $this->languages;
         $translations = [];
 
         $imageBlockId = array_get($data, 'image_block_id', null);
-        $imageBlock = \Modules\Content\Models\ImageBlock::find($imageBlockId);
+        $imageBlock = \Modules\Content\Models\ImageBlock::with([
+            'items.translations'
+        ])->find($imageBlockId);
         if ($imageBlock) {
             foreach ($imageBlock->translations as $translation) {
                 $translations[$translation->locale] = [
