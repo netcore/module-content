@@ -53,13 +53,15 @@ class ImageBlock implements BackendWorkerInterface
                 $name = array_get($imageAttribute, 'file');
                 if ($name) {
                     $uploadedFile = request()->file($name);
-                    $isImage = substr($uploadedFile->getMimeType(), 0, 5) == 'image';
-                    if (!$isImage) {
+                    if($uploadedFile) {
+                        $isImage = substr($uploadedFile->getMimeType(), 0, 5) == 'image';
+                        if (!$isImage) {
 
-                        $tdId = $trIndex . '-image';
-                        $key = 'tableCell.' . $contentBlockIndex . '.' . $tdId;
+                            $tdId = $trIndex . '-image';
+                            $key = 'tableCell.' . $contentBlockIndex . '.' . $tdId;
 
-                        $errors[$key] = 'Must be an image';
+                            $errors[$key] = 'Must be an image';
+                        }
                     }
                 }
             }
@@ -173,8 +175,9 @@ class ImageBlock implements BackendWorkerInterface
             $imageAttribute = (array)array_get($attributes, 'image', []);
             if ($imageAttribute) {
                 $name = array_get($imageAttribute, 'file');
-                if ($name) {
-                    $uploadedFile = request()->file($name);
+                $uploadedFile = request()->file($name);
+                info($name);
+                if ($name AND $uploadedFile) {
                     $imageBlockItem->image = $uploadedFile;
                     $imageBlockItem->save();
                 }

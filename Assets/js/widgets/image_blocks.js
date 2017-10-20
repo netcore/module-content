@@ -91,6 +91,10 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             $(input).val(null);
         });
 
+        // Remove errors
+        $(btn).closest('.add-new-container').find('.has-error').removeClass('has-error');
+        $(btn).closest('.add-new-container').find('.error-span').text('');
+
         // Hide form
         $(btn).closest('.add-new-container').find('.add-new-image-block-table').hide();
     };
@@ -168,23 +172,29 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var jsonValue = {};
 
             $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
+
                 var type = $(input).attr('type');
+                var value = $(input).val();
+
                 if(type == 'file') {
 
-                    var imageName = 'image-' + randomString(); // Used to retrieve image in backend
+                    var addNewContainer = $(btn).closest('.add-new-container');
+                    var imageBlockupdateId = $(addNewContainer).data('update-image-block-item-id');
+                    if(imageBlockupdateId && !value) {
+                        return true; // Continue
+                    }
+
+                    var contentBlockId = $(btn).closest('.widget-tr').data('content-block-id');
+                    var imageName = 'image-' + contentBlockId + '-' + imageBlockupdateId + '-' + field; // Used to retrieve image in backend
 
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
                     $.each($(input)[0].files, function(i, file) {
                         formDataImages[imageName] = file;
                     });
 
-                    //value = imageNames;
-                    //jsonValue['image'] = value;
-                    //console.log(imageName);
-                    //jsonValue = imageName;
                     jsonValue['file'] = imageName
                 } else {
-                    jsonValue['value'] = $(input).val();
+                    jsonValue['value'] = value;
                 }
             });
 
@@ -197,6 +207,13 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
     var addNewRow = function(btn){
 
         var modelId = randomString();
+        var containerBody = $(btn).closest('.template-container-body');
+        var addNewContainer = $(btn).closest('.add-new-container');
+        var updateId = $(addNewContainer).data('update-image-block-item-id');
+
+        if(updateId) {
+            modelId = updateId;
+        }
 
         // Add new row
         var html = '<tr class="fade-out-' + modelId + ' image-blocks-tr" data-image-block-item-id="' + modelId + '">';
@@ -212,7 +229,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         // For each input - one td
         var fieldsJsonValue = getFieldsJsonValue(btn);
 
-        $(btn).closest('.add-new-container').find('input').each(function(index, input){
+        $(addNewContainer).find('input').each(function(index, input){
 
             var value = $(input).val();
             var type = $(input).attr('type');
@@ -225,9 +242,18 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
                 html += value;
-            } else if( type === 'file' && value ) {
+            } else if( type === 'file' && value) {
                 var src = URL.createObjectURL( input.files[0] );
                 html += '<img class="img-responsive width-50" src="' + src + '">';
+            }
+            else if( type === 'file' && !value && updateId ) { // UPDATE, with image intact
+
+                var existingImage = $(containerBody)
+                        .find('.image-blocks-table tbody tr[data-image-block-item-id="' + updateId + '"]')
+                        .find('td[data-field="' + field + '"]')
+                        .html();
+
+                html += existingImage;
             }
 
             html += '</td>';
@@ -240,19 +266,56 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         html += '</tr>';
 
-        var containerBody = $(btn).closest('.template-container-body');
-        $(containerBody).find('.image-blocks-table .no-blocks-tr').remove();
-        var countOfTrsInBody = $(containerBody).find('.image-blocks-table tbody tr').length;
+        if(updateId) {
 
-        if(countOfTrsInBody) {
-            $(containerBody).find('.image-blocks-table tbody tr:last').after(html);
+            // Find that row. And replace html.
+
+            $(containerBody)
+                .find('.image-blocks-table tbody tr[data-image-block-item-id="' + updateId + '"]')
+                .replaceWith(html);
+
+            $(addNewContainer).data('update-image-block-item-id', null);
+
         } else {
-            $(containerBody).find('.image-blocks-table tbody').html(html);
+
+            $(containerBody).find('.image-blocks-table .no-blocks-tr').remove();
+            var countOfTrsInBody = $(containerBody).find('.image-blocks-table tbody tr').length;
+
+            if(countOfTrsInBody) {
+                $(containerBody).find('.image-blocks-table tbody tr:last').after(html);
+            } else {
+                $(containerBody).find('.image-blocks-table tbody').html(html);
+            }
         }
+
 
         var table = $(btn).closest('.template-container-body').find('.image-blocks-table');
         initSortable(table);
     };
+
+    $('body').on('click', '.edit-image-block', function(){
+
+        // Show form
+        var templateContainer = $(this).closest('.template-container-body');
+        var addNewContainer = $(templateContainer).find('.add-new-container');
+
+        var imageBlockItemId = $(this).closest('.image-blocks-tr').data('image-block-item-id');
+        $(addNewContainer).data('update-image-block-item-id', imageBlockItemId);
+
+        $(templateContainer).find('.add-new-image-block-button').hide();
+        $(templateContainer).find('.add-new-image-block-table').fadeIn();
+
+        // Load all data, except image
+        $(this).closest('.image-blocks-tr').find('td.field').each(function(i, td){
+            var field = $(td).data('field');
+            var json = $(td).data('value');
+
+            $.each(json, function(isoCode, value){
+                $(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]').val(value);
+            });
+
+        });
+    });
 
     $('body').on('click', '.add-new-image-block-button', function(){
         $(this).hide();
@@ -267,6 +330,14 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         var valid = true;
         $(this).closest('.add-new-container').find('input').each(function(index, input){
+
+            var type = $(input).attr('type');
+            var isUpdate = $(this).closest('.add-new-container').data('update-image-block-item-id');
+
+            if(type == 'file' && isUpdate) {
+                return true; // continue
+            }
+
             var value = $(input).val();
             if(!value) {
                 $(input).closest('.form-group').addClass('has-error');

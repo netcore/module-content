@@ -192,8 +192,13 @@ $(function() {
 
         // todo - dont send images that has been deleted/overridden/cancel
         $.each(formDataImages, function(imageName, file){
+            console.log(imageName);
             formData.append(imageName, file);
         });
+
+        var btn = $(this);
+        $(btn).find('.not-loading').hide();
+        $(btn).find('.loading').show();
 
         // Post to backend
         $.ajax({
@@ -204,9 +209,13 @@ $(function() {
             processData: false, // Important for FormData
             contentType: false, // Important for FormData
             success: function (response) {
+
                 if(response.redirect_to) {
                     window.location.href = response.redirect_to;
                 } else {
+
+                    $(btn).find('.not-loading').show();
+
                     $.growl.notice({
                         title : 'Success!',
                         message : 'Data saved!'
@@ -214,6 +223,10 @@ $(function() {
                 }
             },
             error: function (xhr) {
+
+                $(btn).find('.loading').hide();
+                $(btn).find('.not-loading').show();
+
                 var errors = xhr.responseJSON.errors;
 
                 $.each(errors, function(key, value){

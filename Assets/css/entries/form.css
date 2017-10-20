@@ -80,13 +80,12 @@
     height:100%;
 }
 
-#widgets-container .template-container-header span.no-drag{
-    /*
-    cursor:default;
-    */
+#widgets-container .template-container-header.has-error .no-drag span {
+    font-weight: bold;
+    color:white;
 }
 
-#widgets-container .template-container-header.has-error a{
+#widgets-container .template-container-header.has-error .no-drag a {
     color:white;
 }
 

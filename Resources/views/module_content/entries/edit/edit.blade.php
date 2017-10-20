@@ -30,7 +30,14 @@
                 class="btn btn-lg btn-success m-t-3 pull-xs-right"
                 id="submit-button"
             >
-                Save
+                <span class="loading" hidden>
+                    <span class="fa fa-gear fa-spin"> </span>
+                    Please wait...
+                </span>
+
+                <span class="not-loading">
+                    Save
+                </span>
             </a>
 
             <a href="{{ route('content::content.index') }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">

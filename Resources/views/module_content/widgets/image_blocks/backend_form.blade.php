@@ -9,7 +9,7 @@
             @if($field == 'image')
                 <tr>
                     <td class="text-align-right">
-                        {{ ucfirst($field) }}:
+                        {{ ucfirst($field) }}
                     </td>
                     <td class="padding-5">
                         <div class="form-group no-margin">
@@ -29,7 +29,13 @@
                         </td>
                         <td class="padding-5">
                             <div class="form-group no-margin">
-                                <input type="text" data-field="{{ $field }}" data-locale="{{ $language->iso_code }}" data-name="translations[{{ $field }}][{{ $language->iso_code }}]" class="form-control">
+                                <input
+                                    type="text"
+                                    data-field="{{ $field }}"
+                                    data-locale="{{ $language->iso_code }}"
+                                    data-name="translations[{{ $field }}][{{ $language->iso_code }}]"
+                                    class="form-control"
+                                >
                                 <span class="error-span"></span>
                             </div>
                         </td>
@@ -41,7 +47,7 @@
             <td></td>
             <td class="padding-5 text-align-right">
                 <a class="btn btn-xs btn-danger add-new-image-block-cancel">Cancel</a>
-                <a class="btn btn-xs btn-success add-new-image-block-submit">Add</a>
+                <a class="btn btn-xs btn-success add-new-image-block-submit">Save</a>
             </td>
         </tr>
     </table>

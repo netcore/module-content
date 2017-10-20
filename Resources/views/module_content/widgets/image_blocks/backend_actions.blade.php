@@ -1,3 +1,10 @@
+
+<a
+    class="btn btn-xs btn-success edit-image-block"
+>
+    Edit
+</a>
+
 <a
     class="btn btn-xs btn-danger confirm-action"
     data-title="Confirmation"
@@ -15,3 +22,4 @@
 >
     Delete
 </a>
+
