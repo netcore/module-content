@@ -81,3 +81,16 @@ Route::group([
         'uses' => 'EntryController@widgets'
     ]);
 });
+
+Route::group([
+    'as'         => 'content::',
+    'middleware' => ['web'],
+    'namespace'  => 'Modules\Content\Http\Controllers\Client'
+], function () {
+
+    Route::get('/{slug}', [
+        'uses'       => 'ResolverController@resolve',
+        'as'         => 'resolver',
+        'middleware' => []
+    ])->where(['slug' => '^(?!_debugbar).*$']);
+});

@@ -189,8 +189,6 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                     var contentBlockId = $(btn).closest('.widget-tr').data('content-block-id');
                     var imageName = 'image-' + contentBlockId + '-' + imageBlockId + '-' + field; // Used to retrieve image in backend
 
-                    console.log(imageName);
-
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
                     $.each($(input)[0].files, function(i, file) {
                         formDataImages[imageName] = file;
