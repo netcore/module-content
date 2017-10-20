@@ -39,27 +39,31 @@ class ImageBlock implements BackendWorkerInterface
     {
         $errors = [];
 
-        /*
-        $order = array_get($widget, 'order');
+        $contentBlockIndex = array_get($widget, 'order');
         $data = (array)array_get($widget, 'data');
-        $translations = (array)array_get($data, 'translations');
+        $blocks = (array)array_get($data, 'blocks');
 
-        $languagesInSystem = TransHelper::getAllLanguages();
-        foreach ($languagesInSystem as $languageInSystem) {
-            $translationsForThatLanguage = (array)array_get($translations, $languageInSystem->iso_code, []);
+        foreach ($blocks as $trIndex => $block) {
+            $block = (array)$block;
+            $attributes = (array)array_get($block, 'attributes', []);
 
-            // strip_tags() is necessary because content can be something like this: '<p><br></p>'
-            // In reality it's empty, so testing length of string is not enough
-            $content = strip_tags(
-                array_get($translationsForThatLanguage, 'content')
-            );
+            $imageAttribute = (array)array_get($attributes, 'image', []);
 
-            if (!$content) {
-                $key = 'widgets.' . $order . '.' . $languageInSystem->iso_code . '.content';
-                $errors[$key] = 'Content is required';
+            if ($imageAttribute) {
+                $name = array_get($imageAttribute, 'file');
+                if ($name) {
+                    $uploadedFile = request()->file($name);
+                    $isImage = substr($uploadedFile->getMimeType(), 0, 5) == 'image';
+                    if (!$isImage) {
+
+                        $tdId = $trIndex . '-image';
+                        $key = 'tableCell.' . $contentBlockIndex . '.' . $tdId;
+
+                        $errors[$key] = 'Must be an image';
+                    }
+                }
             }
         }
-        */
 
         return $errors;
     }
@@ -79,19 +83,7 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function store(Array $frontendData): Array
     {
-        /*
-        $translations = (array)array_get($frontendData, 'translations', []);
-        $translations = array_map(function ($translation) {
-            return (array)$translation;
-        }, $translations);
-
-        $htmlBlock = ImageBlock::create([]);
-        $htmlBlock->storeTranslations($translations);
-
-        return [
-            'html_block_id' => $htmlBlock->id
-        ];
-        */
+        // update() is used in this widget, not store()
     }
 
     /**
@@ -137,6 +129,11 @@ class ImageBlock implements BackendWorkerInterface
             $locales = $languages->pluck('iso_code')->toArray();
             foreach ($locales as $locale) {
                 foreach ($fields as $field) {
+
+                    if ($field == 'image') {
+                        continue;
+                    }
+
                     $fieldData = (array)array_get($attributes, $field, []);
                     $value = array_get($fieldData, $locale, '');
                     $imageBlockItemTranslations[$locale][$field] = $value;
@@ -173,7 +170,15 @@ class ImageBlock implements BackendWorkerInterface
             $imageBlockItem->updateTranslations($imageBlockItemTranslations);
 
             // Image
-            // todo
+            $imageAttribute = (array)array_get($attributes, 'image', []);
+            if ($imageAttribute) {
+                $name = array_get($imageAttribute, 'file');
+                if ($name) {
+                    $uploadedFile = request()->file($name);
+                    $imageBlockItem->image = $uploadedFile;
+                    $imageBlockItem->save();
+                }
+            }
         }
 
         // Delete items that we didnt receive

@@ -19,6 +19,14 @@
      * Object gets populated down below where we include javascripts from $data['backend_javascript']
      */
     var widgetDataCollectors = {};
+
+    /**
+     *
+     * This object contains images that will be sent to backend via FormData
+     * It can be populated in Collectors
+     *
+    */
+    var formDataImages = {};
 </script>
 
 @php

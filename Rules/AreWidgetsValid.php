@@ -24,7 +24,7 @@ class AreWidgetsValid implements Rule
         $widgets = (array) array_map(function ($widget) {
             return (array) $widget;
         }, $widgets);
-        
+
         foreach($widgets as $widget) {
 
             $key = array_get($widget, 'widget');

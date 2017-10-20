@@ -55,15 +55,15 @@ class Storage extends PassThrough
         // Regular data
         $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
-            'layout'    => array_get($requestData, 'layout'),
+            'layout'      => array_get($requestData, 'layout'),
 
             // Checkboxes user array_has
-            'is_active' => array_has($requestData, 'is_active'),
+            'is_active'   => array_has($requestData, 'is_active'),
             'is_homepage' => $isHomepage
         ]);
 
         // If this is homepage, then mark other pages as regular ones
-        if($isHomepage) {
+        if ($isHomepage) {
             Entry::where('id', '!=', $entry->id)->update([
                 'is_homepage' => 0
             ]);

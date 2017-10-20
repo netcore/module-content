@@ -40,7 +40,12 @@
                     @endphp
 
                     @if($field == 'image')
-                        <td class="text-align-center width-75" data-value="{{ $value }}" data-field="{{ $field }}">
+                        <td
+                            class="text-align-center width-75"
+                            data-value="{{ $value }}"
+                            data-field="{{ $field }}"
+                            data-td-id="{{ $loop->parent->index }}-image"
+                        >
                             @if($model->image_file_name)
                                 <img
                                     src="{{ $model->image->url() }}"
@@ -52,7 +57,12 @@
                             @endif
                         </td>
                     @else
-                        <td class="field" data-value="{{ $value }}" data-field="{{ $field }}">
+                        <td
+                            class="field"
+                            data-value="{{ $value }}"
+                            data-field="{{ $field }}"
+                            data-td-id="{{ $loop->parent->index }}-{{ $field }}"
+                        >
                             @foreach($languages as $language)
                                 @if(count($languages) > 1)
                                     {{ strtoupper($language->iso_code) }}:

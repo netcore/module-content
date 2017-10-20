@@ -17,19 +17,19 @@ class ImageBlock extends Model
      * @var string
      */
     protected $table = 'netcore_content__image_blocks';
-    
+
     /**
      * @var array
      */
     protected $fillable = [
-        
+
     ];
-    
+
     /**
      * @var string
      */
     public $translationModel = ImageBlockTranslation::class;
-    
+
     /**
      * @var array
      */

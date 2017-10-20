@@ -13,7 +13,6 @@
  */
 onWidgetAdded['image_blocks'] = function(widgetTr) {
 
-    console.log('image_blocks widget added');
     /*
     $(widgetTr).find('.summernote').summernote({
         height: 300,
@@ -169,8 +168,24 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var jsonValue = {};
 
             $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
-                var value = $(input).val();
-                jsonValue['value'] = value;
+                var type = $(input).attr('type');
+                if(type == 'file') {
+
+                    var imageName = 'image-' + randomString(); // Used to retrieve image in backend
+
+                    //Append file (we use loop, but since this is not multiple, then there is only one image)
+                    $.each($(input)[0].files, function(i, file) {
+                        formDataImages[imageName] = file;
+                    });
+
+                    //value = imageNames;
+                    //jsonValue['image'] = value;
+                    //console.log(imageName);
+                    //jsonValue = imageName;
+                    jsonValue['file'] = imageName
+                } else {
+                    jsonValue['value'] = $(input).val();
+                }
             });
 
             fieldsJsonValue[field] = jsonValue;
@@ -202,9 +217,11 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var value = $(input).val();
             var type = $(input).attr('type');
             var field = $(input).data('field');
+            var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
+            var tdId = trIndex + '-' + field;
             var jsonValue = JSON.stringify(fieldsJsonValue[field]);
 
-            html += '<td class="field" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '">';
+            html += '<td class="field" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
 
             if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
                 html += value;

@@ -40,7 +40,7 @@ class SimpleText implements BackendWorkerInterface
             );
 
             if (!$content) {
-                $key = 'widgets.' . $order . '.' . $languageInSystem->iso_code . '.content';
+                $key = 'specificField.' . $order . '.' . $languageInSystem->iso_code . '.content';
                 $errors[$key] = 'Content is required';
             }
         }

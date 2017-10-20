@@ -62,14 +62,14 @@ trait EntryDatatable
     {
         $channelId = request()->get('channel_id');
 
-        $searchData = (array) request()->get('search', []);
-        $keyword = (string) array_get($searchData, 'value');
+        $searchData = (array)request()->get('search', []);
+        $keyword = (string)array_get($searchData, 'value');
 
         $query = Entry::with([
             'contentBlocks'
         ])->orderBy('id', 'DESC');
 
-        if($channelId) {
+        if ($channelId) {
             $query->whereChannelId($channelId);
         } else {
             $query->whereNull('channel_id');

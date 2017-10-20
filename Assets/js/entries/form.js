@@ -181,14 +181,28 @@ $(function() {
 
         // Reset errors
         $(form).find('.has-error').removeClass('has-error');
+        $(form).find('[data-toggle="tooltip"]').tooltip('destroy');
         $(form).find('.error-span').text('');
+
+        var formData = new FormData(form);
+
+        $(dataForBackend).each(function(index, object){
+            formData.append(object.name, object.value);
+        });
+
+        // todo - dont send images that has been deleted/overridden/cancel
+        $.each(formDataImages, function(imageName, file){
+            formData.append(imageName, file);
+        });
 
         // Post to backend
         $.ajax({
             url: $(form).attr('action'),
             type: $(form).attr('method'),
-            data: dataForBackend,
+            data: formData,
             dataType: 'json',
+            processData: false, // Important for FormData
+            contentType: false, // Important for FormData
             success: function (response) {
                 if(response.redirect_to) {
                     window.location.href = response.redirect_to;
@@ -209,16 +223,39 @@ $(function() {
                             $.each(object, function(name, value){
 
                                 var splitted = name.split('.');
-                                var widgetBlockIndex = splitted[1]; // e.g. "0"
-                                var isoCode = splitted[2]; // e.g. "en"
-                                var field = splitted[3]; // e.g. "content"
+                                var type = splitted[0]; // e.g. "tableCeel" or "specificFields"
+
+                                if(type == 'tableCell') {
+
+                                    var widgetBlockIndex = splitted[1]; // e.g. "0"
+                                    var tdId = splitted[2]; // e.g. 0
+
+                                    // todo Pieliekam bootstrap tooltip par erroru
+
+                                    var td = $('.template-container').eq(widgetBlockIndex)
+                                        .find('td[data-td-id="' + tdId + '"]');
+
+                                    $(td).addClass('has-error')
+                                        .attr('data-toggle', 'tooltip')
+                                        .attr('data-container', 'body')
+                                        .attr('title', value)
+                                        ;
+
+                                    $(td).tooltip(); // Bootstrap tooltip
+                                }
+
+                                if(type == 'specificField') {
+                                    var widgetBlockIndex = splitted[1]; // e.g. "0"
+                                    var isoCode = splitted[2]; // e.g. "en"
+                                    var field = splitted[3]; // e.g. "content"
+
+                                    $('.template-container').eq(widgetBlockIndex)
+                                        .find('.error-span[data-field="' + isoCode + '-' + field + '"]')
+                                        .text(value);
+                                }
 
                                 $('.template-container-header').eq(widgetBlockIndex)
                                     .addClass('has-error');
-
-                                $('.template-container').eq(widgetBlockIndex)
-                                    .find('.error-span[data-field="' + isoCode + '-' + field + '"]')
-                                    .text(value);
                             });
                         });
                     } else {
