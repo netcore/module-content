@@ -103,7 +103,7 @@
 
     Homepage?
     <span class="hidden-switchery" hidden style="margin-right:10px;">
-        {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 1), [
+        {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 0), [
             'class' => 'switchery'
         ]) !!}
     </span>

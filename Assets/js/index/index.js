@@ -31,7 +31,7 @@ $(function() {
             drawCallback: function(){
 
                 // Init switchery
-                $('.changeable-state:visible, .regular-switchery').each(function(i, switcher) {
+                $('.changeable-state:visible, .regular-switchery:visible').each(function(i, switcher) {
                     new Switchery(switcher);
                 });
             }

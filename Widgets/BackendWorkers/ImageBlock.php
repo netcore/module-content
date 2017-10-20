@@ -175,8 +175,8 @@ class ImageBlock implements BackendWorkerInterface
             $imageAttribute = (array)array_get($attributes, 'image', []);
             if ($imageAttribute) {
                 $name = array_get($imageAttribute, 'file');
-                $uploadedFile = request()->file($name);
                 info($name);
+                $uploadedFile = request()->file($name);
                 if ($name AND $uploadedFile) {
                     $imageBlockItem->image = $uploadedFile;
                     $imageBlockItem->save();

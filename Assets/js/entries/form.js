@@ -192,7 +192,6 @@ $(function() {
 
         // todo - dont send images that has been deleted/overridden/cancel
         $.each(formDataImages, function(imageName, file){
-            console.log(imageName);
             formData.append(imageName, file);
         });
 

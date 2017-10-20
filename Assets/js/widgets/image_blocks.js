@@ -133,7 +133,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         initSortable(table);
     });
 
-    var getFieldsJsonValue = function(btn){
+    var getFieldsJsonValue = function(btn, modelId){
 
         var translatableFields = [];
         var regularFields = [];
@@ -179,13 +179,17 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 if(type == 'file') {
 
                     var addNewContainer = $(btn).closest('.add-new-container');
-                    var imageBlockupdateId = $(addNewContainer).data('update-image-block-item-id');
-                    if(imageBlockupdateId && !value) {
+                    var imageBlockUpdateId = $(addNewContainer).data('update-image-block-item-id');
+                    if(imageBlockUpdateId && !value) {
                         return true; // Continue
                     }
 
+                    var imageBlockId = imageBlockUpdateId ? imageBlockUpdateId : modelId;
+
                     var contentBlockId = $(btn).closest('.widget-tr').data('content-block-id');
-                    var imageName = 'image-' + contentBlockId + '-' + imageBlockupdateId + '-' + field; // Used to retrieve image in backend
+                    var imageName = 'image-' + contentBlockId + '-' + imageBlockId + '-' + field; // Used to retrieve image in backend
+
+                    console.log(imageName);
 
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
                     $.each($(input)[0].files, function(i, file) {
@@ -227,7 +231,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         html += '</td>';
 
         // For each input - one td
-        var fieldsJsonValue = getFieldsJsonValue(btn);
+        var fieldsJsonValue = getFieldsJsonValue(btn, modelId);
 
         $(addNewContainer).find('input').each(function(index, input){
 
