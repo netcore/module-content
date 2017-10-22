@@ -9,6 +9,10 @@ use Modules\Content\Models\Entry;
 class ResolverController extends Controller
 {
 
+    /**
+     * @param null $slug
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function resolve($slug = null)
     {
         $page = null;
