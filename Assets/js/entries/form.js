@@ -85,7 +85,7 @@ $(function() {
             hideOrShowCountMessage();
             initSortable();
 
-            var callable = onWidgetAdded[key];
+            var callable = onWidgetAdded[javascriptKey];
             if(callable){
                 var widgetTr = $('#widgets-table .widget-tr:last');
                 callable(widgetTr);
@@ -122,9 +122,9 @@ $(function() {
     // On page load, initialize widgets
     $('#widgets-table tr').each(function(index, widgetTr){
 
-        var key = $(widgetTr).data('key');
+        var javascriptKey = $(widgetTr).data('javascriptKey');
 
-        var callable = onWidgetAdded[key];
+        var callable = onWidgetAdded[javascriptKey];
         if(callable){
             callable(widgetTr);
         }
