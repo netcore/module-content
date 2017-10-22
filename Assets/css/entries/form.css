@@ -11,6 +11,10 @@
     width: 150px;
 }
 
+.width-800{
+    width: 800px;
+}
+
 .no-padding{
     padding: 0px;
 }

@@ -74,7 +74,13 @@
                                 @if(count($languages) > 1)
                                     {{ strtoupper($language->iso_code) }}:
                                 @endif
-                                {{ trans_model($model, $languages->first(), $fieldName) }}
+
+                                @if($fieldType == 'textarea')
+                                    {!! trans_model($model, $languages->first(), $fieldName) !!}
+                                @else
+                                    {{ trans_model($model, $languages->first(), $fieldName) }}
+                                @endif
+
                             @endforeach
                         </td>
                     @endif

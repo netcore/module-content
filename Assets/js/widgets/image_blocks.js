@@ -83,12 +83,20 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
     };
 
     var clearAddNewImageBlockForm = function(btn){
+
+        var addNewcontainer = $(btn).closest('.add-new-container');
+
         // Revert "Add" button
-        $(btn).closest('.add-new-container').find('.add-new-image-block-button').show();
+        $(addNewcontainer).find('.add-new-image-block-button').show();
 
         // Empty input fields
-        $(btn).closest('.add-new-container').find('.add-new-image-block-table input').each(function(index, input){
+        $(addNewcontainer).find('.add-new-image-block-table input').each(function(index, input){
             $(input).val(null);
+        });
+
+        // Empty wysiwyg
+        $(addNewcontainer).find('.add-new-image-block-table textarea.summernote').each(function(index, textarea){
+            $(textarea).summernote('code', '');
         });
 
         // Remove errors
@@ -128,6 +136,29 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         });
     };
 
+    var initSummernote = function(btn){
+
+        // Initialize
+        var widgetTr = $(btn).closest('.widget-tr');
+        var textareas = $(widgetTr).find('.summernote:not(.initialized)');
+        $.each(textareas, function(i, object){
+            $(object).addClass('initialized').summernote({
+                height: 100,
+                focus: true,
+                toolbar: [
+                    // [groupName, [list of button]]
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    //['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link']]
+                ]
+            });
+        });
+    };
+
     // Init sortable on page load
     $('.image-blocks-table').each(function(index, table){
         initSortable(table);
@@ -137,7 +168,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         var translatableFields = [];
         var regularFields = [];
-        $(btn).closest('.add-new-container').find('input').each(function(index, input){
+        $(btn).closest('.add-new-container').find('input[data-field], textarea[data-field]').each(function(index, input){
 
             var field = $(input).data('field');
 
@@ -155,7 +186,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             var jsonValue = {};
 
-            $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
+            var inputOrTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"]';
+            $(btn).closest('.add-new-container').find(inputOrTextarea).each(function(i, input){
 
                 var locale = $(input).data('locale');
                 var field = $(input).data('field');
@@ -171,7 +203,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             var jsonValue = {};
 
-            $(btn).closest('.add-new-container').find('input[data-field="' + field + '"]').each(function(i, input){
+            var inputOrTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"]';
+            $(btn).closest('.add-new-container').find(inputOrTextarea).each(function(i, input){
 
                 var type = $(input).attr('type');
                 var value = $(input).val();
@@ -231,10 +264,10 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         // For each input - one td
         var fieldsJsonValue = getFieldsJsonValue(btn, modelId);
 
-        $(addNewContainer).find('input').each(function(index, input){
+        $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
 
             var value = $(input).val();
-            var type = $(input).attr('type');
+            var type = $(input).is('textarea') ? 'textarea' : $(input).attr('type');
             var field = $(input).data('field');
             var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
             var tdId = trIndex + '-' + field;
@@ -313,15 +346,29 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var json = $(td).data('value');
 
             $.each(json, function(isoCode, value){
-                $(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]').val(value);
+
+                var element = $(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]');
+
+                if($(element).hasClass('summernote')) {
+                    $(element).summernote('code', value);
+                } else {
+                    $(element).val(value);
+                }
+
+                //$(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]').val(value);
+                // $('textarea.summernote').summernote('code', 'test 2')
             });
 
         });
+
+        initSummernote(this);
     });
 
     $('body').on('click', '.add-new-image-block-button', function(){
         $(this).hide();
         $(this).closest('.add-new-container').find('.add-new-image-block-table').fadeIn();
+
+        initSummernote(this);
     });
 
     $('body').on('click', '.add-new-image-block-cancel', function(){
@@ -331,7 +378,15 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
     $('body').on('click', '.add-new-image-block-submit', function(){
 
         var valid = true;
-        $(this).closest('.add-new-container').find('input').each(function(index, input){
+
+        var addNewContainer = $(this).closest('.add-new-container');
+
+        // Remove previous errors
+        $(addNewContainer).find('.has-error').removeClass('has-error');
+        $(addNewContainer).find('.error-span').text('');
+
+        // Input
+        $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
 
             var type = $(input).attr('type');
             var isUpdate = $(this).closest('.add-new-container').data('update-image-block-item-id');

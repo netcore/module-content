@@ -37,13 +37,22 @@
                         </td>
                         <td class="padding-5">
                             <div class="form-group no-margin">
-                                <input
-                                    type="text"
-                                    data-field="{{ $fieldName }}"
-                                    data-locale="{{ $language->iso_code }}"
-                                    data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
-                                    class="form-control"
-                                >
+                                @if($fieldType == 'textarea')
+                                    <textarea
+                                        data-field="{{ $fieldName }}"
+                                        data-locale="{{ $language->iso_code }}"
+                                        data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
+                                        class="form-control summernote width-800"
+                                    ></textarea>
+                                @else
+                                    <input
+                                        type="text"
+                                        data-field="{{ $fieldName }}"
+                                        data-locale="{{ $language->iso_code }}"
+                                        data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
+                                        class="form-control"
+                                    >
+                                @endif
                                 <span class="error-span"></span>
                             </div>
                         </td>
