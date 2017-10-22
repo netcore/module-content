@@ -36,7 +36,6 @@ $(function() {
     var loadWysiwygOnPageload = function(){
         var count = $('#widgets-table tr').length;
         if(!count) {
-            $('#select-widget').val('simple_text');
             $('#add-widget-button').trigger('click');
         }
     };

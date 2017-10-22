@@ -67,7 +67,10 @@ trait EntryDatatable
 
         $query = Entry::with([
             'contentBlocks'
-        ])->orderBy('id', 'DESC');
+        ])
+        ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
+        ->orderBy('id', 'DESC')
+        ;
 
         if ($channelId) {
             $query->whereChannelId($channelId);

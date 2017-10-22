@@ -213,7 +213,7 @@ class Storage extends PassThrough
 
         $contentBlocks = $entry
             ->contentBlocks()
-            ->whereWidget('simple_text')
+            ->where('data', 'LIKE', '%html_block_id%')
             ->get();
 
         foreach ($contentBlocks as $contentBlock) {
