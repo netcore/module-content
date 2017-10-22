@@ -60,7 +60,7 @@ class ImageBlock implements BackendWorkerInterface
                 $name = array_get($imageAttribute, 'file');
                 if ($name) {
                     $uploadedFile = request()->file($name);
-                    if($uploadedFile) {
+                    if ($uploadedFile) {
                         $isImage = substr($uploadedFile->getMimeType(), 0, 5) == 'image';
                         if (!$isImage) {
 
@@ -266,9 +266,13 @@ class ImageBlock implements BackendWorkerInterface
 
         $configuredFields = array_get($this->config, 'fields');
         $fields = [];
-        foreach ($configuredFields as $configuredField) {
-            $value = $imageBlock ? object_get($imageBlock, $configuredField) : '';
-            $fields[$configuredField] = $value;
+        foreach ($configuredFields as $fieldName => $fieldType) {
+            $value = $imageBlock ? object_get($imageBlock, $fieldName) : '';
+            $fields[] = [
+                'name'  => $fieldName,
+                'type'  => $fieldType,
+                'value' => $value,
+            ];
         }
 
         return compact(
