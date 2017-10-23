@@ -86,14 +86,14 @@ class SimpleText implements BackendWorkerInterface
         // Format HtmlBlock translations
         $formattedTranslations = [];
 
-        foreach($rawTranslations as $locale => $attributes) {
-            foreach($attributes as $field => $value) {
+        foreach ($rawTranslations as $locale => $attributes) {
+            foreach ($attributes as $field => $value) {
 
                 $nonJsonFields = ['content'];
                 $isNonJsonField = in_array($field, $nonJsonFields);
 
 
-                if($isNonJsonField) {
+                if ($isNonJsonField) {
                     $formattedTranslations[$locale][$field] = $value;
                 } else {
                     $formattedTranslations[$locale]['json'][$field] = $value;
@@ -175,7 +175,7 @@ class SimpleText implements BackendWorkerInterface
                     'content' => $translation->content,
                 ];
 
-                foreach ($configuredFields as $fieldName => $fielType) {
+                foreach ($configuredFields as $fieldName => $fieldData) {
                     $translatedItem[$fieldName] = array_get($jsonDecoded, $fieldName);
                 }
 
@@ -184,10 +184,15 @@ class SimpleText implements BackendWorkerInterface
         }
 
         $fields = [];
-        foreach ($configuredFields as $fieldName => $fieldType) {
+        foreach ($configuredFields as $fieldName => $fieldData) {
+
+            $fieldType = array_get($fieldData, 'type');
+            $fieldLabel = array_get($fieldData, 'label');
+
             $fields[] = [
                 'name'  => $fieldName,
                 'type'  => $fieldType,
+                'label' => $fieldLabel,
             ];
         }
 

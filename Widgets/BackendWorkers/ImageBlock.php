@@ -173,7 +173,7 @@ class ImageBlock implements BackendWorkerInterface
 
                     $nonJsonFields = ['title', 'subtitle', 'content'];
                     $isNonJsonField = in_array($field, $nonJsonFields);
-                    if($isNonJsonField) {
+                    if ($isNonJsonField) {
                         $imageBlockItemTranslations[$locale][$field] = $value;
                     } else {
                         $imageBlockItemTranslations[$locale]['json'][$field] = $value;
@@ -272,11 +272,16 @@ class ImageBlock implements BackendWorkerInterface
 
         $configuredFields = array_get($this->config, 'fields');
         $fields = [];
-        foreach ($configuredFields as $fieldName => $fieldType) {
+        foreach ($configuredFields as $fieldName => $fieldData) {
+
+            $fieldType = array_get($fieldData, 'type');
+            $fieldLabel = array_get($fieldData, 'label');
+
             $value = $imageBlock ? object_get($imageBlock, $fieldName) : '';
             $fields[] = [
                 'name'  => $fieldName,
                 'type'  => $fieldType,
+                'label' => $fieldLabel,
                 'value' => $value,
             ];
         }

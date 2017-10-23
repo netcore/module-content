@@ -9,6 +9,7 @@
 
             @php
                 $fieldName = array_get($field, 'name');
+                $fieldLabel = array_get($field, 'label');
                 $fieldType = array_get($field, 'type');
                 $fieldValue = array_get($field, 'value');
             @endphp
@@ -16,7 +17,7 @@
             @if($fieldName == 'image')
                 <tr>
                     <td class="text-align-right">
-                        {{ ucfirst($fieldName) }}
+                        {{ ucfirst($fieldLabel) }}
                     </td>
                     <td class="padding-5">
                         <div class="form-group no-margin">
@@ -29,7 +30,7 @@
                 @foreach($languages as $language)
                     <tr>
                         <td class="text-align-right">
-                            {{ ucfirst($fieldName) }}
+                            {{ ucfirst($fieldLabel) }}
                             @if(count($languages) > 1)
                                 {{ strtoupper($language->iso_code) }}
                             @endif

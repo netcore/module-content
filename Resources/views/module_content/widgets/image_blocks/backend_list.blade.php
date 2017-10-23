@@ -13,7 +13,7 @@
         <th class="width-50">Reorder</th>
         @foreach($fields as $field)
             <th class="{{ array_get($field, 'name') == 'image' ? 'text-align-center width-75' : '' }}">
-                {{ ucfirst(array_get($field, 'name')) }}
+                {{ ucfirst(array_get($field, 'label')) }}
             </th>
         @endforeach
         <th class="text-align-center width-150">Actions</th>

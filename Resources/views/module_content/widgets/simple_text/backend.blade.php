@@ -42,12 +42,13 @@
                     @php
                         $fieldName = array_get($field, 'name');
                         $fieldType = array_get($field, 'type');
+                        $fieldLabel = array_get($field, 'label');
 
                         $fieldValue = array_get($translations, $language->iso_code . '.' . $fieldName);
                     @endphp
                     <tr>
                         <td class="text-align-right">
-                            {{ ucfirst($fieldName) }}
+                            {{ ucfirst($fieldLabel) }}
                             @if(count($languages) > 1)
                                 {{ strtoupper($language->iso_code) }}
                             @endif
