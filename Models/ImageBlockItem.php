@@ -84,5 +84,4 @@ class ImageBlockItem extends Model implements StaplerableInterface
     {
         return $this->belongsTo(ImageBlock::class);
     }
-
 }

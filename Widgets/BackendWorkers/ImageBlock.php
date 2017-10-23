@@ -131,23 +131,6 @@ class ImageBlock implements BackendWorkerInterface
             $block = (array)$block;
             $attributes = (array)array_get($block, 'attributes');
 
-            // Format ImageBlockItem translations
-            $imageBlockItemTranslations = [];
-            $fields = array_keys($attributes);
-            $locales = $this->languages->pluck('iso_code')->toArray();
-            foreach ($locales as $locale) {
-                foreach ($fields as $field) {
-
-                    if ($field == 'image') {
-                        continue;
-                    }
-
-                    $fieldData = (array)array_get($attributes, $field, []);
-                    $value = array_get($fieldData, $locale, '');
-                    $imageBlockItemTranslations[$locale][$field] = $value;
-                }
-            }
-
             $imageBlockItemId = array_get($block, 'imageBlockItemId');
             if (is_numeric($imageBlockItemId)) {
 
@@ -174,6 +157,30 @@ class ImageBlock implements BackendWorkerInterface
                 ]);
             }
 
+            // Format ImageBlockItem translations
+            $imageBlockItemTranslations = [];
+            $fields = array_keys($attributes);
+            $locales = $this->languages->pluck('iso_code')->toArray();
+            foreach ($locales as $locale) {
+                foreach ($fields as $field) {
+
+                    if ($field == 'image') {
+                        continue;
+                    }
+
+                    $fieldData = (array)array_get($attributes, $field, []);
+                    $value = array_get($fieldData, $locale, '');
+
+                    $nonJsonFields = ['title', 'subtitle', 'content'];
+                    $isNonJsonField = in_array($field, $nonJsonFields);
+                    if($isNonJsonField) {
+                        $imageBlockItemTranslations[$locale][$field] = $value;
+                    } else {
+                        $imageBlockItemTranslations[$locale]['json'][$field] = $value;
+                    }
+                }
+            }
+
             // Translations
             $imageBlockItem->updateTranslations($imageBlockItemTranslations);
 
@@ -181,7 +188,6 @@ class ImageBlock implements BackendWorkerInterface
             $imageAttribute = (array)array_get($attributes, 'image', []);
             if ($imageAttribute) {
                 $name = array_get($imageAttribute, 'file');
-                info($name);
                 $uploadedFile = request()->file($name);
                 if ($name AND $uploadedFile) {
                     $imageBlockItem->image = $uploadedFile;

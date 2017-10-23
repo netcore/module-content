@@ -1,6 +1,7 @@
 
 @php
     $imageBlockId = isset($imageBlock) ? $imageBlock->id : 'newid';
+    $viewHelper = new \Modules\Content\Widgets\BackendViewHelpers\ImageBlock;
 @endphp
 
 <table
@@ -31,25 +32,16 @@
                 @foreach($fields as $field)
 
                     @php
-
                         $fieldName = array_get($field, 'name');
                         $fieldType = array_get($field, 'type');
                         $fieldValue = array_get($field, 'value');
-
-                        $value = '';
-                        if($fieldName != 'image') {
-                            $value = [];
-                            foreach($languages as $language) {
-                                $value[$language->iso_code] = trans_model($model, $language, $fieldName);
-                            }
-                            $value = json_encode($value);
-                        }
+                        $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $languages);
                     @endphp
 
                     @if($fieldName == 'image')
                         <td
                             class="text-align-center width-75"
-                            data-value="{{ $value }}"
+                            data-value="{{ $dataValue }}"
                             data-field="{{ $fieldName }}"
                             data-td-id="{{ $loop->parent->index }}-image"
                         >
@@ -66,19 +58,24 @@
                     @else
                         <td
                             class="field"
-                            data-value="{{ $value }}"
+                            data-value="{{ $dataValue }}"
                             data-field="{{ $fieldName }}"
                             data-td-id="{{ $loop->parent->index }}-{{ $fieldName }}"
                         >
                             @foreach($languages as $language)
+
+                                @php
+                                    $value = $viewHelper->getValueForTd($model, $language, $fieldName);
+                                @endphp
+
                                 @if(count($languages) > 1)
                                     {{ strtoupper($language->iso_code) }}:
                                 @endif
 
                                 @if($fieldType == 'textarea')
-                                    {!! trans_model($model, $languages->first(), $fieldName) !!}
+                                    {!! $value !!}
                                 @else
-                                    {{ trans_model($model, $languages->first(), $fieldName) }}
+                                    {{ $value }}
                                 @endif
 
                             @endforeach
