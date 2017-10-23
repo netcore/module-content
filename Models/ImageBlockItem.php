@@ -84,4 +84,12 @@ class ImageBlockItem extends Model implements StaplerableInterface
     {
         return $this->belongsTo(ImageBlock::class);
     }
+
+    /**
+     * @return array
+     */
+    public function getJsonDecodedAttribute()
+    {
+        return (array) json_decode($this->json);
+    }
 }
