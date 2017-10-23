@@ -41,13 +41,23 @@ widgetDataCollectors['simple_text'] = function(widgetTr) {
 
     var translations = {};
 
-    $(widgetTr).find('.summernote').each(function(index, object){
-        var language = $(object).data('language');
-        var content = $(object).val();
+    $(widgetTr).find('input[data-field], textarea[data-field]').each(function(index, object){
 
-        translations[language] = {
-            'content': content
-        };
+        var value = $(object).val();
+
+        if($(object).is('input[type=checkbox]')) {
+            value = $(object).is(':checked');
+        }
+
+        var field = $(object).data('field');
+
+        var language = $(object).data('locale');
+
+        if(translations[language] === undefined){
+            translations[language] = {};
+        }
+
+        translations[language][field] = value;
     });
 
     return {

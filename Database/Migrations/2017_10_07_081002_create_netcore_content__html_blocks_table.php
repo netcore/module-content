@@ -27,6 +27,7 @@ class CreateNetcoreContentHtmlBlocksTable extends Migration
             $table->string('locale')->index();
 
             $table->text('content');
+            $table->text('json')->nullable();
         });
     }
 

@@ -33,6 +33,15 @@ class HtmlBlock extends Model
      * @var array
      */
     public $translatedAttributes = [
-        'content'
+        'content',
+        'json'
     ];
+
+    /**
+     * @return array
+     */
+    public function getJsonDecodedAttribute()
+    {
+        return (array) json_decode($this->json);
+    }
 }

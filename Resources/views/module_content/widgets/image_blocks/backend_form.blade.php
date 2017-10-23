@@ -8,7 +8,6 @@
         @foreach($fields as $field)
 
             @php
-
                 $fieldName = array_get($field, 'name');
                 $fieldType = array_get($field, 'type');
                 $fieldValue = array_get($field, 'value');

@@ -14,6 +14,21 @@ class SimpleText implements BackendWorkerInterface
     public $action = 'recreate';
 
     /**
+     * @var array
+     */
+    private $config = [];
+
+    /**
+     * ImageBlock constructor.
+     *
+     * @param $config
+     */
+    public function __construct($config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      *
      * getErrors() method accept widget's data as it comes from frontend
      * and then returns any validation errors
@@ -63,13 +78,31 @@ class SimpleText implements BackendWorkerInterface
      */
     public function store(Array $frontendData): Array
     {
-        $translations = (array)array_get($frontendData, 'translations', []);
-        $translations = array_map(function ($translation) {
+        $rawTranslations = (array)array_get($frontendData, 'translations', []);
+        $rawTranslations = array_map(function ($translation) {
             return (array)$translation;
-        }, $translations);
+        }, $rawTranslations);
+
+        // Format HtmlBlock translations
+        $formattedTranslations = [];
+
+        foreach($rawTranslations as $locale => $attributes) {
+            foreach($attributes as $field => $value) {
+
+                $nonJsonFields = ['content'];
+                $isNonJsonField = in_array($field, $nonJsonFields);
+
+
+                if($isNonJsonField) {
+                    $formattedTranslations[$locale][$field] = $value;
+                } else {
+                    $formattedTranslations[$locale]['json'][$field] = $value;
+                }
+            }
+        }
 
         $htmlBlock = HtmlBlock::create([]);
-        $htmlBlock->storeTranslations($translations);
+        $htmlBlock->storeTranslations($formattedTranslations);
 
         return [
             'html_block_id' => $htmlBlock->id
@@ -127,21 +160,42 @@ class SimpleText implements BackendWorkerInterface
     public function backendTemplateComposer(Array $data): Array
     {
         $languages = TransHelper::getAllLanguages();
+        $configuredFields = array_get($this->config, 'fields');
         $translations = [];
 
         $htmlBlockId = array_get($data, 'html_block_id', null);
-        if ($htmlBlockId) {
-            $htmlBlock = HtmlBlock::find($htmlBlockId);
+        $htmlBlock = HtmlBlock::find($htmlBlockId);
+        if ($htmlBlock) {
             foreach ($htmlBlock->translations as $translation) {
-                $translations[$translation->locale] = [
-                    'content' => $translation->content
+
+                $jsonString = $translation->json;
+                $jsonDecoded = (array)json_decode($jsonString);
+
+                $translatedItem = [
+                    'content' => $translation->content,
                 ];
+
+                foreach ($configuredFields as $fieldName => $fielType) {
+                    $translatedItem[$fieldName] = array_get($jsonDecoded, $fieldName);
+                }
+
+                $translations[$translation->locale] = $translatedItem;
             }
         }
 
-        return [
-            'languages'    => $languages,
-            'translations' => $translations
-        ];
+        $fields = [];
+        foreach ($configuredFields as $fieldName => $fieldType) {
+            $fields[] = [
+                'name'  => $fieldName,
+                'type'  => $fieldType,
+            ];
+        }
+
+        return compact(
+            'htmlBlock',
+            'fields',
+            'languages',
+            'translations'
+        );
     }
 }
