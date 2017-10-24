@@ -12,23 +12,6 @@
  *
  */
 onWidgetAdded['image_blocks'] = function(widgetTr) {
-
-    /*
-    $(widgetTr).find('.summernote').summernote({
-        height: 300,
-        focus: true,
-        toolbar: [
-            // [groupName, [list of button]]
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            //['font', ['strikethrough', 'superscript', 'subscript']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['height', ['height']],
-            ['insert', ['picture', 'link']]
-        ]
-    });
-    */
 };
 
 /**
@@ -95,8 +78,12 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         });
 
         // Empty wysiwyg
-        $(addNewcontainer).find('.add-new-image-block-table textarea.summernote').each(function(index, textarea){
-            $(textarea).summernote('code', '');
+        $(addNewcontainer).find('.add-new-image-block-table textarea.image-blocks-summernote').each(function(index, textarea){
+            if($(textarea).hasClass('initialized')) {
+                $(textarea).summernote('code', '');
+            } else {
+                $(textarea).val('');
+            }
         });
 
         // Remove errors
@@ -140,21 +127,22 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         // Initialize
         var widgetTr = $(btn).closest('.widget-tr');
-        var textareas = $(widgetTr).find('.summernote:not(.initialized)');
+        var textareas = $(widgetTr).find('.image-blocks-summernote:not(.initialized)');
         $.each(textareas, function(i, object){
+            console.log('Init');
+            //return;
             $(object).addClass('initialized').summernote({
-                height: 100,
+                height: 300,
                 focus: true,
                 toolbar: [
-                    // [groupName, [list of button]]
                     ['style', ['bold', 'italic', 'underline', 'clear']],
-                    //['font', ['strikethrough', 'superscript', 'subscript']],
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
                     ['insert', ['picture', 'link']]
-                ]
+                ],
+                fontSizes: ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
             });
         });
     };
@@ -351,14 +339,11 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
                 var element = $(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]');
 
-                if($(element).hasClass('summernote')) {
+                if($(element).hasClass('image-blocks-summernote') && $(element).hasClass('initialized')) {
                     $(element).summernote('code', value);
                 } else {
                     $(element).val(value);
                 }
-
-                //$(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]').val(value);
-                // $('textarea.summernote').summernote('code', 'test 2')
             });
 
         });

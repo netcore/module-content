@@ -123,3 +123,17 @@
     margin-top:-21px;
     border-radius:0px;
 }
+
+/**
+Override big margin from pixeladmin.css
+ */
+.widget-tr td h1,
+.widget-tr td h2,
+.widget-tr td h3,
+.widget-tr td h4,
+.widget-tr td h5,
+.widget-tr td h6
+{
+    margin-top:5px;
+    margin-bottom:5px;
+}

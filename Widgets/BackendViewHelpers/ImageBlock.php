@@ -17,7 +17,7 @@ class ImageBlock
             $dataValue = [];
             foreach($languages as $language) {
 
-                $nonJsonFields = ['title', 'subtitle', 'content'];
+                $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
                 $isNonJsonField = in_array($fieldName, $nonJsonFields);
 
                 if($isNonJsonField) {
@@ -44,7 +44,7 @@ class ImageBlock
      */
     public function getValueForTd($model, $language, $fieldName)
     {
-        $nonJsonFields = ['title', 'subtitle', 'content'];
+        $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
         $isNonJsonField = in_array($fieldName, $nonJsonFields);
 
         if($isNonJsonField) {
