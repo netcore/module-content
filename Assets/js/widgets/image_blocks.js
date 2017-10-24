@@ -279,7 +279,9 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 html += value;
             } else if( type === 'file' && value) {
                 var src = URL.createObjectURL( input.files[0] );
-                html += '<img class="img-responsive width-50" src="' + src + '">';
+
+                var imageWidth = $(input).data('image-width') || 50;
+                html += '<img class="img-responsive" style="width:' + imageWidth + 'px;" src="' + src + '">';
             }
             else if( type === 'file' && !value && updateId ) { // UPDATE, with image intact
 

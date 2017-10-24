@@ -12,6 +12,7 @@
                 $fieldLabel = array_get($field, 'label');
                 $fieldType = array_get($field, 'type');
                 $fieldValue = array_get($field, 'value');
+                $imageWidth = array_get($field, 'image_width');
             @endphp
 
             @if($fieldName == 'image')
@@ -21,7 +22,13 @@
                     </td>
                     <td class="padding-5">
                         <div class="form-group no-margin">
-                            <input type="file" data-name="html-block-images[]" data-field="{{ $fieldName }}" class="form-control form-input inline">
+                            <input
+                                type="file"
+                                data-name="html-block-images[]"
+                                data-field="{{ $fieldName }}"
+                                class="form-control form-input inline"
+                                data-image-width="{{ $imageWidth }}"
+                            >
                             <span class="error-span"></span>
                         </div>
                     </td>

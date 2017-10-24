@@ -45,6 +45,8 @@
                         $fieldType = array_get($field, 'type');
                         $fieldValue = array_get($field, 'value');
                         $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $languages);
+
+                        $imageWidth = array_get($field, 'image_width');
                     @endphp
 
                     <td
@@ -58,7 +60,8 @@
                                 <img
                                     src="{{ $model->image->url() }}"
                                     alt="Image"
-                                    class="img-responsive width-50"
+                                    class="img-responsive"
+                                    style="width:{{ $imageWidth }}px;"
                                 >
                             @else
                                 No image
