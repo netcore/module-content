@@ -182,6 +182,10 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 var field = $(input).data('field');
                 var value = $(input).val();
 
+                if($(input).is('input[type=checkbox]')) {
+                    value = $(input).is(':checked');
+                }
+
                 jsonValue[locale] = value;
             });
 
@@ -256,6 +260,10 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
 
             var value = $(input).val();
+            if($(input).is('input[type=checkbox]')) {
+                value = $(input).is(':checked') ? 'Yes' : 'No';
+            }
+
             var type = $(input).is('textarea') ? 'textarea' : $(input).attr('type');
             var field = $(input).data('field');
             var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
@@ -264,7 +272,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
 
-            if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
+            if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox']) !== -1 ) {
                 html += value;
             } else if( type === 'file' && value) {
                 var src = URL.createObjectURL( input.files[0] );

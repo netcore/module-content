@@ -79,7 +79,7 @@
                             @foreach($languages as $language)
 
                                 @php
-                                    $value = $viewHelper->getValueForTd($model, $language, $fieldName);
+                                    $value = $viewHelper->getValueForTd($model, $language, $fieldName, $fieldType);
                                 @endphp
 
                                 @if(count($languages) > 1)

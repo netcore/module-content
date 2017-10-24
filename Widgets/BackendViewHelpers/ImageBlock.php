@@ -40,9 +40,10 @@ class ImageBlock
      * @param $model
      * @param $language
      * @param $fieldName
+     * @param $fieldType
      * @return mixed
      */
-    public function getValueForTd($model, $language, $fieldName)
+    public function getValueForTd($model, $language, $fieldName, $fieldType)
     {
         $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
         $isNonJsonField = in_array($fieldName, $nonJsonFields);
@@ -53,6 +54,10 @@ class ImageBlock
             $jsonString = trans_model($model, $language, 'json');
             $jsonDecoded = (array) json_decode($jsonString);
             $value = array_get($jsonDecoded, $fieldName);
+        }
+
+        if($fieldType == 'checkbox') {
+            $value = $value ? 'Yes' : 'No';
         }
 
         return $value;

@@ -51,6 +51,15 @@
                                         data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                                         class="form-control image-blocks-summernote width-800"
                                     ></textarea>
+                                @elseif($fieldType == 'checkbox')
+                                    <input
+                                        type="checkbox"
+                                        value="1"
+                                        data-field="{{ $fieldName }}"
+                                        data-locale="{{ $language->iso_code }}"
+                                        data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
+                                        class=""
+                                    >
                                 @else
                                     <input
                                         type="text"
