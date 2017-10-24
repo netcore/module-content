@@ -17,10 +17,15 @@
                 $classes = [];
                 $styles = [];
                 $fieldName = array_get($field, 'name');
+                $fieldStyles = array_get($field, 'styles', []);
+                $imageWidth = array_get($fieldStyles, 'image_width', 75);
                 if($fieldName == 'image' AND count($fields) > 1) {
-                    //$classes[] = 'width-75';
-                    $imageWidth = array_get($field, 'image_width');
                     $styles[] = 'width:' . $imageWidth . 'px;';
+                }
+
+                $thWidth = array_get($fieldStyles, 'th_width');
+                if($thWidth){
+                    $styles[] = 'width:' . $thWidth. ';';
                 }
             @endphp
 
@@ -49,7 +54,8 @@
                         $fieldValue = array_get($field, 'value');
                         $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $languages);
 
-                        $imageWidth = array_get($field, 'image_width');
+                        $fieldStyles = array_get($field, 'styles', []);
+                        $imageWidth = array_get($fieldStyles, 'image_width', 75);
                     @endphp
 
                     <td
