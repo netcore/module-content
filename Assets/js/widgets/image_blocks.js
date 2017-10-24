@@ -132,7 +132,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             console.log('Init');
             //return;
             $(object).addClass('initialized').summernote({
-                height: 300,
+                height: 100,
+                width: 800,
                 focus: true,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'clear']],
