@@ -257,7 +257,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         actionsTemplate = replaceAll('modelId', modelId, actionsTemplate);
 
         // Handler for dragndrop
-        html += '<td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle width-50">';
+        html += '<td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle">';
         html += '<span class="fa fa-icon fa-arrows"></span>';
         html += '</td>';
 

@@ -12,7 +12,16 @@
     <tr>
         <th class="width-50">Reorder</th>
         @foreach($fields as $field)
-            <th class="{{ array_get($field, 'name') == 'image' ? 'text-align-center width-75' : '' }}">
+
+            @php
+                $classes = [];
+                $fieldName = array_get($field, 'name');
+                if($fieldName == 'image' AND count($fields) > 1) {
+                    $classes[] = 'width-75';
+                }
+            @endphp
+
+            <th class="{{ join($classes, ' ') }}">
                 {{ ucfirst(array_get($field, 'label')) }}
             </th>
         @endforeach
@@ -26,7 +35,7 @@
                     class="fade-out-{{ $model->id }} image-blocks-tr"
                     data-image-block-item-id="{{ $model->id }}"
             >
-                <td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle width-50">
+                <td class="cursor-dragndrop image-blocks-handle text-align-center vertical-align-middle">
                     <span class="fa fa-icon fa-arrows"></span>
                 </td>
                 @foreach($fields as $field)
@@ -38,13 +47,13 @@
                         $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $languages);
                     @endphp
 
-                    @if($fieldName == 'image')
-                        <td
-                            class="text-align-center width-75"
-                            data-value="{{ $dataValue }}"
-                            data-field="{{ $fieldName }}"
-                            data-td-id="{{ $loop->parent->index }}-image"
-                        >
+                    <td
+                        class="field"
+                        data-value="{{ $dataValue }}"
+                        data-field="{{ $fieldName }}"
+                        data-td-id="{{ $loop->parent->index }}-image"
+                    >
+                        @if($fieldName == 'image')
                             @if($model->image_file_name)
                                 <img
                                     src="{{ $model->image->url() }}"
@@ -54,14 +63,7 @@
                             @else
                                 No image
                             @endif
-                        </td>
-                    @else
-                        <td
-                            class="field"
-                            data-value="{{ $dataValue }}"
-                            data-field="{{ $fieldName }}"
-                            data-td-id="{{ $loop->parent->index }}-{{ $fieldName }}"
-                        >
+                        @else
                             @foreach($languages as $language)
 
                                 @php
@@ -79,8 +81,8 @@
                                 @endif
 
                             @endforeach
-                        </td>
-                    @endif
+                        @endif
+                    </td>
                 @endforeach
                 <td class="text-align-center vertical-align-middle width-150">
                     @include('content::module_content.widgets.image_blocks.backend_actions', [
