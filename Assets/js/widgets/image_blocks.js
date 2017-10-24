@@ -273,7 +273,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var tdId = trIndex + '-' + field;
             var jsonValue = JSON.stringify(fieldsJsonValue[field]);
 
-            html += '<td class="field" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
+            html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
 
             if( $.inArray(type, ['text', 'number', 'textarea']) !== -1 ) {
                 html += value;

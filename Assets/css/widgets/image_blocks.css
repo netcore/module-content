@@ -3,6 +3,15 @@
     border: 2px solid red !important;
 }
 
+.image-blocks-table td.has-image{
+    padding: 15px !important;
+}
+
+.image-blocks-table td{
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    padding: 5px !important;
+}
+
 .image-blocks-table td{
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
     padding: 5px !important;

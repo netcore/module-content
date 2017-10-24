@@ -15,13 +15,16 @@
 
             @php
                 $classes = [];
+                $styles = [];
                 $fieldName = array_get($field, 'name');
                 if($fieldName == 'image' AND count($fields) > 1) {
-                    $classes[] = 'width-75';
+                    //$classes[] = 'width-75';
+                    $imageWidth = array_get($field, 'image_width');
+                    $styles[] = 'width:' . $imageWidth . 'px;';
                 }
             @endphp
 
-            <th class="{{ join($classes, ' ') }}">
+            <th class="{{ join($classes, ' ') }}" style="{{ join($styles, '') }}">
                 {{ ucfirst(array_get($field, 'label')) }}
             </th>
         @endforeach
@@ -50,7 +53,7 @@
                     @endphp
 
                     <td
-                        class="field"
+                        class="field {{ $fieldName == 'image' ? 'has-image' : '' }}"
                         data-value="{{ $dataValue }}"
                         data-field="{{ $fieldName }}"
                         data-td-id="{{ $loop->parent->index }}-image"
