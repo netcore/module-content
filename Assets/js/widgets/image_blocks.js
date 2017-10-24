@@ -129,8 +129,6 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         var widgetTr = $(btn).closest('.widget-tr');
         var textareas = $(widgetTr).find('.image-blocks-summernote:not(.initialized)');
         $.each(textareas, function(i, object){
-            console.log('Init');
-            //return;
             $(object).addClass('initialized').summernote({
                 height: 100,
                 width: 800,
@@ -385,10 +383,15 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
 
             var type = $(input).attr('type');
+            var notRequired = $(input).data('not-required') || false;
             var isUpdate = $(this).closest('.add-new-container').data('update-image-block-item-id');
 
             if(type == 'file' && isUpdate) {
                 return true; // continue
+            }
+
+            if(notRequired) {
+                return true;
             }
 
             var value = $(input).val();

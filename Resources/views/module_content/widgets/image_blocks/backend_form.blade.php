@@ -12,7 +12,10 @@
                 $fieldLabel = array_get($field, 'label');
                 $fieldType = array_get($field, 'type');
                 $fieldValue = array_get($field, 'value');
-                $imageWidth = array_get($field, 'image_width');
+                $fieldStyles = array_get($field, 'styles');
+
+                $imageWidth = array_get($fieldStyles, 'image_width');
+                $notRequired = array_get($fieldStyles, 'not_required', 0);
             @endphp
 
             @if($fieldName == 'image')
@@ -28,6 +31,7 @@
                                 data-field="{{ $fieldName }}"
                                 class="form-control form-input inline"
                                 data-image-width="{{ $imageWidth }}"
+                                data-not-required="{{ $notRequired }}"
                             >
                             <span class="error-span"></span>
                         </div>
@@ -48,6 +52,7 @@
                                     <textarea
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
+                                        data-not-required="{{ $notRequired }}"
                                         data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                                         class="form-control image-blocks-summernote width-800"
                                     ></textarea>
@@ -57,6 +62,7 @@
                                         value="1"
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
+                                        data-not-required="{{ $notRequired }}"
                                         data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                                         class=""
                                     >
@@ -65,6 +71,7 @@
                                         type="text"
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
+                                        data-not-required="{{ $notRequired }}"
                                         data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                                         class="form-control"
                                     >
