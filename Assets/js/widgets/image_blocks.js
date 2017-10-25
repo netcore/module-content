@@ -287,6 +287,10 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
                 html += existingImage;
             }
+            else if( type === 'file' && !value && !updateId ) { // INSERT, with image not required
+
+                html += 'No image';
+            }
 
             html += '</td>';
         });
