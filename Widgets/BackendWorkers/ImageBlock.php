@@ -61,7 +61,20 @@ class ImageBlock implements BackendWorkerInterface
                 if ($name) {
                     $uploadedFile = request()->file($name);
                     if ($uploadedFile) {
-                        $isImage = substr($uploadedFile->getMimeType(), 0, 5) == 'image';
+
+                        $serverMimeType = $uploadedFile->getMimeType();
+                        $clientMimeType = $uploadedFile->getClientMimeType();
+
+                        $isImage = false;
+                        if (
+                            substr($serverMimeType, 0, 5) == 'image'
+                            OR
+                            // Here we trust admins not to upload malicious .svg file. That's odd, but at the moment I dont's see a way to validate .svg images.
+                            ($serverMimeType == 'text/html' AND $clientMimeType == 'image/svg+xml')
+                        ) {
+                            $isImage = true;
+                        }
+
                         if (!$isImage) {
 
                             $tdId = $trIndex . '-image';

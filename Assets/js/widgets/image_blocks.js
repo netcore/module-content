@@ -265,6 +265,11 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
             var type = $(input).is('textarea') ? 'textarea' : $(input).attr('type');
             var field = $(input).data('field');
             var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
+
+            if(updateId) {
+                trIndex--; // Index is zero based.
+            }
+
             var tdId = trIndex + '-' + field;
             var jsonValue = JSON.stringify(fieldsJsonValue[field]);
 
