@@ -33,7 +33,7 @@ class ResolverController extends Controller
 
                 if($channel) {
                     // @TODO - its not a valid approach to use $channel->slug. Must come up with something better.
-                    $channelTemplate = config('module_content.channels.'.$channel->slug.'.template');
+                    $channelTemplate = config('netcore.module-content.channels.'.$channel->slug.'.template');
                     if($channelTemplate) {
                         return view($channelTemplate, compact('channel'));
                     }

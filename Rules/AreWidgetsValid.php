@@ -28,7 +28,7 @@ class AreWidgetsValid implements Rule
         foreach($widgets as $widget) {
 
             $key = array_get($widget, 'widget');
-            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
             
             if ($backendWorker) {
