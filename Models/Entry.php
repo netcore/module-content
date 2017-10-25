@@ -50,7 +50,8 @@ class Entry extends Model implements StaplerableInterface
         'section_id',
         'is_active',
         'is_homepage',
-        'layout'
+        'layout',
+        'attachment'
     ];
 
     /**
@@ -64,8 +65,7 @@ class Entry extends Model implements StaplerableInterface
     public $translatedAttributes = [
         'title',
         'slug',
-        'content',
-        'attachment'
+        'content'
     ];
 
     /**
@@ -110,5 +110,22 @@ class Entry extends Model implements StaplerableInterface
     public function scopeHomepage($query)
     {
         return $query->active()->whereIsHomepage(1);
+    }
+
+    /**
+     * @return String
+     */
+    public function getHumanAttachmentSizeAttribute()
+    {
+        $decimals = 0;
+        $bytes = $this->attachment_file_size;
+
+        if (!$bytes) {
+            return '0 KB';
+        }
+
+        $size = [' B', ' KB', ' MB', ' GB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }

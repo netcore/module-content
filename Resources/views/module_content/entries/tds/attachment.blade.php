@@ -1,8 +1,5 @@
 @if($entry->attachment_file_name)
-    Download
-    {{--
-    <a href="{{ $entry->attachment->url() }}">Download</a>
-    --}}
+    <a href="{{ $entry->attachment->url() }}" target="_blank">File ({{ $entry->human_attachment_size }})</a>
 @else
-    No attachment
+    None
 @endif

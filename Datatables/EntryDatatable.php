@@ -55,7 +55,7 @@ trait EntryDatatable
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
-            ->rawColumns(['action', 'title', 'slug', 'is_active', 'is_homepage'])
+            ->rawColumns(['attachment', 'action', 'title', 'slug', 'is_active', 'is_homepage'])
             ->toJson();
     }
 
