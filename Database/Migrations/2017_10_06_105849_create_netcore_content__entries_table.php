@@ -40,7 +40,7 @@ class CreateNetcoreContentEntriesTable extends Migration
 
             $table->string('title')->default('');
             $table->string('locale')->index();
-            $table->text('content')->nullable();
+            $table->mediumText('content')->nullable();
 
             $table->string('slug')->default('');
         });
