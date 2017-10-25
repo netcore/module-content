@@ -45,11 +45,30 @@
                 <div class="col-xs-4">
                     <div class="form-group">
                         <label>Attachment</label>
-                        {!! Form::file('attachment', ['class' => 'form-control form-input slug']) !!}
+                        <br>
+                        {!! Form::file('attachment', [
+                            'class' => 'form-control form-input slug',
+                            'style' => ((isset($entry) && $entry->attachment_file_name) ? 'max-width:250px;display:inline;' : '' )
+                        ]) !!}
+
                         <span class="error-span"></span>
 
                         @if(isset($entry) && $entry->attachment_file_name)
-                            <a href="{{ $entry->attachment->url() }}" target="_blank">File ({{ $entry->human_attachment_size }})</a>
+                            <a
+                                class="btn btn-xs btn-danger confirm-action"
+                                data-title="Confirmation"
+                                data-text="Attachment will be deleted. Are you sure?"
+                                data-confirm-button-text="Delete"
+                                data-method="DELETE"
+                                data-href="{{ route('content::entries.destroy_attachment', $entry) }}"
+                                data-success-title="Success"
+                                data-success-text="Attachment was deleted"
+                                data-refresh-page-on-success
+                            >
+                                Delete
+                            </a>
+
+                            <a href="{{ $entry->attachment->url() }}" target="_blank">Download ({{ $entry->human_attachment_size }})</a>
                         @endif
                     </div>
                 </div>

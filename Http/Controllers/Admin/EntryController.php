@@ -155,4 +155,18 @@ class EntryController extends Controller
             'success' => true
         ]);
     }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function destroyAttachment(Entry $entry)
+    {
+        $entry->attachment = STAPLER_NULL;
+        $entry->save();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }
