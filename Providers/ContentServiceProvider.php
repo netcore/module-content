@@ -38,9 +38,7 @@ class ContentServiceProvider extends ServiceProvider
     public function register()
     {
         // Load stapler (it is not shipped with package auto-discovery)
-        $this->app->register(
-            \Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class
-        );
+        $this->app->register(\Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class);
     }
 
     /**
@@ -51,12 +49,10 @@ class ContentServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__ . '/../Config/module_content.php' => config_path('module_content.php'),
+            __DIR__ . '/../Config/config.php' => config_path('netcore/module-content.php'),
         ], 'config');
 
-        $this->mergeConfigFrom(
-            __DIR__ . '/../Config/module_content.php', 'content'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/../Config/config.php', 'content');
     }
 
     /**
