@@ -11,7 +11,7 @@ use Modules\Crud\Traits\CRUDModel;
 
 class Entry extends Model
 {
-    
+
     use Translatable, SyncTranslations;
 
     use CRUDModel;
@@ -43,7 +43,8 @@ class Entry extends Model
     public $translatedAttributes = [
         'title',
         'slug',
-        'content'
+        'content',
+        'attachment'
     ];
 
     /**
