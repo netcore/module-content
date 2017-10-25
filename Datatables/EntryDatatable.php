@@ -32,7 +32,8 @@ trait EntryDatatable
                 $language = $languages->first();
                 $translated = trans_model($entry, $language, 'content');
                 $stripped = strip_tags($translated);
-                return str_limit($stripped, 100);
+                $title = trans_model($entry, $language, 'title');
+                return str_limit($stripped, 100) ?: $title;
             })
             ->editColumn('updated_at', function ($entry) {
                 $updatedAt = $entry->updated_at;
@@ -76,6 +77,16 @@ trait EntryDatatable
             $query->whereChannelId($channelId);
         } else {
             $query->whereNull('channel_id');
+        }
+
+        if($keyword) {
+            $query->whereHas('translations', function($subq) use ($keyword) {
+                return $subq
+                    ->where('netcore_content__entry_translations.title', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('netcore_content__entry_translations.slug', 'LIKE', '%' . $keyword . '%')
+                    ->orWhere('netcore_content__entry_translations.content', 'LIKE', '%' . $keyword . '%')
+                    ;
+            });
         }
 
         return $query;
