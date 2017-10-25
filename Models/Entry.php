@@ -87,6 +87,14 @@ class Entry extends Model implements StaplerableInterface
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
+
+    /**
      * @return Storage
      */
     public function storage()
