@@ -27,7 +27,7 @@ class ResolverController extends Controller
 
                 // Single page (or channel)
 
-                $channel = Channel::whereHas('translations', function ($q) use ($slug) {
+                $channel = Channel::active()->whereHas('translations', function ($q) use ($slug) {
                     return $q->whereSlug($slug);
                 })->first();
 
@@ -39,7 +39,7 @@ class ResolverController extends Controller
                     }
                 }
 
-                $page = Entry::whereHas('translations', function ($q) use ($slug) {
+                $page = Entry::active()->whereHas('translations', function ($q) use ($slug) {
                     return $q->whereSlug($slug);
                 })->first();
 
@@ -50,15 +50,15 @@ class ResolverController extends Controller
                 $channelSlug = array_get($exploded, 0);
                 $entrySlug = array_get($exploded, 1);
 
-                $channel = Channel::whereHas('translations', function ($q) use ($channelSlug) {
+                $channel = Channel::active()->whereHas('translations', function ($q) use ($channelSlug) {
                     return $q->whereSlug($channelSlug);
                 })->first();
 
                 if (!$channel) {
-                    abort(404);
+                    return redirect()->to('/');
                 }
 
-                $page = Entry::whereChannelId($channel->id)
+                $page = Entry::active()->whereChannelId($channel->id)
                     ->whereHas('translations', function ($q) use ($entrySlug) {
                         return $q->whereSlug($entrySlug);
                     })->first();
@@ -66,7 +66,7 @@ class ResolverController extends Controller
         }
 
         if (!$page) {
-            abort(404);
+            return redirect()->to('/');
         }
 
         return view('content::module_content.resolver.page', compact('page'));

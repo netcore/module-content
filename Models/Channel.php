@@ -58,4 +58,13 @@ class Channel extends Model
     {
         return new Storage($this);
     }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->whereIsActive(1);
+    }
 }
