@@ -117,7 +117,7 @@ class Storage extends PassThrough
         $deletableContentBlocks = $entry->contentBlocks()->whereIn('id', $deletableContentBlockIds)->get();
         foreach ($deletableContentBlocks as $deletableContentBlock) {
             $key = $deletableContentBlock->widget;
-            $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+            $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
             $backendWorker = array_get($config, 'backend_worker');
             if ($backendWorker) {
                 $backendWorker = new $backendWorker($config);
@@ -147,7 +147,7 @@ class Storage extends PassThrough
         $entry = $this->entry;
 
         $key = array_get($contentBlock, 'widget');
-        $config = collect(config('module_content.widgets'))->where('key', $key)->first();
+        $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
         $backendWorker = array_get($config, 'backend_worker');
 
         if ($backendWorker) {

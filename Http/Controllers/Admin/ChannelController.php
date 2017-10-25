@@ -27,7 +27,7 @@ class ChannelController extends Controller
     {
         $languages = TransHelper::getAllLanguages();
 
-        $layoutOptions = config('module_content.layouts', []);
+        $layoutOptions = config('netcore.module-content.layouts', []);
         if (!$channel->layout) {
             $layoutOptions = [null => ''] + $layoutOptions;
         }

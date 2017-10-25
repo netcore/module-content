@@ -23,9 +23,9 @@ class EntryController extends Controller
     {
         $languages = TransHelper::getAllLanguages();
         $widgetData = $this->widgets();
-        $widgetOptions = collect(config('module_content.widgets'))->pluck('name', 'key');
+        $widgetOptions = collect(config('netcore.module-content.widgets'))->pluck('name', 'key');
 
-        $layoutOptions = config('module_content.layouts', []);
+        $layoutOptions = config('netcore.module-content.layouts', []);
 
         return view('content::module_content.entries.create.create', compact(
             'channelId',
@@ -73,9 +73,9 @@ class EntryController extends Controller
         $languages = TransHelper::getAllLanguages();
 
         $widgetData = $this->widgets();
-        $widgetOptions = collect(config('module_content.widgets'))->pluck('name', 'key');
+        $widgetOptions = collect(config('netcore.module-content.widgets'))->pluck('name', 'key');
 
-        $layoutOptions = config('module_content.layouts', []);
+        $layoutOptions = config('netcore.module-content.layouts', []);
         if (!$entry->layout) {
             $layoutOptions = [null => ''] + $layoutOptions;
         }
@@ -113,7 +113,7 @@ class EntryController extends Controller
      */
     public function widgets()
     {
-        $alteredWidgets = collect(config('module_content.widgets'))->map(function ($widget) {
+        $alteredWidgets = collect(config('netcore.module-content.widgets'))->map(function ($widget) {
 
             $view = array_get($widget, 'backend_template');
             $worker = array_get($widget, 'backend_worker');
