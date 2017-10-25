@@ -27,6 +27,12 @@ class CreateNetcoreContentEntriesTable extends Migration
             $table->boolean('is_active')->default(0);
             $table->boolean('is_homepage')->default(0);
 
+            // Stapler fields
+            $table->string('attachment_file_name')->nullable();
+            $table->integer('attachment_file_size')->nullable();
+            $table->string('attachment_content_type')->nullable();
+            $table->timestamp('attachment_updated_at')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -43,12 +49,6 @@ class CreateNetcoreContentEntriesTable extends Migration
             $table->mediumText('content')->nullable();
 
             $table->string('slug')->default('');
-
-            // Stapler fields
-            $table->string('attachment_file_name')->nullable();
-            $table->integer('attachment_file_size')->nullable();
-            $table->string('attachment_content_type')->nullable();
-            $table->timestamp('attachment_updated_at')->nullable();
         });
     }
 

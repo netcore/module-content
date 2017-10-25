@@ -2,20 +2,41 @@
 
 namespace Modules\Content\Models;
 
+use Codesleeve\Stapler\ORM\EloquentTrait;
+use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\Entry\Storage;
-use Modules\Admin\Traits\SyncTranslations;
 use Modules\Content\Translations\EntryTranslation;
+use Modules\Admin\Traits\StaplerAndTranslatable;
+use Modules\Admin\Traits\BootStapler;
+use Modules\Admin\Traits\SyncTranslations;
 use Modules\Crud\Traits\CRUDModel;
 
-class Entry extends Model
+class Entry extends Model implements StaplerableInterface
 {
 
-    use Translatable, SyncTranslations;
+    /**
+     * Stapler and Translatable traits conflict with each other
+     * Thats why we have created custom trait to resolve this conflict
+     */
+    use StaplerAndTranslatable, BootStapler;
+
+    use Translatable {
+        StaplerAndTranslatable::getAttribute insteadof Translatable;
+        StaplerAndTranslatable::setAttribute insteadof Translatable;
+    }
+
+    use EloquentTrait {
+        StaplerAndTranslatable::getAttribute insteadof EloquentTrait;
+        StaplerAndTranslatable::setAttribute insteadof EloquentTrait;
+        BootStapler::boot insteadof EloquentTrait;
+    }
+
+    use SyncTranslations;
 
     use CRUDModel;
-    
+
     /**
      * @var string
      */
@@ -45,6 +66,16 @@ class Entry extends Model
         'slug',
         'content',
         'attachment'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $staplerConfig = [
+        'attachment' => [
+            'default_style' => 'original',
+            'url'           => '/uploads/:class/:attachment/:id_partition/:style/:filename'
+        ]
     ];
 
     /**
