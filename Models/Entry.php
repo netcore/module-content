@@ -113,6 +113,17 @@ class Entry extends Model implements StaplerableInterface
     }
 
     /**
+     * @return string
+     */
+    public function preview($length)
+    {
+        return str_limit(
+            strip_tags($this->content),
+            $length
+        );
+    }
+
+    /**
      * @return String
      */
     public function getHumanAttachmentSizeAttribute()
