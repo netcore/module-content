@@ -49,6 +49,9 @@ trait EntryDatatable
             ->editColumn('is_active', function ($entry) {
                 return view('content::module_content.entries.tds.is_active', compact('entry'))->render();
             })
+            ->addColumn('attachment', function ($entry) {
+                return view('content::module_content.entries.tds.attachment', compact('entry'))->render();
+            })
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })

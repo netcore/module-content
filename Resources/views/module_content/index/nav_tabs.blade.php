@@ -61,6 +61,7 @@
                         <th>Title</th>
                         <th>Slug</th>
                         <th>Content</th>
+                        <th>Attachment</th>
                         <th>Updated at</th>
                         <th>Homepage?</th>
                         <th>Active</th>
@@ -100,6 +101,7 @@
                     <th>Title</th>
                     <th>Slug</th>
                     <th>Content</th>
+                    <th>Attachment</th>
                     <th>Updated at</th>
                     <th>Homepage?</th>
                     <th>Active</th>
