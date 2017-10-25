@@ -59,7 +59,9 @@ class Storage extends PassThrough
 
             // Checkboxes user array_has
             'is_active'   => array_has($requestData, 'is_active'),
-            'is_homepage' => $isHomepage
+            'is_homepage' => $isHomepage,
+
+            'attachment' => request()->file('attachment')
         ]);
 
         // If this is homepage, then mark other pages as regular ones

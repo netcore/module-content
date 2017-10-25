@@ -145,8 +145,10 @@ $(function() {
         $(this).closest('.tab-pane').find('input.slug').val(slug);
     });
 
-    $('body').on('click', '#submit-button', function(){
+    $('body').on('click', '#submit-button:not(.loading)', function(){
 
+        var btn = $(this);
+        $(btn).addClass('loading');
         var dataForBackend = $(this).closest('form').serializeArray();
 
         var widgets = [];
@@ -189,12 +191,16 @@ $(function() {
             formData.append(object.name, object.value);
         });
 
-        // todo - dont send images that has been deleted/overridden/cancel
         $.each(formDataImages, function(imageName, file){
             formData.append(imageName, file);
         });
 
-        var btn = $(this);
+        // Entry attachment
+        var attachments = $(this).closest('form').find('input[name=attachment]')[0].files;
+        $.each(attachments, function(i, file) {
+            formData.append('attachment', file);
+        });
+
         $(btn).find('.not-loading').hide();
         $(btn).find('.loading').show();
 
@@ -212,6 +218,7 @@ $(function() {
                     window.location.href = response.redirect_to;
                 } else {
 
+                    $(btn).removeClass('loading');
                     $(btn).find('.not-loading').show();
 
                     $.growl.notice({
@@ -221,6 +228,8 @@ $(function() {
                 }
             },
             error: function (xhr) {
+
+                $(btn).removeClass('loading');
 
                 $(btn).find('.loading').hide();
                 $(btn).find('.not-loading').show();

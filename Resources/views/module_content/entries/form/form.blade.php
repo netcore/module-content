@@ -27,19 +27,30 @@
         <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ $language->iso_code }}">
 
             <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-4">
                     <div class="form-group">
                         <label>Title</label>
                         {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control title']) !!}
                         <span class="error-span"></span>
                     </div>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-4">
                     <div class="form-group">
                         <label>Slug</label>
                         (Automatically generated if left empty)
                         {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control slug']) !!}
                         <span class="error-span"></span>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="form-group">
+                        <label>Attachment</label>
+                        {!! Form::file('attachment', ['class' => 'form-control form-input slug']) !!}
+                        <span class="error-span"></span>
+
+                        @if(isset($entry) && $entry->attachment_file_name)
+                            <a href="{{ $entry->attachment->url() }}" target="_blank">File ({{ $entry->human_attachment_size }})</a>
+                        @endif
                     </div>
                 </div>
             </div>
