@@ -44,7 +44,7 @@
                 </a>
 
                 <a href="{{ route('content::entries.create', $channel) }}" class="btn btn-success btn-xs">
-                    Add new page
+                    Add new {{ trans_model($channel, $firstLanguage, 'name') }} page
                 </a>
             </div>
 
