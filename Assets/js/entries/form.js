@@ -24,6 +24,15 @@ $(function() {
         });
     };
 
+    var initDatepicker = function () {
+        // Datepicker assets need to be fixed
+        /*
+        $('.datepicker').datepicker({
+            dateFormat: 'dd.mm.yy'
+        });
+        */
+    };
+
     var hideOrShowCountMessage = function(){
         var count = $('#widgets-table tr').length;
         if(!count) {
@@ -131,6 +140,9 @@ $(function() {
 
     // After widgets have been initialised - init sortable
     initSortable();
+
+    // Init datepicker on page load
+    initDatepicker();
 
     // Init switchery
     $('.switchery').each(function(i, switcher) {

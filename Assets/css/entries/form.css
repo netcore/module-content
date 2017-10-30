@@ -137,3 +137,7 @@ Override big margin from pixeladmin.css
     margin-top:5px;
     margin-bottom:5px;
 }
+
+input.datepicker{
+    padding: 4px 12px;
+}

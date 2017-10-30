@@ -27,7 +27,8 @@ class EntryRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'widgets' => new AreWidgetsValid
+            'created_at' => 'required|date_format:d.m.Y',
+            'widgets'    => new AreWidgetsValid
         ];
 
         $languagesInSystem = TransHelper::getAllLanguages();
@@ -46,7 +47,10 @@ class EntryRequest extends FormRequest
      */
     public function messages()
     {
-        $messages = [];
+        $messages = [
+            'created_at.required'    => 'Date field is required',
+            'created_at.date_format' => 'Date field must be in format dd.mm.yyyy'
+        ];
 
         $languagesInSystem = TransHelper::getAllLanguages();
         foreach ($languagesInSystem as $language) {

@@ -73,6 +73,7 @@ trait EntryDatatable
             'contentBlocks'
         ])
         ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
+        ->orderBy('created_at', 'DESC')
         ->orderBy('id', 'DESC')
         ;
 

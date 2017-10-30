@@ -51,7 +51,8 @@ class Entry extends Model implements StaplerableInterface
         'is_active',
         'is_homepage',
         'layout',
-        'attachment'
+        'attachment',
+        'created_at'
     ];
 
     /**

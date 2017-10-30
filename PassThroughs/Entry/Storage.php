@@ -2,6 +2,7 @@
 
 namespace Modules\Content\PassThroughs\Entry;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
@@ -52,10 +53,16 @@ class Storage extends PassThrough
             return (array)$contentBlock;
         }, $contentBlocks);
 
+
+        $createdAt = array_get($requestData, 'created_at');
+        $createdAtCarbon = Carbon::createFromFormat('d.m.Y', $createdAt);
+        $createdAtFormatted = $createdAtCarbon ? $createdAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
+
         // Regular data
         $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
             'layout'      => array_get($requestData, 'layout'),
+            'created_at'  => $createdAtFormatted,
 
             // Checkboxes user array_has
             'is_active'   => array_has($requestData, 'is_active'),

@@ -5,20 +5,21 @@
     ])
 @endif
 
-@php
-    $fieldErrors = $errors->get('layout');
-@endphp
 
-<div class="form-group{{ $fieldErrors ? ' has-error' : '' }}">
-    <label>Layout</label>
+<div class="row">
+    <div class="col-xs-12">
 
-    {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control']) !!}
+        <div class="form-group">
+            <label>Date</label>
+            {!! Form::text('created_at', (isset($entry) ? $entry->created_at->format('d.m.Y') : date('d.m.Y')), ['class' => 'form-control datepicker']) !!}
+            <span class="error-span"></span>
+        </div>
 
-    @foreach($fieldErrors as $error)
-        <span class="error-span">
-            {{ $error }}
-        </span>
-    @endforeach
+    </div>
+
+    <div class="col-xs-6">
+
+    </div>
 </div>
 
 <!-- Tab panes -->
@@ -130,6 +131,19 @@
 </div>
 
 <div class="pull-right">
+
+    @php
+        $multipleLayouts = count($layoutOptions) > 1;;
+    @endphp
+
+    <div
+        class="form-group {{ $multipleLayouts ? 'inline-block' : '' }}"
+        style="margin-right:15px;"
+        {{ $multipleLayouts ? '' : 'hidden' }}
+    >
+        {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control', 'style' => 'width:125px;']) !!}
+        <span class="error-span"></span>
+    </div>
 
     Homepage?
     <span class="hidden-switchery" hidden style="margin-right:10px;">
