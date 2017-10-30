@@ -55,7 +55,7 @@ class Storage extends PassThrough
 
 
         $createdAt = array_get($requestData, 'created_at');
-        $createdAtCarbon = Carbon::createFromFormat('d.m.Y', $createdAt);
+        $createdAtCarbon = Carbon::createFromFormat('d.m.Y', $createdAt)->startOfDay();
         $createdAtFormatted = $createdAtCarbon ? $createdAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
         // Regular data

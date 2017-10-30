@@ -41,7 +41,7 @@ trait EntryDatatable
             })
             ->editColumn('created_at', function ($entry) {
                 $createdAt = $entry->created_at;
-                return $createdAt ? $createdAt->format('d.m.Y H:i') : '-';
+                return $createdAt ? $createdAt->format('d.m.Y') : '-';
             })
             ->editColumn('is_homepage', function ($entry) {
                 return view('content::module_content.entries.tds.is_homepage', compact('entry'))->render();
