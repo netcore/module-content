@@ -39,9 +39,9 @@ trait EntryDatatable
                 $updatedAt = $entry->updated_at;
                 return $updatedAt ? $updatedAt->format('d.m.Y H:i') : '-';
             })
-            ->editColumn('created_at', function ($entry) {
-                $createdAt = $entry->created_at;
-                return $createdAt ? $createdAt->format('d.m.Y') : '-';
+            ->addColumn('published_at', function ($entry) {
+                $publishedAt = $entry->published_at;
+                return $publishedAt ? $publishedAt->format('d.m.Y') : '-';
             })
             ->editColumn('is_homepage', function ($entry) {
                 return view('content::module_content.entries.tds.is_homepage', compact('entry'))->render();
@@ -73,7 +73,7 @@ trait EntryDatatable
             'contentBlocks'
         ])
         ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
-        ->orderBy('created_at', 'DESC')
+        ->orderBy('published_at', 'DESC')
         ->orderBy('id', 'DESC')
         ;
 

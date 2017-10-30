@@ -57,7 +57,7 @@
                 >
                     <thead>
                     <tr>
-                        <th>Created at</th>
+                        <th>Published</th>
                         <th>Title</th>
                         <th>Slug</th>
                         <th>Content</th>
@@ -97,7 +97,7 @@
             >
                 <thead>
                 <tr>
-                    <th>Created at</th>
+                    <th>Published</th>
                     <th>Title</th>
                     <th>Slug</th>
                     <th>Content</th>

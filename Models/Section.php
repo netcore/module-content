@@ -19,7 +19,15 @@ class Section extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'order'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function channels()
+    {
+        return $this->hasMany(Channel::class);
+    }
 }

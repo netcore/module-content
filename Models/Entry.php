@@ -52,7 +52,14 @@ class Entry extends Model implements StaplerableInterface
         'is_homepage',
         'layout',
         'attachment',
-        'created_at'
+        'published_at'
+    ];
+
+    /**
+     * @var array
+     */
+    public $dates = [
+        'published_at'
     ];
 
     /**

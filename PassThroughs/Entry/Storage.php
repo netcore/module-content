@@ -54,19 +54,19 @@ class Storage extends PassThrough
         }, $contentBlocks);
 
 
-        $createdAt = array_get($requestData, 'created_at');
-        $createdAtCarbon = Carbon::createFromFormat('d.m.Y', $createdAt)->startOfDay();
-        $createdAtFormatted = $createdAtCarbon ? $createdAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
+        $publishedAt = array_get($requestData, 'published_at');
+        $publishedAtCarbon = Carbon::createFromFormat('d.m.Y', $publishedAt)->startOfDay();
+        $publishedAtFormatted = $publishedAtCarbon ? $publishedAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
         // Regular data
         $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
-            'layout'      => array_get($requestData, 'layout'),
-            'created_at'  => $createdAtFormatted,
+            'layout'       => array_get($requestData, 'layout'),
+            'published_at' => $publishedAtFormatted,
 
             // Checkboxes user array_has
-            'is_active'   => array_has($requestData, 'is_active'),
-            'is_homepage' => $isHomepage,
+            'is_active'    => array_has($requestData, 'is_active'),
+            'is_homepage'  => $isHomepage,
 
             'attachment' => request()->file('attachment')
         ]);

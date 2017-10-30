@@ -19,7 +19,7 @@ $(function() {
             //order: [[1, "asc"]],
             columns: [
 
-                { data: 'created_at', name: 'created_at', orderable: false, searchable: false, class: 'vertical-align-middle width-150'},
+                { data: 'published_at', name: 'published_at', orderable: false, searchable: false, class: 'vertical-align-middle width-150'},
                 { data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
                 { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
                 { data: 'content', name: 'content', orderable: false, searchable: false, class: ''},

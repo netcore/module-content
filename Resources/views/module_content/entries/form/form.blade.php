@@ -11,7 +11,7 @@
 
         <div class="form-group">
             <label>Date</label>
-            {!! Form::text('created_at', (isset($entry) ? $entry->created_at->format('d.m.Y') : date('d.m.Y')), ['class' => 'form-control datepicker']) !!}
+            {!! Form::text('published_at', (isset($entry) ? $entry->published_at->format('d.m.Y') : date('d.m.Y')), ['class' => 'form-control datepicker']) !!}
             <span class="error-span"></span>
         </div>
 
