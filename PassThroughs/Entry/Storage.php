@@ -58,6 +58,8 @@ class Storage extends PassThrough
         $publishedAtCarbon = Carbon::createFromFormat('d.m.Y', $publishedAt)->startOfDay();
         $publishedAtFormatted = $publishedAtCarbon ? $publishedAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
+        $isActive = array_has($requestData, 'is_active');
+
         // Regular data
         $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
@@ -65,7 +67,7 @@ class Storage extends PassThrough
             'published_at' => $publishedAtFormatted,
 
             // Checkboxes user array_has
-            'is_active'    => array_has($requestData, 'is_active'),
+            'is_active'    => $isActive,
             'is_homepage'  => $isHomepage,
 
             'attachment' => request()->file('attachment')
@@ -138,6 +140,15 @@ class Storage extends PassThrough
         // Store translations
         $entryTranslations = (array)array_get($requestData, 'translations', []);
         $this->storeEntryTranslations($entryTranslations);
+
+        // Hide/show menu items that link to this entry
+        $menuItemClass = '\Modules\Admin\Models\MenuItem';
+        if(class_exists($menuItemClass)) {
+            $slug = '/' . trim($entry->slug, '/');
+            app($menuItemClass)->whereValue($slug)->update([
+                'is_active' => $isActive
+            ]);
+        }
 
         return $entry;
     }
