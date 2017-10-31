@@ -30,7 +30,7 @@ Screenshot:
 
 Require this package with composer:
 
-    composer require netcore/translations --dev
+    composer require netcore/module-content
 
 Publish config, assets, migrations. Migrate and seed:
 
@@ -48,7 +48,7 @@ However, in most cases add this to your RouteServiceProvider.php (typically in `
         'middleware' => ['web'],
         'namespace'  => null,
     ], function (Router $router) {
-        ResolverRouter::register($router);
+        \Modules\Content\Http\ResolverRouter::register($router);
     });
 
 After installation, you should start editing ```config/netcore/module-content.php``` and put there your own widgets
