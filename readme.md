@@ -84,5 +84,5 @@ However, in most cases your will not customize backend_template and backend_work
 Channels should be added via database seeding. They are typically hardcoded, so administrator shouldn't have any user
 interface to add new channels.
 
-However, you need to configure and create a template for each of your channels. (In ```config/netcore/module-content.php```)
+However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
 
