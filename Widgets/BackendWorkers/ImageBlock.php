@@ -69,7 +69,7 @@ class ImageBlock implements BackendWorkerInterface
                     $fieldConfig = array_get($configuredFields, $field, []);
                     $fieldType = array_get($fieldConfig, 'type', 'text');
 
-                    $maxlength = 255;
+                    $maxlength = 191;
                     if ($fieldType == 'textarea') {
                         $maxlength = 8000000; // 8MB
                     }

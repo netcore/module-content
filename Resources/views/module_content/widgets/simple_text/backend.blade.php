@@ -26,9 +26,10 @@
                         $value,
                         [
                             'hidden',
-                            'class' => 'summernote',
-                            'data-field' => 'content',
-                            'data-locale' => $language->iso_code
+                            'class'       => 'summernote',
+                            'data-field'  => 'content',
+                            'data-locale' => $language->iso_code,
+                            'maxlength'   => '8000000'
                         ]
                     ) !!}
 
@@ -67,13 +68,14 @@
                                 @else
                                     <input
                                         type="text"
+                                        maxlength="191"
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
                                         class="form-control"
                                         value="{{ $fieldValue }}"
                                     >
                                 @endif
-                                <span class="error-span"></span>
+                                <span class="error-span" data-field="{{ $language->iso_code }}-{{ $fieldName }}"></span>
                             </div>
                         </td>
                     </tr>

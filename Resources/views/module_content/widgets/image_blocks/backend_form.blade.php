@@ -50,6 +50,7 @@
                             <div class="form-group no-margin">
                                 @if($fieldType == 'textarea')
                                     <textarea
+                                        maxlength="8000000"
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
                                         data-not-required="{{ $notRequired }}"
@@ -69,6 +70,7 @@
                                 @else
                                     <input
                                         type="text"
+                                        maxlength="191"
                                         data-field="{{ $fieldName }}"
                                         data-locale="{{ $language->iso_code }}"
                                         data-not-required="{{ $notRequired }}"

@@ -43,20 +43,35 @@ class SimpleText implements BackendWorkerInterface
         $order = array_get($widget, 'order');
         $data = (array)array_get($widget, 'data');
         $translations = (array)array_get($data, 'translations');
+        $configuredFields = array_get($this->config, 'fields');
 
         $languagesInSystem = TransHelper::getAllLanguages();
         foreach ($languagesInSystem as $languageInSystem) {
             $translationsForThatLanguage = (array)array_get($translations, $languageInSystem->iso_code, []);
 
-            // strip_tags() is necessary because content can be something like this: '<p><br></p>'
-            // In reality it's empty, so testing length of string is not enough
-            $content = strip_tags(
-                array_get($translationsForThatLanguage, 'content')
-            );
+            foreach($translationsForThatLanguage as $field => $value) {
 
-            if (!$content) {
-                $key = 'specificField.' . $order . '.' . $languageInSystem->iso_code . '.content';
-                $errors[$key] = 'Content is required';
+                $fieldConfig = array_get($configuredFields, $field, []);
+                $fieldType = array_get($fieldConfig, 'type', 'textarea');
+
+                // strip_tags() is necessary because content can be something like this: '<p><br></p>'
+                // In reality it's empty, so testing length of string is not enough
+                $value = strip_tags($value);
+                $key = 'specificField.' . $order . '.' . $languageInSystem->iso_code . '.' . $field;
+
+                if ($fieldType != 'checkbox' AND !$value) {
+                    $errors[$key] = 'Field is required';
+                }
+
+                $maxlength = 191;
+
+                if ($fieldType == 'textarea') {
+                    $maxlength = 8000000; // 8MB
+                }
+
+                if (mb_strlen($value) > $maxlength) {
+                    $errors[$key] = 'Data is too long';
+                }
             }
         }
 
