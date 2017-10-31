@@ -54,6 +54,36 @@ class ImageBlock implements BackendWorkerInterface
             $block = (array)$block;
             $attributes = (array)array_get($block, 'attributes', []);
 
+            // Validate length of attributes that are not images
+            $configuredFields = array_get($this->config, 'fields');
+            foreach ($attributes as $field => $data) {
+
+                if (!$data) {
+                    continue;
+                }
+
+                $data = (array)$data;
+
+                foreach ($data as $isoCode => $value) {
+
+                    $fieldConfig = array_get($configuredFields, $field, []);
+                    $fieldType = array_get($fieldConfig, 'type', 'text');
+
+                    $maxlength = 255;
+                    if ($fieldType == 'textarea') {
+                        $maxlength = 8000000; // 8MB
+                    }
+
+                    if (mb_strlen($value) > $maxlength) {
+
+                        $tdId = $trIndex . '-' . $field;
+                        $key = 'tableCell.' . $contentBlockIndex . '.' . $tdId;
+
+                        $errors[$key] = 'Data is too long for this field';
+                    }
+                }
+            }
+
             $imageAttribute = (array)array_get($attributes, 'image', []);
 
             if ($imageAttribute) {
