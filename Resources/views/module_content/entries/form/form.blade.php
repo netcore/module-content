@@ -48,7 +48,7 @@
                         <label>Attachment</label>
                         <br>
                         {!! Form::file('attachment', [
-                            'class' => 'form-control form-input slug',
+                            'class' => 'form-control form-input',
                             'style' => ((isset($entry) && $entry->attachment_file_name) ? 'max-width:250px;display:inline;' : '' )
                         ]) !!}
 

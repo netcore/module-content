@@ -197,7 +197,7 @@ $(function() {
         $(form).find('[data-toggle="tooltip"]').tooltip('destroy');
         $(form).find('.error-span').text('');
 
-        var formData = new FormData(form);
+        var formData = new FormData();
 
         $(dataForBackend).each(function(index, object){
             formData.append(object.name, object.value);
@@ -271,7 +271,7 @@ $(function() {
                                         .attr('data-toggle', 'tooltip')
                                         .attr('data-container', 'body')
                                         .attr('title', value)
-                                        ;
+                                    ;
 
                                     $(td).tooltip(); // Bootstrap tooltip
                                 }
@@ -313,3 +313,4 @@ $(function() {
         });
     });
 });
+
