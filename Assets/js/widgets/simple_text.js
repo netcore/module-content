@@ -17,15 +17,15 @@ onWidgetAdded['simple_text'] = function(widgetTr) {
         height: 300,
         focus: true,
         toolbar: [
-            // [groupName, [list of button]]
             ['style', ['bold', 'italic', 'underline', 'clear']],
-            //['font', ['strikethrough', 'superscript', 'subscript']],
             ['fontsize', ['fontsize']],
             ['color', ['color']],
+            ['style', ['style']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['height', ['height']],
             ['insert', ['picture', 'link']]
-        ]
+        ],
+        fontSizes: ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
     });
 };
 
@@ -35,7 +35,7 @@ onWidgetAdded['simple_text'] = function(widgetTr) {
  * will be called to collect data from widget for usage in backend.
  *
  * widgetTr is <tr></tr> element that houses widget
- * 
+ *
  */
 widgetDataCollectors['simple_text'] = function(widgetTr) {
 
@@ -64,3 +64,4 @@ widgetDataCollectors['simple_text'] = function(widgetTr) {
         'translations': translations
     };
 };
+
