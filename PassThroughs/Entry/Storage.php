@@ -206,6 +206,26 @@ class Storage extends PassThrough
     }
 
     /**
+     *
+     */
+    public function deleteOldContentBlocks()
+    {
+        $entry = $this->entry;
+
+        foreach($entry->contentBlocks as $contentBlock) {
+
+            $key = $contentBlock->widget;
+            $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
+            $backendWorker = array_get($config, 'backend_worker');
+            $backendWorker = new $backendWorker($config);
+
+            // Delete data in related tables
+            $backendWorker->delete($contentBlock);
+            $contentBlock->delete();
+        }
+    }
+
+    /**
      * @param array $entryTranslations
      */
     private function storeEntryTranslations(Array $entryTranslations)

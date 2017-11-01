@@ -154,8 +154,19 @@ class EntryController extends Controller
         // Delete content blocks
         $entry->storage()->deleteOldContentBlocks();
 
+        // Grab slug before object is deleted
+        $slug = '/' . trim($entry->slug, '/');
+
         // Delete entry itself
         $entry->delete();
+
+        // Hide/show menu items that link to this entry
+        $menuItemClass = '\Modules\Admin\Models\MenuItem';
+        if(class_exists($menuItemClass)) {
+            app($menuItemClass)->whereValue($slug)->update([
+                'is_active' => 0
+            ]);
+        }
 
         return response()->json([
             'success' => true
