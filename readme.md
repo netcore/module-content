@@ -25,6 +25,15 @@ Screenshot:
 ![screenshot](https://image.prntscr.com/image/K4IDTqVFShu_EcAUvtAu6w.png)
 
 
+## Pre-installation
+
+This package is part of Netcore CMS ecosystem and is only functional in a project that has following packages
+installed:
+
+1. https://github.com/netcore/netcore
+2. https://github.com/netcore/module-admin
+3. https://github.com/netcore/module-translate
+4. https://github.com/nWidart/laravel-modules
 
 ## Installation
 
