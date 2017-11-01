@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Http\Requests\Admin\EntryRequest;
+use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
@@ -27,8 +28,11 @@ class EntryController extends Controller
 
         $layoutOptions = config('netcore.module-content.layouts', []);
 
+        $channel = $channelId ? Channel::find($channelId) : null;
+
         return view('content::module_content.entries.create.create', compact(
             'channelId',
+            'channel',
             'languages',
             'widgetData',
             'widgetOptions',
@@ -70,6 +74,7 @@ class EntryController extends Controller
     public function edit(Entry $entry)
     {
         $entry->load('contentBlocks');
+        $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 
         $widgetData = $this->widgets();
@@ -82,6 +87,7 @@ class EntryController extends Controller
 
         return view('content::module_content.entries.edit.edit', compact(
             'entry',
+            'channel',
             'languages',
             'widgetData',
             'widgetOptions',

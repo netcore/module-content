@@ -1,9 +1,14 @@
+
+@php
+    $activeChannel = request()->get('channel');
+@endphp
+
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
 
     <li
         role="presentation"
-        class="active"
+        class="{{ $activeChannel ? '' : 'active' }}"
     >
         <a
             href="#single-entries"
@@ -16,7 +21,10 @@
     </li>
 
     @foreach($channels as $channel)
-        <li role="presentation">
+        <li
+            role="presentation"
+            class="{{ $activeChannel == $channel->slug ? 'active' : '' }}"
+        >
             <a
                 href="#channel-{{ $channel->id }}"
                 aria-controls="channel-{{ $channel->id }}"
@@ -35,7 +43,7 @@
     @foreach($channels as $channel)
         <div
             role="tabpanel"
-            class="tab-pane"
+            class="tab-pane {{ $activeChannel == $channel->slug ? 'active' : '' }}"
             id="channel-{{ $channel->id }}"
         >
             <div class="above-table">
@@ -79,7 +87,7 @@
 
     <div
         role="tabpanel"
-        class="tab-pane active"
+        class="tab-pane {{ $activeChannel ? '' : 'active' }}"
         id="single-entries"
     >
         <div class="above-table">

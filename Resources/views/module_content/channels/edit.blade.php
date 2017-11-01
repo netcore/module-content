@@ -31,7 +31,7 @@
 
             <button type="submit" class="btn btn-lg btn-success m-t-3 pull-xs-right">Save</button>
 
-            <a href="{{ route('content::content.index') }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+            <a href="{{ route('content::content.index') }}?channel={{ $channel->slug }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
                 Back
             </a>
 

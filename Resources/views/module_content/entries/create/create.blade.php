@@ -18,7 +18,7 @@
             <div class="panel">
                 <div class="panel-heading">
                     <div class="panel-title">
-                        Create
+                        Create {{ $channel ? $channel->name : 'Page' }}
                     </div>
                 </div>
                 <div class="panel-body">
@@ -33,7 +33,7 @@
                 Save
             </a>
 
-            <a href="{{ route('content::content.index') }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+            <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
                 Back
             </a>
 

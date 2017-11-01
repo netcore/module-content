@@ -40,7 +40,7 @@
                 </span>
             </a>
 
-            <a href="{{ route('content::content.index') }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+            <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
                 Back
             </a>
 
