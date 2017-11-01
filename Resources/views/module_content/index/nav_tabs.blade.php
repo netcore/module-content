@@ -71,7 +71,7 @@
                         <th>Content</th>
                         <th>Attachment</th>
                         <th>Updated at</th>
-                        <th>Homepage?</th>
+                        {{-- <th>Homepage?</th> --}}
                         <th>Active</th>
                         <th>Actions</th>
                     </tr>
@@ -111,7 +111,7 @@
                     <th>Content</th>
                     <th>Attachment</th>
                     <th>Updated at</th>
-                    <th>Homepage?</th>
+                    {{-- <th>Homepage?</th> --}}
                     <th>Active</th>
                     <th>Actions</th>
                 </tr>

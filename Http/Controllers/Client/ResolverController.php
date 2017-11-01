@@ -19,6 +19,11 @@ class ResolverController extends Controller
 
         if (!$slug) {
             $page = Entry::homepage()->with('contentBlocks')->first();
+
+            if(!$page) { // Home page is not set
+                abort(404);
+            }
+
         } else {
 
             $exploded = explode('/', $slug);

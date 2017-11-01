@@ -145,12 +145,14 @@
         <span class="error-span"></span>
     </div>
 
-    Homepage?
-    <span class="hidden-switchery" hidden style="margin-right:10px;">
-        {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 0), [
-            'class' => 'switchery'
-        ]) !!}
-    </span>
+    @if(!$channel)
+        Homepage?
+        <span class="hidden-switchery" hidden style="margin-right:10px;">
+            {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 0), [
+                'class' => 'switchery'
+            ]) !!}
+        </span>
+    @endif
 
     Active
     <span class="hidden-switchery" hidden>
