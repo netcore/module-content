@@ -6,7 +6,7 @@
  * is added
  *
  * It's a good place to initialise things like summernote,
- * switchery, bootstrap toolbars, etc.
+ * switchery, bootstrap tooltips, etc.
  *
  * widgetTr is <tr></tr> element that houses widget
  *

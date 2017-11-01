@@ -20,7 +20,7 @@ onWidgetAdded['image_blocks'] = function(widgetTr) {
  * will be called to collect data from widget for usage in backend.
  *
  * widgetTr is <tr></tr> element that houses widget
- * 
+ *
  */
 widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
@@ -151,6 +151,24 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         initSortable(table);
     });
 
+    var initImageTooltips = function(){
+
+        $('.image-blocks-tr .field.has-image img').each(function(index, img){
+
+            var title = $(img).attr('title');
+            var naturalWidth = $(img)[0].naturalWidth;
+            var naturalHeight = $(img)[0].naturalHeight;
+
+            title += ' (' + naturalWidth + 'x' + naturalHeight + 'px)';
+
+            $(img).attr('title', title);
+        });
+
+        $('[data-toggle=tooltip]').tooltip({}); // Bootstrap tooltip
+    };
+
+    initImageTooltips();
+
     var getFieldsJsonValue = function(btn, modelId){
 
         var translatableFields = [];
@@ -279,16 +297,15 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 html += value;
             } else if( type === 'file' && value) {
                 var src = URL.createObjectURL( input.files[0] );
-
                 var imageWidth = $(input).data('image-width') || 50;
-                html += '<img class="img-responsive" style="width:' + imageWidth + 'px;" src="' + src + '">';
+                html += '<img class="img-responsive" data-initialized="0" data-toggle="tooltip" data-placement="right" title="Test" data-container="body" style="width:' + imageWidth + 'px;" src="' + src + '">';
             }
             else if( type === 'file' && !value && updateId ) { // UPDATE, with image intact
 
                 var existingImage = $(containerBody)
-                        .find('.image-blocks-table tbody tr[data-image-block-item-id="' + updateId + '"]')
-                        .find('td[data-field="' + field + '"]')
-                        .html();
+                    .find('.image-blocks-table tbody tr[data-image-block-item-id="' + updateId + '"]')
+                    .find('td[data-field="' + field + '"]')
+                    .html();
 
                 html += existingImage;
             }
@@ -331,6 +348,28 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
 
         var table = $(btn).closest('.template-container-body').find('.image-blocks-table');
+
+        $(table).find('[data-toggle="tooltip"][data-initialized=0]').each(function(i, img){
+
+            if($(img).data('initialized')) {
+                return true;
+            }
+
+            img.onload = function(){
+
+                var title = '';
+                var naturalWidth = $(img)[0].naturalWidth;
+                var naturalHeight = $(img)[0].naturalHeight;
+
+                title += ' (' + naturalWidth + 'x' + naturalHeight + 'px)';
+
+                $(img).attr('title', title);
+
+                $(img).tooltip();
+                $(img).data('initialized', 1);
+            };
+        });
+
         initSortable(table);
     };
 

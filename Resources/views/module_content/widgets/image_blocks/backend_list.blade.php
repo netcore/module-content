@@ -68,8 +68,13 @@
                             @if($model->image_file_name)
                                 <img
                                     src="{{ $model->image->url() }}"
+
                                     alt="Image"
                                     class="img-responsive"
+                                    data-toggle="tooltip"
+                                    data-placement="right"
+                                    title="{{ $model->human_attachment_size }}"
+                                    data-container="body"
                                     style="width:{{ $imageWidth }}px;"
                                 >
                             @else

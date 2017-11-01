@@ -92,4 +92,21 @@ class ImageBlockItem extends Model implements StaplerableInterface
     {
         return (array) json_decode($this->json);
     }
+
+    /**
+     * @return String
+     */
+    public function getHumanAttachmentSizeAttribute()
+    {
+        $decimals = 0;
+        $bytes = $this->image_file_size;
+
+        if (!$bytes) {
+            return '0 KB';
+        }
+
+        $size = [' B', ' KB', ' MB', ' GB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+    }
 }
