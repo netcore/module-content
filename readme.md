@@ -56,6 +56,20 @@ according to "Adding a new widget" instructions.
 
 
 
+## Updating to new version
+
+Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 ir released.
+Because we are working with https://github.com/nWidart/laravel-modules, simply doing
+```composer require netcore/module-content``` might not be enough, because there might be
+changes in assets and/or migrations. Therefore, to install new version, you should run all the following commands:
+
+    composer require netcore/module-content:0.0.x
+    php artisan module:publish Content
+    php artisan module:publish-migration Content
+    php artisan migrate
+
+
+
 ## Terminology
 
 Before working with this package, it can be helpful to understand basic terminology:
