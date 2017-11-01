@@ -63,45 +63,58 @@ $(function() {
         return text;
     };
 
-    $.get('/admin/content/entries/widgets', function(widgets){
+    $.ajax({
+        url: '/admin/content/entries/widgets',
+        type: 'GET',
+        data: null,
+        dataType: 'json',
+        success: function (widgets) {
 
-        $('body').on('click', '#add-widget-button', function(){
-            var key = $('#select-widget option:selected').val();
-            var data = widgets[key];
+            $('body').on('click', '#add-widget-button', function(){
+                var key = $('#select-widget option:selected').val();
+                var data = widgets[key];
 
-            var contentBlockId = randomString();
-            var javascriptKey = data.javascript_key;
-            var widgetName = data.name;
-            var template = data.backend_template || data.name;
+                var contentBlockId = randomString();
+                var javascriptKey = data.javascript_key;
+                var widgetName = data.name;
+                var template = data.backend_template || data.name;
 
-            var withBorder = data.backend_with_border ? 'with-border' : '';
+                var withBorder = data.backend_with_border ? 'with-border' : '';
 
-            var html = $('#widget-tr-template').html();
-            html = replaceAll('{{ contentBlockId }}', contentBlockId, html);
-            html = replaceAll('{{ key }}', key, html);
-            html = replaceAll('{{ javascriptKey }}', javascriptKey, html);
-            html = replaceAll('{{ withBorder }}', withBorder, html);
-            html = replaceAll('{{ template }}', template, html);
-            html = replaceAll('{{ widgetName }}', widgetName, html);
+                var html = $('#widget-tr-template').html();
+                html = replaceAll('{{ contentBlockId }}', contentBlockId, html);
+                html = replaceAll('{{ key }}', key, html);
+                html = replaceAll('{{ javascriptKey }}', javascriptKey, html);
+                html = replaceAll('{{ withBorder }}', withBorder, html);
+                html = replaceAll('{{ template }}', template, html);
+                html = replaceAll('{{ widgetName }}', widgetName, html);
 
-            if( $('#widgets-table tbody .widget-tr').length ) {
-                $('#widgets-table tbody .widget-tr:last').after(html);
-            } else {
-                $('#widgets-table tbody').html(html);
-            }
+                if( $('#widgets-table tbody .widget-tr').length ) {
+                    $('#widgets-table tbody .widget-tr:last').after(html);
+                } else {
+                    $('#widgets-table tbody').html(html);
+                }
 
-            hideOrShowCountMessage();
-            initSortable();
+                hideOrShowCountMessage();
+                initSortable();
 
-            var callable = onWidgetAdded[javascriptKey];
-            if(callable){
-                var widgetTr = $('#widgets-table .widget-tr:last');
-                callable(widgetTr);
-            }
-        });
+                var callable = onWidgetAdded[javascriptKey];
+                if(callable){
+                    var widgetTr = $('#widgets-table .widget-tr:last');
+                    callable(widgetTr);
+                }
+            });
 
-        // On page load - show wysiwyg, if there are no widgets
-        loadWysiwygOnPageload();
+            // On page load - show wysiwyg, if there are no widgets
+            loadWysiwygOnPageload();
+        },
+        error: function (xhr) {
+            $.growl.error({
+                title : 'Error!',
+                message : 'Sorry, there ws an error. Please try again later or inform technical staff about this problem.',
+                duration: 10000
+            });
+        }
     });
 
     // Delete widget blocks
@@ -246,6 +259,19 @@ $(function() {
                 $(btn).find('.loading').hide();
                 $(btn).find('.not-loading').show();
 
+                var statusCode = xhr.status;
+
+                if(statusCode != 422) {
+
+                    $.growl.error({
+                        title : 'Error!',
+                        message : 'Sorry, there ws an error. Please try again later or inform technical staff about this problem.',
+                        duration: 10000
+                    });
+
+                    return;
+                }
+
                 var errors = xhr.responseJSON.errors;
 
                 $.each(errors, function(key, value){
@@ -313,4 +339,3 @@ $(function() {
         });
     });
 });
-
