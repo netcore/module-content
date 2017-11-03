@@ -1,6 +1,5 @@
-
 @if(count($languages) > 1)
-    @include('crud::nav_tabs', [
+    @include('translate::_partials._nav_tabs', [
         'idPrefix' => 'simple-text-'
     ])
 @endif

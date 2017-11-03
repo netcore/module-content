@@ -1,10 +1,8 @@
-
 @if(count($languages) > 1)
-    @include('crud::nav_tabs', [
+    @include('translate::_partials._nav_tabs', [
         'idPrefix' => 'basic-data-'
     ])
 @endif
-
 
 <div class="row">
     <div class="col-xs-12">
