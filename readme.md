@@ -1,4 +1,4 @@
-## Content management with widgets
+## Content management with widgets v0.1
 
 Idea behind this package is that many webpages are constructed from different sections, that
 look different in frontend, but they can use identical UI and database structure in backend.
