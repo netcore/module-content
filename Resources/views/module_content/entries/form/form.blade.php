@@ -23,7 +23,7 @@
 <!-- Tab panes -->
 <div class="tab-content {{ count($languages) > 1 ? '' : 'no-padding' }}">
     @foreach($languages as $language)
-        <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="{{ $language->iso_code }}">
+        <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="basic-data-{{ $language->iso_code }}">
 
             <div class="row">
                 <div class="col-xs-4">
