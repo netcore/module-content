@@ -109,3 +109,8 @@ interface to add new channels.
 
 However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
 
+## Main information about versions
+
+0.1 branch contains initial version of package. It has very limited multi-language support and it is mainly intended for use in not-translatable websites.
+1.0 branch will properly support translatable websites. Although that will not be possible in initial 1.0.0 version, but will be added in a new minor or patch release.
+
