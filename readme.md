@@ -67,7 +67,7 @@ according to "Adding a new widget" instructions.
 
 ## Updating to new version
 
-Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 ir released.
+Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 is released.
 Because we are working with https://github.com/nWidart/laravel-modules, simply doing
 ```composer require netcore/module-content``` might not be enough, because there might be
 changes in assets and/or migrations. Therefore, to install new version, you should run all the following commands:
@@ -112,5 +112,6 @@ However, you need to configure and create a template for each of your channels i
 ## Main information about versions
 
 0.1 branch contains initial version of package. It has very limited multi-language support and it is mainly intended for use in not-translatable websites.
+
 1.0 branch will properly support translatable websites. Although that will not be possible in initial 1.0.0 version, but will be added in a new minor or patch release.
 
