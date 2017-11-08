@@ -67,7 +67,7 @@ according to "Adding a new widget" instructions.
 
 ## Updating to new version
 
-Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 ir released.
+Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 is released.
 Because we are working with https://github.com/nWidart/laravel-modules, simply doing
 ```composer require netcore/module-content``` might not be enough, because there might be
 changes in assets and/or migrations. Therefore, to install new version, you should run all the following commands:
