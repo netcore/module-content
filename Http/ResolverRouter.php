@@ -20,6 +20,12 @@ class ResolverRouter
             'namespace'  => 'Modules\Content\Http\Controllers\Client'
         ], function (Router $router) {
 
+            $router->get('/content/entry/{entry}', [
+                'uses'       => 'ApiController@entry',
+                'as'         => 'api.entry',
+                'middleware' => []
+            ]);
+
             $router->get('/{slug}', [
                 'uses'       => 'ResolverController@resolve',
                 'as'         => 'resolver',
