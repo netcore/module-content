@@ -134,6 +134,7 @@ class Entry extends Model implements StaplerableInterface
     public function preview($length)
     {
         $replaced = str_replace('</p>', ' </p>', $this->content);
+        $replaced = html_entity_decode($replaced);
 
         return str_limit(
             strip_tags($replaced),
@@ -147,7 +148,15 @@ class Entry extends Model implements StaplerableInterface
      */
     public function readMoreIfPreviewIs($length)
     {
-        return $this->preview($length) < $this->preview($length + 1);
+        $lengthOfPreview = mb_strlen(
+            $this->preview($length)
+        );
+
+        $lengthOfPreviewPlusOne = mb_strlen(
+            $this->preview($length + 1)
+        );
+
+        return $lengthOfPreview < $lengthOfPreviewPlusOne;
     }
 
     /**
