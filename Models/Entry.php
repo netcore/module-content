@@ -47,7 +47,6 @@ class Entry extends Model implements StaplerableInterface
      */
     protected $fillable = [
         'channel_id',
-        'section_id',
         'is_active',
         'is_homepage',
         'layout',

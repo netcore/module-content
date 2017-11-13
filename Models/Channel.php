@@ -14,7 +14,6 @@ class Channel extends Model
 
     use Translatable, SyncTranslations;
 
-    //@TODO: varbūt šis jāiekļauj Admin modulī
     use CRUDModel;
 
     /**

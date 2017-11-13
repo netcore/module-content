@@ -20,9 +20,6 @@ class CreateNetcoreContentEntriesTable extends Migration
             $table->integer('channel_id')->unsigned()->nullable();
             $table->foreign('channel_id')->references('id')->on('netcore_content__channels');
 
-            $table->integer('section_id')->unsigned()->nullable();
-            $table->foreign('section_id')->references('id')->on('netcore_content__sections');
-
             $table->string('layout')->nullable();
             $table->boolean('is_active')->default(0);
             $table->boolean('is_homepage')->default(0);

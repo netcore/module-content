@@ -17,9 +17,6 @@ class CreateNetcoreContentChannelsTable extends Migration
 
             $table->increments('id');
 
-            $table->integer('section_id')->unsigned()->nullable();
-            $table->foreign('section_id')->references('id')->on('netcore_content__sections')->onDelete('restrict');
-
             $table->string('layout')->nullable();
             $table->boolean('is_active')->default(0);
 
