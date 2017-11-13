@@ -38,13 +38,17 @@
                     </td>
                 </tr>
             @else
+                {{--
                 @foreach($languages as $language)
+                --}}
                     <tr>
                         <td class="text-align-right">
                             {{ ucfirst($fieldLabel) }}
+                            {{--
                             @if(count($languages) > 1)
                                 {{ strtoupper($language->iso_code) }}
                             @endif
+                            --}}
                         </td>
                         <td class="padding-5">
                             <div class="form-group no-margin">
@@ -82,7 +86,9 @@
                             </div>
                         </td>
                     </tr>
+                {{--
                 @endforeach
+                --}}
             @endif
         @endforeach
         <tr>

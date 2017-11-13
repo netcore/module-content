@@ -73,7 +73,7 @@ class EntryController extends Controller
      */
     public function edit(Entry $entry)
     {
-        $entry->load('contentBlocks');
+        $entry->load('translations.contentBlocks');
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 
@@ -119,19 +119,31 @@ class EntryController extends Controller
      */
     public function widgets()
     {
-        $alteredWidgets = collect(config('netcore.module-content.widgets'))->map(function ($widget) {
+        $languages = TransHelper::getAllLanguages();
+
+        $alteredWidgets = collect(config('netcore.module-content.widgets'))->map(function ($widget) use ($languages) {
 
             $view = array_get($widget, 'backend_template');
             $worker = array_get($widget, 'backend_worker');
 
-            $composed = [];
-            if ($worker) {
-                $worker = new $worker($widget);
-                $composed = $worker->backendTemplateComposer([]);
+            if (!$view) {
+                return $widget;
             }
 
-            if ($view) {
-                $widget['backend_template'] = view($view, $composed)->render();
+            foreach($languages as $language) {
+
+                $composed = [];
+
+                if ($worker) {
+                    $worker = new $worker($widget);
+                    $composed = $worker->backendTemplateComposer([], $language);
+                }
+
+                if(!is_array($widget['backend_template'])) {
+                    $widget['backend_template'] = [];
+                }
+
+                $widget['backend_template'][$language->iso_code] = view($view, $composed)->render();
             }
 
             return $widget;

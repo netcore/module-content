@@ -1,13 +1,17 @@
+{{--
 @if(count($languages) > 1)
     @include('translate::_partials._nav_tabs', [
         'idPrefix' => 'simple-text-'
     ])
 @endif
+--}}
 
 <!-- Tab panes -->
-<div class="tab-content {{ count($languages) <= 1 ? 'no-padding' : '' }}">
+{{--
+<div class="tab-content no-padding {{ count($languages) <= 1 ? 'no-padding' : '' }}">
     @foreach($languages as $language)
         <div role="tabpanel" class="tab-pane {{ $loop->first ? 'active' : '' }}" id="simple-text-{{ $language->iso_code }}">
+            --}}
 
             @php
                 $name = isset($name) ? $name : null;
@@ -18,7 +22,7 @@
                 <div class="">
                     {{--
                     Why do we have "hidden"?
-                    Otherwise client can see raw html in textarea before summernoet kicks in.
+                    Otherwise client can see raw html in textarea before summernote kicks in.
                     --}}
                     {!! Form::textarea(
                         $name,
@@ -49,9 +53,11 @@
                     <tr>
                         <td class="text-align-right">
                             {{ ucfirst($fieldLabel) }}
+                            {{--
                             @if(count($languages) > 1)
                                 {{ strtoupper($language->iso_code) }}
                             @endif
+                            --}}
                         </td>
                         <td class="padding-5">
                             <div class="form-group no-margin">
@@ -82,6 +88,8 @@
             </table>
             @endif
 
+{{--
         </div>
     @endforeach
 </div>
+--}}

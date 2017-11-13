@@ -1,26 +1,27 @@
 $(function() {
 
     var initSortable = function(){
-        // Orderable shop images
-        $('#widgets-table').sortable({
-            containerSelector: '#widgets-table',
-            itemPath : '> tbody',
-            itemSelector : '.widget-tr',
-            handle : '.widget-tr-handle',
-            onDrop : function($item, container, _super, event) {
+        $('.widgets-container').each(function(index, container){
+            $(container).find('.widgets-table').sortable({
+                containerSelector: '.widgets-table',
+                itemPath : '> tbody',
+                itemSelector : '.widget-tr',
+                handle : '.widget-tr-handle',
+                onDrop : function($item, container, _super, event) {
 
-                $item.removeClass(container.group.options.draggedClass).removeAttr("style");
-                $("body").removeClass(container.group.options.bodyClass);
+                    $item.removeClass(container.group.options.draggedClass).removeAttr("style");
+                    $("body").removeClass(container.group.options.bodyClass);
 
-                var order = [];
-                var id;
+                    var order = [];
+                    var id;
 
-                $.each( $(container.el).find('tr'), function (i, tr) {
-                    if( id = $(tr).data('content-block-id') ) {
-                        order.push( id );
-                    }
-                });
-            }
+                    $.each( $(container.el).find('tr'), function (i, tr) {
+                        if( id = $(tr).data('content-block-id') ) {
+                            order.push( id );
+                        }
+                    });
+                }
+            });
         });
     };
 
@@ -34,19 +35,24 @@ $(function() {
     };
 
     var hideOrShowCountMessage = function(){
-        var count = $('#widgets-table tr').length;
-        if(!count) {
-            $('#widgets-container #no-widgets').show();
-        } else {
-            $('#widgets-container #no-widgets').hide();
-        }
+        $('.widgets-container').each(function(index, container){
+            var count = $(object).find('.widgets-table tr').length;
+            console.log('tr count in hideOrShowCountMessage ', count);
+            if(!count) {
+                $(container).find('.no-widgets').show();
+            } else {
+                $(container).find('.no-widgets').hide();
+            }
+        });
     };
 
     var loadWysiwygOnPageload = function(){
-        var count = $('#widgets-table tr').length;
-        if(!count) {
-            $('#add-widget-button').trigger('click');
-        }
+        $('.widgets-container').each(function(index, container){
+            var count = $(container).find('.widgets-table .widget-tr').length;
+            if(!count) {
+                $('.add-widget-button').trigger('click');
+            }
+        });
     };
 
     var replaceAll = function(search, replacement, source) {
@@ -89,10 +95,14 @@ $(function() {
                 html = replaceAll('{{ template }}', template, html);
                 html = replaceAll('{{ widgetName }}', widgetName, html);
 
-                if( $('#widgets-table tbody .widget-tr').length ) {
-                    $('#widgets-table tbody .widget-tr:last').after(html);
+                var addButton = $(this);
+                var container = $(addButton).closest('.widdget-container');
+                var tbody = $(container).find('.widgets-table tbody');
+
+                if( $(tbody).find('.widget-tr').length ) {
+                    $(tbody).find('.widget-tr:last').after(html);
                 } else {
-                    $('#widgets-table tbody').html(html);
+                    $(tbody).html(html);
                 }
 
                 hideOrShowCountMessage();
@@ -100,7 +110,7 @@ $(function() {
 
                 var callable = onWidgetAdded[javascriptKey];
                 if(callable){
-                    var widgetTr = $('#widgets-table .widget-tr:last');
+                    var widgetTr = $(tbody).find('.widget-tr:last');
                     callable(widgetTr);
                 }
             });
@@ -141,14 +151,17 @@ $(function() {
     });
 
     // On page load, initialize widgets
-    $('#widgets-table tr').each(function(index, widgetTr){
+    $('.widgets-container').each(function(index, container){
+        $(container).find('.widgets-table .widget-tr').each(function(index, widgetTr){
 
-        var javascriptKey = $(widgetTr).data('javascriptKey');
+            var javascriptKey = $(widgetTr).data('javascriptKey');
+            //console.log('javascriptKey', javascriptKey, widgetTr);
 
-        var callable = onWidgetAdded[javascriptKey];
-        if(callable){
-            callable(widgetTr);
-        }
+            var callable = onWidgetAdded[javascriptKey];
+            if(callable){
+                callable(widgetTr);
+            }
+        });
     });
 
     // After widgets have been initialised - init sortable
@@ -178,25 +191,32 @@ $(function() {
 
         var widgets = [];
 
-        $('#widgets-table .widget-tr').each(function(i, o){
+        $('.widgets-container').each(function(index, container){
+            $(container).find('.widgets-table .widget-tr').each(function(i, o){
 
-            var key = $(o).data('key');
-            var javascriptKey = $(o).data('javascript-key');
-            var contentBlockId = $(o).data('contentBlockId');
-            var collector = widgetDataCollectors[javascriptKey];
+                var key = $(o).data('key');
+                var javascriptKey = $(o).data('javascript-key');
+                var contentBlockId = $(o).data('contentBlockId');
+                var collector = widgetDataCollectors[javascriptKey];
 
-            var item = {
-                'order': i,
-                'widget': key,
-                'contentBlockId': contentBlockId
-            };
+                // @TODO language
 
-            if(collector) {
-                item['data'] = collector($(this));
-            }
+                var item = {
+                    'order': i,
+                    'widget': key,
+                    'contentBlockId': contentBlockId
+                };
 
-            widgets.push(item);
+                if(collector) {
+                    item['data'] = collector($(this));
+                }
+
+                widgets.push(item);
+            });
         });
+
+        console.log(widgets);
+        return;
 
         dataForBackend.push({
             name: 'widgets',

@@ -86,14 +86,6 @@ class Entry extends Model implements StaplerableInterface
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function contentBlocks()
-    {
-        return $this->morphMany(ContentBlock::class, 'contentable');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function channel()

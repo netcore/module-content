@@ -5,6 +5,7 @@ namespace Modules\Content\Widgets\BackendWorkers;
 use Illuminate\Support\Collection;
 use Modules\Content\Models\ContentBlock;
 use Netcore\Translator\Helpers\TransHelper;
+use Netcore\Translator\Models\Language;
 
 class ImageBlock implements BackendWorkerInterface
 {
@@ -291,11 +292,12 @@ class ImageBlock implements BackendWorkerInterface
      * And then return it.
      *
      * @param $data
+     * @param Language $language
      * @return mixed
      */
-    public function backendTemplateComposer(Array $data): Array
+    public function backendTemplateComposer(Array $data, Language $language): Array
     {
-        $languages = $this->languages;
+        //$languages = $this->languages;
         $translations = [];
 
         $imageBlockId = array_get($data, 'image_block_id', null);
@@ -333,7 +335,7 @@ class ImageBlock implements BackendWorkerInterface
 
         return compact(
             'imageBlock',
-            'languages',
+            'language',
             'translations',
             'fields'
         );

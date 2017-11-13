@@ -3,7 +3,7 @@
 namespace Modules\Content\Translations;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\Admin\Traits\BootStapler;
+use Modules\Content\Models\ContentBlock;
 
 class EntryTranslation extends Model
 {
@@ -29,5 +29,11 @@ class EntryTranslation extends Model
      */
     public $timestamps = false;
 
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function contentBlocks()
+    {
+        return $this->morphMany(ContentBlock::class, 'contentable');
+    }
 }

@@ -52,7 +52,7 @@
                         $fieldName = array_get($field, 'name');
                         $fieldType = array_get($field, 'type');
                         $fieldValue = array_get($field, 'value');
-                        $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $languages);
+                        $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $language);
 
                         $fieldStyles = array_get($field, 'styles', []);
                         $imageWidth = array_get($fieldStyles, 'image_width', 75);
@@ -81,15 +81,19 @@
                                 No image
                             @endif
                         @else
+                            {{--
                             @foreach($languages as $language)
+                            --}}
 
                                 @php
                                     $value = $viewHelper->getValueForTd($model, $language, $fieldName, $fieldType);
                                 @endphp
 
+                                {{--
                                 @if(count($languages) > 1)
                                     {{ strtoupper($language->iso_code) }}:
                                 @endif
+                                --}}
 
                                 @if($fieldType == 'textarea')
                                     {!! $value !!}
@@ -97,7 +101,9 @@
                                     {{ $value }}
                                 @endif
 
+                            {{--
                             @endforeach
+                            --}}
                         @endif
                     </td>
                 @endforeach

@@ -111,10 +111,6 @@ return [
     ],
 
     'admin_panel' => [
-        'views'        => [
-            'extends' => 'layouts.admin',
-            'section' => 'layouts.content'
-        ],
         'translations' => [
             'index' => [
                 'actions' => 'Actions',

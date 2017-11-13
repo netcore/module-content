@@ -5,6 +5,7 @@ namespace Modules\Content\Widgets\BackendWorkers;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
+use Netcore\Translator\Models\Language;
 
 class SimpleText implements BackendWorkerInterface
 {
@@ -170,11 +171,12 @@ class SimpleText implements BackendWorkerInterface
      * And then return it.
      *
      * @param $data
+     * @param Language $language
      * @return mixed
      */
-    public function backendTemplateComposer(Array $data): Array
+    public function backendTemplateComposer(Array $data, Language $language): Array
     {
-        $languages = TransHelper::getAllLanguages();
+        //$languages = TransHelper::getAllLanguages();
         $configuredFields = array_get($this->config, 'fields');
         $translations = [];
 
@@ -214,7 +216,7 @@ class SimpleText implements BackendWorkerInterface
         return compact(
             'htmlBlock',
             'fields',
-            'languages',
+            'language',
             'translations'
         );
     }
