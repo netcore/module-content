@@ -1,5 +1,12 @@
 
-<link rel="stylesheet" href="/assets/content/css/entries/form.css">
+@php
+    $frontendPath = '/assets/content/css/entries/form.css';
+    $serverPath = public_path($frontendPath);
+    $filemtime = filemtime($serverPath);
+    $frontendPath .= '?v=' . $filemtime;
+@endphp
+
+<link rel="stylesheet" href="{{ $frontendPath }}">
 
 {{-- @TODO get php out of View  --}}
 
@@ -14,5 +21,13 @@
 @endphp
 
 @foreach($cssFiles as $file)
-    <link rel="stylesheet" href="/assets/content/css/widgets/{{ $file }}">
+
+    @php
+        $frontendPath = '/assets/content/css/widgets/' . $file;
+        $serverPath = public_path($frontendPath);
+        $filemtime = filemtime($serverPath);
+        $frontendPath .= '?v=' . $filemtime;
+    @endphp
+
+    <link rel="stylesheet" href="{{ $frontendPath }}">
 @endforeach
