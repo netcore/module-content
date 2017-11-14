@@ -13,6 +13,7 @@
                 $fieldType = array_get($field, 'type');
                 $fieldValue = array_get($field, 'value');
                 $fieldStyles = array_get($field, 'styles');
+                $fieldOptions = (array) array_get($field, 'options');
 
                 $imageWidth = array_get($fieldStyles, 'image_width');
                 $notRequired = array_get($fieldStyles, 'not_required', 0);
@@ -71,6 +72,18 @@
                                         data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                                         class=""
                                     >
+                                @elseif($fieldType == 'select')
+                                    <select
+                                        data-field="{{ $fieldName }}"
+                                        data-locale="{{ $language->iso_code }}"
+                                        data-not-required="{{ $notRequired }}"
+                                        data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
+                                        class="form-control"
+                                    >
+                                        @foreach($fieldOptions as $label => $value)
+                                            <option {{ $value==$fieldValue ? 'checked' : '' }} value="{{ $value }}">{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                 @else
                                     <input
                                         type="text"

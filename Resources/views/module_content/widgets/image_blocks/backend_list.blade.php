@@ -55,6 +55,7 @@
                         $dataValue = $viewHelper->getDataValueForTd($model, $fieldName, $language);
 
                         $fieldStyles = array_get($field, 'styles', []);
+                        $fieldOptions = (array) array_get($field, 'options');
                         $imageWidth = array_get($fieldStyles, 'image_width', 75);
                     @endphp
 
@@ -97,6 +98,12 @@
 
                                 @if($fieldType == 'textarea')
                                     {!! $value !!}
+                                @elseif($fieldType == 'select')
+                                    @foreach($fieldOptions as $selectLabel => $selectValue)
+                                        @if($selectValue == $value)
+                                            {{ $selectLabel }}
+                                        @endif
+                                    @endforeach
                                 @else
                                     {{ $value }}
                                 @endif

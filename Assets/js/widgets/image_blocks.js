@@ -174,7 +174,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
         var translatableFields = [];
         var regularFields = [];
-        $(btn).closest('.add-new-container').find('input[data-field], textarea[data-field]').each(function(index, input){
+        $(btn).closest('.add-new-container').find('input[data-field], textarea[data-field], select[data-field]').each(function(index, input){
 
             var field = $(input).data('field');
 
@@ -192,8 +192,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             var jsonValue = {};
 
-            var inputOrTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"]';
-            $(btn).closest('.add-new-container').find(inputOrTextarea).each(function(i, input){
+            var inputCheckboxTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"], select[data-field="' + field + '"]';
+            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function(i, input){
 
                 var locale = $(input).data('locale');
                 var field = $(input).data('field');
@@ -213,8 +213,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             var jsonValue = {};
 
-            var inputOrTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"]';
-            $(btn).closest('.add-new-container').find(inputOrTextarea).each(function(i, input){
+            var inputCheckboxTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"], select[data-field="' + field + '"]';
+            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function(i, input){
 
                 var type = $(input).attr('type');
                 var value = $(input).val();
@@ -274,14 +274,27 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         // For each input - one td
         var fieldsJsonValue = getFieldsJsonValue(btn, modelId);
 
-        $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
+        $(addNewContainer).find('input[data-field], textarea[data-field], select[data-field]').each(function(index, input){
 
             var value = $(input).val();
             if($(input).is('input[type=checkbox]')) {
                 value = $(input).is(':checked') ? 'Yes' : 'No';
             }
 
-            var type = $(input).is('textarea') ? 'textarea' : $(input).attr('type');
+            if($(input).is('select')) {
+                value = $(input).find('option:selected').text();
+            }
+
+            var type = $(input).attr('type');
+
+            if( $(input).is('textarea') ) {
+                type = 'textarea';
+            }
+
+            if( $(input).is('select') ) {
+                type = 'select';
+            }
+
             var field = $(input).data('field');
             var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
 
@@ -294,7 +307,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
             html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
 
-            if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox']) !== -1 ) {
+            if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox', 'select']) !== -1 ) {
                 html += value;
             } else if( type === 'file' && value) {
                 var src = URL.createObjectURL( input.files[0] );
@@ -460,3 +473,4 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         clearAddNewImageBlockForm(this);
     });
 })();
+
