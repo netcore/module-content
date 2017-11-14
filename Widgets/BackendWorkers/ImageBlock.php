@@ -320,14 +320,16 @@ class ImageBlock implements BackendWorkerInterface
             $fieldType = array_get($fieldData, 'type');
             $fieldLabel = array_get($fieldData, 'label');
             $styles = array_get($fieldData, 'styles');
+            $options = (array) array_get($fieldData, 'options', []);
 
             $value = $imageBlock ? object_get($imageBlock, $fieldName) : '';
             $fields[] = [
-                'name'   => $fieldName,
-                'type'   => $fieldType,
-                'label'  => $fieldLabel,
-                'styles' => $styles,
-                'value'  => $value,
+                'name'    => $fieldName,
+                'type'    => $fieldType,
+                'label'   => $fieldLabel,
+                'styles'  => $styles,
+                'options' => $options,
+                'value'   => $value,
             ];
         }
 

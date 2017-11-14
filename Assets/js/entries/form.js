@@ -149,6 +149,8 @@ $(function() {
         if(callable){
             callable(widgetTr);
         }
+
+        window.scrollTo(0, 0);
     });
 
     // After widgets have been initialised - init sortable
