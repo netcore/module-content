@@ -49,7 +49,7 @@ class SimpleText implements BackendWorkerInterface
         foreach ($languagesInSystem as $languageInSystem) {
             $translationsForThatLanguage = (array)array_get($translations, $languageInSystem->iso_code, []);
 
-            foreach($translationsForThatLanguage as $field => $value) {
+            foreach ($translationsForThatLanguage as $field => $value) {
 
                 $fieldConfig = array_get($configuredFields, $field, []);
                 $fieldType = array_get($fieldConfig, 'type', 'textarea');
@@ -203,11 +203,13 @@ class SimpleText implements BackendWorkerInterface
 
             $fieldType = array_get($fieldData, 'type');
             $fieldLabel = array_get($fieldData, 'label');
+            $options = (array)array_get($fieldData, 'options', []);
 
             $fields[] = [
-                'name'  => $fieldName,
-                'type'  => $fieldType,
-                'label' => $fieldLabel,
+                'name'    => $fieldName,
+                'type'    => $fieldType,
+                'label'   => $fieldLabel,
+                'options' => $options,
             ];
         }
 

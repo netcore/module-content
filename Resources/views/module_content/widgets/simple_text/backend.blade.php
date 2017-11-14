@@ -64,6 +64,16 @@
                                         data-locale="{{ $language->iso_code }}"
                                         class=""
                                     >
+                                @elseif($fieldType == 'select')
+                                    <select
+                                        data-field="{{ $fieldName }}"
+                                        data-locale="{{ $language->iso_code }}"
+                                        class="form-control"
+                                    >
+                                        @foreach($fieldOptions as $label => $value)
+                                            <option {{ $value==$fieldValue ? 'checked' : '' }} value="{{ $value }}">{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                 @else
                                     <input
                                         type="text"
