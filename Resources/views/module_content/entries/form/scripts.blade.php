@@ -40,11 +40,24 @@
 @endphp
 
 @foreach($jsFiles as $file)
-    <script src="/assets/content/js/widgets/{{ $file }}"></script>
+    @php
+        $frontendPath = '/assets/content/js/widgets/' . $file;
+        $serverPath = public_path($frontendPath);
+        $filemtime = filemtime($serverPath);
+        $frontendPath .= '?v=' . $filemtime;
+    @endphp
+    <script src="{{ $frontendPath }}"></script>
 @endforeach
 
 <script id="widget-tr-template" type="text/template">
     @include('content::module_content.entries.form.widget_tr_template')
 </script>
 
-<script src="/assets/content/js/entries/form.js"></script>
+@php
+    $frontendPath = '/assets/content/js/entries/form.js';
+    $serverPath = public_path($frontendPath);
+    $filemtime = filemtime($serverPath);
+    $frontendPath .= '?v=' . $filemtime;
+@endphp
+
+<script src="{{ $frontendPath }}"></script>
