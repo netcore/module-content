@@ -21,7 +21,13 @@ trait EntryDatatable
 
         $languages = TransHelper::getAllLanguages();
 
-        return datatables()->of($query)
+        /*
+        dd(
+            $query->get()->first()->translations->slice(1, 1)->first()->attachment->url()
+        );
+        */
+
+        $response = datatables()->of($query)
             ->editColumn('title', function ($entry) use ($languages) {
                 return view('content::module_content.entries.tds.title', compact('entry', 'languages'))->render();
             })
@@ -56,7 +62,13 @@ trait EntryDatatable
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
             ->rawColumns(['attachment', 'action', 'title', 'slug', 'is_active', 'is_homepage'])
-            ->toJson();
+            ->toJson()
+            ;
+
+        dd($response);
+        return $response;
+        //return $response;
+            //->toJson();
     }
 
     /**
@@ -64,12 +76,47 @@ trait EntryDatatable
      */
     private function getQuery()
     {
+
+        return Entry::select([
+            'id',
+            'is_active',
+            'is_homepage',
+            'deleted_at',
+            'created_at',
+            'updated_at',
+            'published_at'
+        ])
+            ->with([
+                'translations' => function($subq){
+                    return $subq->select([
+                        'id',
+                        'entry_id',
+                        //'title',
+                        //'content',
+                        //'slug',
+                        //'attachment_file_name',
+                        //'attachment_file_size',
+                        //'attachment_content_type',
+                        //'attachment_updated_at',
+                        'locale'
+                    ]);
+                }
+            ])
+            ->orderBy('id', 'DESC');
+
+        // Not needed
+
         $channelId = request()->get('channel_id');
 
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::orderBy('is_homepage', 'DESC') // Homepage always at the top.
+        $query = Entry::with([
+            'translations' => function($subq){
+                return $subq->select(['id', 'entry_id', 'title', 'locale', 'content', 'slug']);
+            }
+        ])
+        ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
         ->orderBy('published_at', 'DESC')
         ->orderBy('id', 'DESC')
         ;
