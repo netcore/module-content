@@ -11,10 +11,10 @@ use Modules\Admin\Traits\BootStapler;
 class EntryTranslation extends Model implements StaplerableInterface
 {
 
-    //use BootStapler;
+    use BootStapler;
 
     use EloquentTrait {
-        //BootStapler::boot insteadof EloquentTrait;
+        BootStapler::boot insteadof EloquentTrait;
     }
 
     /**

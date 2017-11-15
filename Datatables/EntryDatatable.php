@@ -4,6 +4,7 @@ namespace Modules\Content\Datatables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Content\Models\Entry;
+use Modules\Content\Translations\EntryTranslation;
 use Yajra\Datatables\Datatables;
 use Netcore\Translator\Helpers\TransHelper;
 
@@ -21,13 +22,7 @@ trait EntryDatatable
 
         $languages = TransHelper::getAllLanguages();
 
-        /*
-        dd(
-            $query->get()->first()->translations->slice(1, 1)->first()->attachment->url()
-        );
-        */
-
-        $response = datatables()->of($query)
+        return datatables()->of($query)
             ->editColumn('title', function ($entry) use ($languages) {
                 return view('content::module_content.entries.tds.title', compact('entry', 'languages'))->render();
             })
@@ -62,13 +57,7 @@ trait EntryDatatable
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
             ->rawColumns(['attachment', 'action', 'title', 'slug', 'is_active', 'is_homepage'])
-            ->toJson()
-            ;
-
-        dd($response);
-        return $response;
-        //return $response;
-            //->toJson();
+            ->toJson();
     }
 
     /**
@@ -76,50 +65,14 @@ trait EntryDatatable
      */
     private function getQuery()
     {
-
-        return Entry::select([
-            'id',
-            'is_active',
-            'is_homepage',
-            'deleted_at',
-            'created_at',
-            'updated_at',
-            'published_at'
-        ])
-            ->with([
-                'translations' => function($subq){
-                    return $subq->select([
-                        'id',
-                        'entry_id',
-                        //'title',
-                        //'content',
-                        //'slug',
-                        //'attachment_file_name',
-                        //'attachment_file_size',
-                        //'attachment_content_type',
-                        //'attachment_updated_at',
-                        'locale'
-                    ]);
-                }
-            ])
-            ->orderBy('id', 'DESC');
-
-        // Not needed
-
         $channelId = request()->get('channel_id');
 
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::with([
-            'translations' => function($subq){
-                return $subq->select(['id', 'entry_id', 'title', 'locale', 'content', 'slug']);
-            }
-        ])
-        ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
-        ->orderBy('published_at', 'DESC')
-        ->orderBy('id', 'DESC')
-        ;
+        $query = Entry::orderBy('is_homepage', 'DESC')// Homepage always at the top.
+            ->orderBy('published_at', 'DESC')
+            ->orderBy('id', 'DESC');
 
         if ($channelId) {
             $query->whereChannelId($channelId);
@@ -127,13 +80,12 @@ trait EntryDatatable
             $query->whereNull('channel_id');
         }
 
-        if($keyword) {
-            $query->whereHas('translations', function($subq) use ($keyword) {
+        if ($keyword) {
+            $query->whereHas('translations', function ($subq) use ($keyword) {
                 return $subq
                     ->where('netcore_content__entry_translations.title', 'LIKE', '%' . $keyword . '%')
                     ->orWhere('netcore_content__entry_translations.slug', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('netcore_content__entry_translations.content', 'LIKE', '%' . $keyword . '%')
-                    ;
+                    ->orWhere('netcore_content__entry_translations.content', 'LIKE', '%' . $keyword . '%');
             });
         }
 
