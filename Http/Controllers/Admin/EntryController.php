@@ -2,15 +2,13 @@
 
 namespace Modules\Content\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Http\Requests\Admin\EntryRequest;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
-use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
-use ReflectionClass;
+use Netcore\Translator\Models\Language;
 
 class EntryController extends Controller
 {
@@ -187,12 +185,17 @@ class EntryController extends Controller
 
     /**
      * @param Entry $entry
-     * @return mixed
+     * @param Language $language
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroyAttachment(Entry $entry)
+    public function destroyAttachment(Entry $entry, Language $language)
     {
-        $entry->attachment = STAPLER_NULL;
-        $entry->save();
+        $entryTranslation = $entry->translations()
+            ->whereLocale($language->iso_code)
+            ->firstOrFail();
+
+        $entryTranslation->attachment = STAPLER_NULL;
+        $entryTranslation->save();
 
         return response()->json([
             'success' => true

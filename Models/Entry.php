@@ -4,6 +4,7 @@ namespace Modules\Content\Models;
 
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\PassThroughs\Entry\Attachments;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
 use Modules\Admin\Traits\SyncTranslations;
@@ -58,7 +59,11 @@ class Entry extends Model
         'title',
         'slug',
         'content',
-        'attachment'
+        'attachment', // Object
+        'attachment_file_name',
+        'attachment_file_size',
+        'attachment_content_type',
+        'attachment_updated_at'
     ];
 
     /**
@@ -75,6 +80,14 @@ class Entry extends Model
     public function storage()
     {
         return new Storage($this);
+    }
+
+    /**
+     * @return Attachments
+     */
+    public function attachments()
+    {
+        return new Attachments($this);
     }
 
     /**
@@ -124,22 +137,5 @@ class Entry extends Model
         );
 
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
-    }
-
-    /**
-     * @return String
-     */
-    public function getHumanAttachmentSizeAttribute()
-    {
-        $decimals = 0;
-        $bytes = $this->attachment_file_size;
-
-        if (!$bytes) {
-            return '0 KB';
-        }
-
-        $size = [' B', ' KB', ' MB', ' GB'];
-        $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }
