@@ -6,9 +6,9 @@
     }
 @endphp
 
-<div class="widgets-container"> {{-- TODO This used to be id --}}
+<div class="widgets-container" data-locale="{{ $language->iso_code }}">
 
-    <div class="no-widgets" {{-- TODO this used to be ID --}}
+    <div class="no-widgets"
         @if(isset($entry))
         {{ $entryTranslation->contentBlocks->count() ? 'hidden' : '' }}
         @endif
@@ -17,12 +17,9 @@
     </div>
 
     <table
-        class="table widgets-table" {{-- TODO this used to be ID --}}
-        {{--
-        id="widgets-table"
-        --}}
+        class="table widgets-table"
     >
-        <tbody>
+        <tbody class="widgets-table-tbody">
         @if(isset($entry))
             @foreach($entryTranslation->contentBlocks->sortBy('order') as $contentBlock)
 

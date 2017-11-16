@@ -36,8 +36,7 @@ $(function() {
 
     var hideOrShowCountMessage = function(){
         $('.widgets-container').each(function(index, container){
-            var count = $(object).find('.widgets-table tr').length;
-            console.log('tr count in hideOrShowCountMessage ', count);
+            var count = $(container).find('.widgets-table .widget-tr').length;
             if(!count) {
                 $(container).find('.no-widgets').show();
             } else {
@@ -80,10 +79,13 @@ $(function() {
                 var key = $('#select-widget option:selected').val();
                 var data = widgets[key];
 
+                var container = $('.widgets-container:visible');
+                var locale = $(container).data('locale');
+
                 var contentBlockId = randomString();
                 var javascriptKey = data.javascript_key;
                 var widgetName = data.name;
-                var template = data.backend_template || data.name;
+                var template = data.backend_template[locale] || data.name;
 
                 var withBorder = data.backend_with_border ? 'with-border' : '';
 
@@ -95,10 +97,7 @@ $(function() {
                 html = replaceAll('{{ template }}', template, html);
                 html = replaceAll('{{ widgetName }}', widgetName, html);
 
-                var addButton = $(this);
-                var container = $(addButton).closest('.widdget-container');
-                var tbody = $(container).find('.widgets-table tbody');
-
+                var tbody = $(container).find('.widgets-table .widgets-table-tbody');
                 if( $(tbody).find('.widget-tr').length ) {
                     $(tbody).find('.widget-tr:last').after(html);
                 } else {
@@ -155,7 +154,6 @@ $(function() {
         $(container).find('.widgets-table .widget-tr').each(function(index, widgetTr){
 
             var javascriptKey = $(widgetTr).data('javascriptKey');
-            //console.log('javascriptKey', javascriptKey, widgetTr);
 
             var callable = onWidgetAdded[javascriptKey];
             if(callable){
@@ -199,13 +197,13 @@ $(function() {
                 var key = $(o).data('key');
                 var javascriptKey = $(o).data('javascript-key');
                 var contentBlockId = $(o).data('contentBlockId');
+                var locale = $(o).closest('.widgets-container').data('locale');
                 var collector = widgetDataCollectors[javascriptKey];
-
-                // @TODO language
 
                 var item = {
                     'order': i,
                     'widget': key,
+                    'locale' : locale,
                     'contentBlockId': contentBlockId
                 };
 
@@ -216,9 +214,6 @@ $(function() {
                 widgets.push(item);
             });
         });
-
-        console.log(widgets);
-        return;
 
         dataForBackend.push({
             name: 'widgets',

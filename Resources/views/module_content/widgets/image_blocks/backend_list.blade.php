@@ -82,35 +82,23 @@
                                 No image
                             @endif
                         @else
-                            {{--
-                            @foreach($languages as $language)
-                            --}}
 
-                                @php
-                                    $value = $viewHelper->getValueForTd($model, $language, $fieldName, $fieldType);
-                                @endphp
+                            @php
+                                $value = $viewHelper->getValueForTd($model, $language, $fieldName, $fieldType);
+                            @endphp
 
-                                {{--
-                                @if(count($languages) > 1)
-                                    {{ strtoupper($language->iso_code) }}:
-                                @endif
-                                --}}
+                            @if($fieldType == 'textarea')
+                                {!! $value !!}
+                            @elseif($fieldType == 'select')
+                                @foreach($fieldOptions as $selectLabel => $selectValue)
+                                    @if($selectValue == $value)
+                                        {{ $selectLabel }}
+                                    @endif
+                                @endforeach
+                            @else
+                                {{ $value }}
+                            @endif
 
-                                @if($fieldType == 'textarea')
-                                    {!! $value !!}
-                                @elseif($fieldType == 'select')
-                                    @foreach($fieldOptions as $selectLabel => $selectValue)
-                                        @if($selectValue == $value)
-                                            {{ $selectLabel }}
-                                        @endif
-                                    @endforeach
-                                @else
-                                    {{ $value }}
-                                @endif
-
-                            {{--
-                            @endforeach
-                            --}}
                         @endif
                     </td>
                 @endforeach
