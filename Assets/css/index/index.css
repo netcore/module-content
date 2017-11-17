@@ -12,6 +12,10 @@
     width:300px;
 }
 
+.above-table.without-channels{
+    top:-15px;
+}
+
 .default-cursor{
     cursor:default;
 }

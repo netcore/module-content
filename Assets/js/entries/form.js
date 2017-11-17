@@ -85,7 +85,7 @@ $(function() {
                 var contentBlockId = randomString();
                 var javascriptKey = data.javascript_key;
                 var widgetName = data.name;
-                var template = data.backend_template[locale] || data.name;
+                var template = data.backend_template ? data.backend_template[locale] : data.name;
 
                 var withBorder = data.backend_with_border ? 'with-border' : '';
 

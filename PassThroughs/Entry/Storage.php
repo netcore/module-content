@@ -91,7 +91,7 @@ class Storage extends PassThrough
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
         if (class_exists($menuItemClass)) {
             $slug = '/' . trim($entry->slug, '/');
-            app($menuItemClass)->whereHas('translations', function($subQuery) use ($slug) {
+            app($menuItemClass)->whereHas('translations', function ($subQuery) use ($slug) {
                 return $subQuery->whereValue($slug);
             })->update([
                 'is_active' => $isActive
@@ -188,8 +188,8 @@ class Storage extends PassThrough
             if ($backendWorker) {
                 $backendWorker = new $backendWorker($config);
                 $backendWorker->delete($deletableContentBlock); // Delete data in related tables
-                $deletableContentBlock->delete();
             }
+            $deletableContentBlock->delete();
         }
     }
 

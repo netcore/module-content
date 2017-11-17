@@ -181,7 +181,6 @@ class SimpleText implements BackendWorkerInterface
      */
     public function backendTemplateComposer(Array $data, Language $language): Array
     {
-        //$languages = TransHelper::getAllLanguages();
         $configuredFields = array_get($this->config, 'fields');
         $translations = [];
 
