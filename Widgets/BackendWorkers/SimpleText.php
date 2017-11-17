@@ -20,6 +20,11 @@ class SimpleText implements BackendWorkerInterface
     private $config = [];
 
     /**
+     * @var array
+     */
+    private static $cachedHtmlBlocks = [];
+
+    /**
      * ImageBlock constructor.
      *
      * @param $config
@@ -180,8 +185,18 @@ class SimpleText implements BackendWorkerInterface
         $configuredFields = array_get($this->config, 'fields');
         $translations = [];
 
+        $htmlBlock = null;
         $htmlBlockId = array_get($data, 'html_block_id', null);
-        $htmlBlock = HtmlBlock::find($htmlBlockId);
+
+        $cached = isset(self::$cachedHtmlBlocks[$htmlBlockId]);
+        if($htmlBlockId AND !$cached) {
+            self::$cachedHtmlBlocks[$htmlBlockId] = HtmlBlock::find($htmlBlockId);
+        }
+
+        if($htmlBlockId) {
+            $htmlBlock = array_get(self::$cachedHtmlBlocks, $htmlBlockId);
+        }
+
         if ($htmlBlock) {
             foreach ($htmlBlock->translations as $translation) {
 

@@ -25,6 +25,11 @@ class ImageBlock implements BackendWorkerInterface
     private $languages;
 
     /**
+     * @var array
+     */
+    private static $cachedImageBlocks = [];
+
+    /**
      * ImageBlock constructor.
      *
      * @param $config
@@ -275,12 +280,6 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function delete(ContentBlock $contentBlock)
     {
-        /*
-        $htmlBlockId = array_get($contentBlock->data, 'html_block_id');
-        if ($htmlBlockId) {
-            ImageBlock::whereId($htmlBlockId)->delete();
-        }
-        */
     }
 
     /**
@@ -298,13 +297,22 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function backendTemplateComposer(Array $data, Language $language): Array
     {
-        //$languages = $this->languages;
         $translations = [];
+        $imageBlock = null;
 
         $imageBlockId = array_get($data, 'image_block_id', null);
-        $imageBlock = \Modules\Content\Models\ImageBlock::with([
-            'items.translations'
-        ])->find($imageBlockId);
+
+        $cached = isset(self::$cachedImageBlocks[$imageBlockId]);
+        if($imageBlockId AND !$cached) {
+            self::$cachedImageBlocks[$imageBlockId] = \Modules\Content\Models\ImageBlock::with([
+                'items.translations'
+            ])->find($imageBlockId);
+        }
+
+        if($imageBlockId) {
+            $imageBlock = array_get(self::$cachedImageBlocks, $imageBlockId);
+        }
+
         if ($imageBlock) {
             foreach ($imageBlock->translations as $translation) {
                 $translations[$translation->locale] = [
@@ -323,7 +331,7 @@ class ImageBlock implements BackendWorkerInterface
             $fieldType = array_get($fieldData, 'type');
             $fieldLabel = array_get($fieldData, 'label');
             $styles = array_get($fieldData, 'styles');
-            $options = (array) array_get($fieldData, 'options', []);
+            $options = (array)array_get($fieldData, 'options', []);
 
             $value = $imageBlock ? object_get($imageBlock, $fieldName) : '';
             $fields[] = [
