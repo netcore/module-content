@@ -25,7 +25,7 @@ class Compose extends PassThrough
     /**
      * @return array
      */
-    public function backend(): Array
+    public function backend($language): Array
     {
         $contentBlock = $this->contentBlock;
 
@@ -34,7 +34,8 @@ class Compose extends PassThrough
         if($backendWorker) {
             $worker = new $backendWorker($contentBlock->config->all());
             $templateData = $worker->backendTemplateComposer(
-                $contentBlock->data
+                $contentBlock->data,
+                $language
             );
         }
 

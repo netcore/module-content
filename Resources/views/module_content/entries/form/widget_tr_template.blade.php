@@ -32,10 +32,5 @@
             </div>
 
         </div>
-        {{--
-        <div class="content-block-errors has-error">
-            Error
-        </div>
-        --}}
     </td>
 </tr>

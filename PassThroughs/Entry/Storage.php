@@ -8,6 +8,8 @@ use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
 use Modules\Content\PassThroughs\PassThrough;
+use Modules\Content\Translations\EntryTranslation;
+use Netcore\Translator\Helpers\TransHelper;
 
 class Storage extends PassThrough
 {
@@ -17,6 +19,11 @@ class Storage extends PassThrough
     private $entry;
 
     /**
+     * @var Collection
+     */
+    private $languages;
+
+    /**
      * Storage constructor.
      *
      * @param Entry $entry
@@ -24,6 +31,7 @@ class Storage extends PassThrough
     public function __construct(Entry $entry)
     {
         $this->entry = $entry;
+        $this->languages = TransHelper::getAllLanguages();
     }
 
     /**
@@ -47,20 +55,15 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
-        // Cast widgets to array
-        $contentBlocks = json_decode(array_get($requestData, 'widgets', null));
-        $contentBlocks = (array)array_map(function ($contentBlock) {
-            return (array)$contentBlock;
-        }, $contentBlocks);
-
-
+        /**
+         * Regular data
+         */
         $publishedAt = array_get($requestData, 'published_at');
         $publishedAtCarbon = Carbon::createFromFormat('d.m.Y', $publishedAt)->startOfDay();
         $publishedAtFormatted = $publishedAtCarbon ? $publishedAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
         $isActive = array_has($requestData, 'is_active');
 
-        // Regular data
         $isHomepage = array_has($requestData, 'is_homepage');
         $entry->update([
             'layout'       => array_get($requestData, 'layout'),
@@ -69,8 +72,6 @@ class Storage extends PassThrough
             // Checkboxes user array_has
             'is_active'    => $isActive,
             'is_homepage'  => $isHomepage,
-
-            'attachment' => request()->file('attachment')
         ]);
 
         // If this is homepage, then mark other pages as regular ones
@@ -80,7 +81,61 @@ class Storage extends PassThrough
             ]);
         }
 
-        $existingContentBlockIds = $entry->contentBlocks()->pluck('id')->toArray();
+        $this->processContentBlocks($requestData);
+
+        // Store translations
+        $entryTranslations = (array)array_get($requestData, 'translations', []);
+        $this->storeEntryTranslations($entryTranslations);
+
+        // Hide/show menu items that link to this entry
+        $menuItemClass = '\Modules\Admin\Models\MenuItem';
+        if (class_exists($menuItemClass)) {
+            $slug = '/' . trim($entry->slug, '/');
+            app($menuItemClass)->whereHas('translations', function ($subQuery) use ($slug) {
+                return $subQuery->whereValue($slug);
+            })->update([
+                'is_active' => $isActive
+            ]);
+        }
+
+        return $entry;
+    }
+
+    /**
+     * @param array $requestData
+     */
+    private function processContentBlocks(Array $requestData): void
+    {
+        $entry = $this->entry;
+
+        /**
+         * Widgets
+         */
+        $contentBlocks = json_decode(array_get($requestData, 'widgets', null));
+        $contentBlocks = (array)array_map(function ($contentBlock) {
+            return (array)$contentBlock;
+        }, $contentBlocks);
+
+        foreach ($this->languages as $language) {
+            $entryTranslation = $entry->translateOrNew($language->iso_code);
+
+            $filteredContentBlocks = array_filter($contentBlocks, function ($contentBlock) use ($language) {
+                $locale = array_get($contentBlock, 'locale');
+                return $locale == $language->iso_code;
+            });
+
+            $this->processEntryTranslation($entryTranslation, $filteredContentBlocks);
+        }
+    }
+
+    /**
+     * @param EntryTranslation $entryTranslation
+     * @param array $contentBlocks
+     */
+    private function processEntryTranslation(EntryTranslation $entryTranslation, Array $contentBlocks): void
+    {
+
+        $existingContentBlockIds = $entryTranslation->contentBlocks()->pluck('id')->toArray();
         $receivedContentBlockIds = [];
 
         foreach ($contentBlocks as $index => $contentBlock) {
@@ -93,7 +148,7 @@ class Storage extends PassThrough
 
                 $receivedContentBlockIds[] = $contentBlockId;
 
-                $existingContentBlock = $entry->contentBlocks()->find($contentBlockId);
+                $existingContentBlock = $entryTranslation->contentBlocks()->find($contentBlockId);
                 if (!$existingContentBlock) {
                     continue;
                 }
@@ -107,7 +162,7 @@ class Storage extends PassThrough
             } else {
                 // $contentBlockId is random string, something like "Mfjxi"
 
-                $newContentBlock = $entry->contentBlocks()->create([
+                $newContentBlock = $entryTranslation->contentBlocks()->create([
                     'widget' => $widget,
                     'order'  => ($index + 1),
                     'data'   => []
@@ -125,7 +180,7 @@ class Storage extends PassThrough
             }
         }
 
-        $deletableContentBlocks = $entry->contentBlocks()->whereIn('id', $deletableContentBlockIds)->get();
+        $deletableContentBlocks = $entryTranslation->contentBlocks()->whereIn('id', $deletableContentBlockIds)->get();
         foreach ($deletableContentBlocks as $deletableContentBlock) {
             $key = $deletableContentBlock->widget;
             $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
@@ -133,24 +188,9 @@ class Storage extends PassThrough
             if ($backendWorker) {
                 $backendWorker = new $backendWorker($config);
                 $backendWorker->delete($deletableContentBlock); // Delete data in related tables
-                $deletableContentBlock->delete();
             }
+            $deletableContentBlock->delete();
         }
-
-        // Store translations
-        $entryTranslations = (array)array_get($requestData, 'translations', []);
-        $this->storeEntryTranslations($entryTranslations);
-
-        // Hide/show menu items that link to this entry
-        $menuItemClass = '\Modules\Admin\Models\MenuItem';
-        if(class_exists($menuItemClass)) {
-            $slug = '/' . trim($entry->slug, '/');
-            app($menuItemClass)->whereValue($slug)->update([
-                'is_active' => $isActive
-            ]);
-        }
-
-        return $entry;
     }
 
     /**
@@ -161,10 +201,12 @@ class Storage extends PassThrough
     private function storeNewContentBlock(ContentBlock $existingContentBlock, Array $contentBlock, Int $index)
     {
         // Save widgets and their data
-        // 1. Put data in $entry->content_blocks table
+        // 1. Put data in content_blocks table
         // 1.1 Put data in additional tables, according to each specific widget
 
+        $locale = array_get($contentBlock, 'locale');
         $entry = $this->entry;
+        $entryTranslation = $entry->translateOrNew($locale);
 
         $key = array_get($contentBlock, 'widget');
         $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
@@ -175,8 +217,9 @@ class Storage extends PassThrough
             $action = $backendWorker->action;
 
             if ($action == 'update') {
+
                 $frontendData = (array)array_get($contentBlock, 'data', []);
-                $data = $backendWorker->update($frontendData, $entry);
+                $data = $backendWorker->update($frontendData);
 
                 $existingContentBlock->update([
                     'order'  => ($index + 1),
@@ -200,7 +243,7 @@ class Storage extends PassThrough
                     'data'   => $data
                 ];
 
-                $entry->contentBlocks()->create($contentBlockData);
+                $entryTranslation->contentBlocks()->create($contentBlockData);
             }
         }
     }
@@ -212,16 +255,18 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
-        foreach($entry->contentBlocks as $contentBlock) {
+        foreach ($entry->translations as $entryTranslation) {
+            foreach ($entryTranslation->contentBlocks as $contentBlock) {
 
-            $key = $contentBlock->widget;
-            $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
-            $backendWorker = array_get($config, 'backend_worker');
-            $backendWorker = new $backendWorker($config);
+                $key = $contentBlock->widget;
+                $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
+                $backendWorker = array_get($config, 'backend_worker');
+                $backendWorker = new $backendWorker($config);
 
-            // Delete data in related tables
-            $backendWorker->delete($contentBlock);
-            $contentBlock->delete();
+                // Delete data in related tables
+                $backendWorker->delete($contentBlock);
+                $contentBlock->delete();
+            }
         }
     }
 
@@ -251,30 +296,32 @@ class Storage extends PassThrough
             return $translations;
         })->toArray();
 
-        $contentBlocks = $entry
-            ->contentBlocks()
-            ->where('data', 'LIKE', '%html_block_id%')
-            ->get();
+        foreach ($entry->translations as $entryTranslation) {
+            $contentBlocks = $entryTranslation
+                ->contentBlocks()
+                ->where('data', 'LIKE', '%html_block_id%')
+                ->get();
 
-        foreach ($contentBlocks as $contentBlock) {
+            foreach ($contentBlocks as $contentBlock) {
 
-            $htmlBlockId = array_get($contentBlock->data, 'html_block_id', null);
-            if (!$htmlBlockId) {
-                continue;
-            }
-
-            $htmlBlock = HtmlBlock::find($htmlBlockId);
-
-            if (!$htmlBlock) {
-                continue;
-            }
-
-            foreach ($htmlBlock->translations as $translation) {
-                if (!isset($entryTranslations[$translation->locale]['content'])) {
-                    $entryTranslations[$translation->locale]['content'] = '';
+                $htmlBlockId = array_get($contentBlock->data, 'html_block_id', null);
+                if (!$htmlBlockId) {
+                    continue;
                 }
 
-                $entryTranslations[$translation->locale]['content'] .= $translation->content;
+                $htmlBlock = HtmlBlock::find($htmlBlockId);
+
+                if (!$htmlBlock) {
+                    continue;
+                }
+
+                foreach ($htmlBlock->translations as $translation) {
+                    if (!isset($entryTranslations[$translation->locale]['content'])) {
+                        $entryTranslations[$translation->locale]['content'] = '';
+                    }
+
+                    $entryTranslations[$translation->locale]['content'] .= $translation->content;
+                }
             }
         }
 

@@ -5,6 +5,7 @@ namespace Modules\Content\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Models\Menu;
+use Netcore\Translator\Helpers\TransHelper;
 
 class MenuTableSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class MenuTableSeeder extends Seeder
                     'name'            => 'Content',
                     'icon'            => 'ion-ios-paper',
                     'type'            => 'route',
+                    'is_active'       => 1,
                     'value'           => 'content::content.index',
                     'active_resolver' => 'content::content.*,content::entries.*,content::channels.*',
                     'module'          => 'Content',
@@ -31,15 +33,31 @@ class MenuTableSeeder extends Seeder
             ]
         ];
 
-        foreach ($menus as $name => $items) {
+        foreach ($menus as $key => $items) {
             $menu = Menu::firstOrCreate([
-                'name' => $name
+                'key' => $key
             ]);
 
+            $translations = [];
+            foreach (TransHelper::getAllLanguages() as $language) {
+                $translations[$language->iso_code] = [
+                    'name' => ucwords(preg_replace(array('/(?<=[^A-Z])([A-Z])/', '/(?<=[^0-9])([0-9])/'), ' $0', $key))
+                ];
+            }
+            $menu->updateTranslations($translations);
+
             foreach ($items as $item) {
-                $i = $menu->items()->firstOrCreate($item);
-                $i->is_active = 1;
-                $i->save();
+                $row = $menu->items()->firstOrCreate(array_except($item, ['name', 'value', 'parameters']));
+
+                $translations = [];
+                foreach (TransHelper::getAllLanguages() as $language) {
+                    $translations[$language->iso_code] = [
+                        'name'       => $item['name'],
+                        'value'      => $item['value'],
+                        'parameters' => $item['parameters']
+                    ];
+                }
+                $row->updateTranslations($translations);
             }
         }
     }

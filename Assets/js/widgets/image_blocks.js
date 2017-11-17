@@ -26,7 +26,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
     var blocks = [];
 
-    $(widgetTr).find('.image-blocks-tr:visible').each(function(index, tr){
+    $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
 
         var imageBlockItemId = $(tr).data('image-block-item-id');
         var order = (index+1);

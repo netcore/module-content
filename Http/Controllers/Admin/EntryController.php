@@ -2,15 +2,13 @@
 
 namespace Modules\Content\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Http\Requests\Admin\EntryRequest;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
-use Modules\Content\Models\HtmlBlock;
 use Netcore\Translator\Helpers\TransHelper;
-use ReflectionClass;
+use Netcore\Translator\Models\Language;
 
 class EntryController extends Controller
 {
@@ -73,7 +71,7 @@ class EntryController extends Controller
      */
     public function edit(Entry $entry)
     {
-        $entry->load('contentBlocks');
+        $entry->load('translations.contentBlocks');
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 
@@ -119,19 +117,31 @@ class EntryController extends Controller
      */
     public function widgets()
     {
-        $alteredWidgets = collect(config('netcore.module-content.widgets'))->map(function ($widget) {
+        $languages = TransHelper::getAllLanguages();
+
+        $alteredWidgets = collect(config('netcore.module-content.widgets'))->map(function ($widget) use ($languages) {
 
             $view = array_get($widget, 'backend_template');
             $worker = array_get($widget, 'backend_worker');
 
-            $composed = [];
-            if ($worker) {
-                $worker = new $worker($widget);
-                $composed = $worker->backendTemplateComposer([]);
+            if (!$view) {
+                return $widget;
             }
 
-            if ($view) {
-                $widget['backend_template'] = view($view, $composed)->render();
+            foreach($languages as $language) {
+
+                $composed = [];
+
+                if ($worker) {
+                    $worker = new $worker($widget);
+                    $composed = $worker->backendTemplateComposer([], $language);
+                }
+
+                if(!is_array($widget['backend_template'])) {
+                    $widget['backend_template'] = [];
+                }
+
+                $widget['backend_template'][$language->iso_code] = view($view, $composed)->render();
             }
 
             return $widget;
@@ -175,12 +185,17 @@ class EntryController extends Controller
 
     /**
      * @param Entry $entry
-     * @return mixed
+     * @param Language $language
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroyAttachment(Entry $entry)
+    public function destroyAttachment(Entry $entry, Language $language)
     {
-        $entry->attachment = STAPLER_NULL;
-        $entry->save();
+        $entryTranslation = $entry->translations()
+            ->whereLocale($language->iso_code)
+            ->firstOrFail();
+
+        $entryTranslation->attachment = STAPLER_NULL;
+        $entryTranslation->save();
 
         return response()->json([
             'success' => true

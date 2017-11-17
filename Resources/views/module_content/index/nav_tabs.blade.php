@@ -4,7 +4,7 @@
 @endphp
 
 <!-- Nav tabs -->
-<ul class="nav nav-tabs" role="tablist">
+<ul class="nav nav-tabs" role="tablist" {{ $channels->count() ? '' : 'hidden' }}>
 
     <li
         role="presentation"
@@ -90,7 +90,7 @@
         class="tab-pane {{ $activeChannel ? '' : 'active' }}"
         id="single-entries"
     >
-        <div class="above-table">
+        <div class="above-table {{ $channels->count() ? '' : 'without-channels' }}">
             <a href="{{ route('content::entries.create') }}" class="btn btn-success btn-xs">
                 Add new page
             </a>
