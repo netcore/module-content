@@ -3,6 +3,7 @@
 namespace Modules\Content\Widgets\BackendWorkers;
 
 use Modules\Content\Models\ContentBlock;
+use Netcore\Translator\Models\Language;
 
 interface BackendWorkerInterface
 {
@@ -14,5 +15,5 @@ interface BackendWorkerInterface
 
     public function delete(ContentBlock $contentBlock);
     
-    public function backendTemplateComposer(Array $data);
+    public function backendTemplateComposer(Array $data, Language $language);
 }

@@ -2,12 +2,20 @@
 
 namespace Modules\Content\Translations;
 
+use Codesleeve\Stapler\ORM\EloquentTrait;
+use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\Models\ContentBlock;
 use Modules\Admin\Traits\BootStapler;
 
-class EntryTranslation extends Model
+class EntryTranslation extends Model implements StaplerableInterface
 {
 
+    use BootStapler;
+
+    use EloquentTrait {
+        BootStapler::boot insteadof EloquentTrait;
+    }
 
     /**
      * @var string
@@ -20,8 +28,9 @@ class EntryTranslation extends Model
     protected $fillable = [
         'title',
         'slug',
-        'locale', // This is very important
-        'content'
+        'content',
+        'attachment',
+        'locale' // This is very important
     ];
 
     /**
@@ -29,5 +38,21 @@ class EntryTranslation extends Model
      */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
+    public $staplerConfig = [
+        'attachment' => [
+            'default_style' => 'original',
+            'url'           => '/uploads/:class/:attachment/:id_partition/:style/:filename'
+        ]
+    ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function contentBlocks()
+    {
+        return $this->morphMany(ContentBlock::class, 'contentable');
+    }
 }

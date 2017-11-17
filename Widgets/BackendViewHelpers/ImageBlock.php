@@ -7,15 +7,15 @@ class ImageBlock
     /**
      * @param $model
      * @param $fieldName
-     * @param $languages
+     * @param $language
      * @return array|string
      */
-    public function getDataValueForTd($model, $fieldName, $languages)
+    public function getDataValueForTd($model, $fieldName, $language)
     {
         $dataValue = '';
         if($fieldName != 'image') {
             $dataValue = [];
-            foreach($languages as $language) {
+            //foreach($languages as $language) {
 
                 $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
                 $isNonJsonField = in_array($fieldName, $nonJsonFields);
@@ -29,7 +29,7 @@ class ImageBlock
                 }
 
                 $dataValue[$language->iso_code] = $translation;
-            }
+            //}
             $dataValue = json_encode($dataValue);
         }
 

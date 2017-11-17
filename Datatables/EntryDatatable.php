@@ -4,6 +4,7 @@ namespace Modules\Content\Datatables;
 
 use Illuminate\Database\Eloquent\Builder;
 use Modules\Content\Models\Entry;
+use Modules\Content\Translations\EntryTranslation;
 use Yajra\Datatables\Datatables;
 use Netcore\Translator\Helpers\TransHelper;
 
@@ -49,8 +50,8 @@ trait EntryDatatable
             ->editColumn('is_active', function ($entry) {
                 return view('content::module_content.entries.tds.is_active', compact('entry'))->render();
             })
-            ->addColumn('attachment', function ($entry) {
-                return view('content::module_content.entries.tds.attachment', compact('entry'))->render();
+            ->addColumn('attachment', function ($entry) use ($languages) {
+                return view('content::module_content.entries.tds.attachment', compact('entry', 'languages'))->render();
             })
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
@@ -69,13 +70,9 @@ trait EntryDatatable
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::with([
-            'contentBlocks'
-        ])
-        ->orderBy('is_homepage', 'DESC') // Homepage always at the top.
+        $query = Entry::orderBy('is_homepage', 'DESC')// Homepage always at the top.
         ->orderBy('published_at', 'DESC')
-        ->orderBy('id', 'DESC')
-        ;
+            ->orderBy('id', 'DESC');
 
         if ($channelId) {
             $query->whereChannelId($channelId);
@@ -83,13 +80,12 @@ trait EntryDatatable
             $query->whereNull('channel_id');
         }
 
-        if($keyword) {
-            $query->whereHas('translations', function($subq) use ($keyword) {
+        if ($keyword) {
+            $query->whereHas('translations', function ($subq) use ($keyword) {
                 return $subq
                     ->where('netcore_content__entry_translations.title', 'LIKE', '%' . $keyword . '%')
                     ->orWhere('netcore_content__entry_translations.slug', 'LIKE', '%' . $keyword . '%')
-                    ->orWhere('netcore_content__entry_translations.content', 'LIKE', '%' . $keyword . '%')
-                    ;
+                    ->orWhere('netcore_content__entry_translations.content', 'LIKE', '%' . $keyword . '%');
             });
         }
 

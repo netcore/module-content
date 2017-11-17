@@ -2,39 +2,19 @@
 
 namespace Modules\Content\Models;
 
-use Codesleeve\Stapler\ORM\EloquentTrait;
-use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\PassThroughs\Entry\Attachments;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
-use Modules\Admin\Traits\StaplerAndTranslatable;
-use Modules\Admin\Traits\BootStapler;
-use Modules\Admin\Traits\SyncTranslations;
+use Modules\Translate\Traits\SyncTranslations;
 use Modules\Crud\Traits\CRUDModel;
 
-class Entry extends Model implements StaplerableInterface
+class Entry extends Model
 {
 
-    /**
-     * Stapler and Translatable traits conflict with each other
-     * Thats why we have created custom trait to resolve this conflict
-     */
-    use StaplerAndTranslatable, BootStapler;
-
-    use Translatable {
-        StaplerAndTranslatable::getAttribute insteadof Translatable;
-        StaplerAndTranslatable::setAttribute insteadof Translatable;
-    }
-
-    use EloquentTrait {
-        StaplerAndTranslatable::getAttribute insteadof EloquentTrait;
-        StaplerAndTranslatable::setAttribute insteadof EloquentTrait;
-        BootStapler::boot insteadof EloquentTrait;
-    }
-
+    use Translatable;
     use SyncTranslations;
-
     use CRUDModel;
 
     /**
@@ -50,8 +30,14 @@ class Entry extends Model implements StaplerableInterface
         'is_active',
         'is_homepage',
         'layout',
-        'attachment',
         'published_at'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $hidden = [
+        'attachment' // Important. Datatables will hang up if you let them serialize this.
     ];
 
     /**
@@ -72,26 +58,13 @@ class Entry extends Model implements StaplerableInterface
     public $translatedAttributes = [
         'title',
         'slug',
-        'content'
+        'content',
+        'attachment', // Object
+        'attachment_file_name',
+        'attachment_file_size',
+        'attachment_content_type',
+        'attachment_updated_at'
     ];
-
-    /**
-     * @var array
-     */
-    protected $staplerConfig = [
-        'attachment' => [
-            'default_style' => 'original',
-            'url'           => '/uploads/:class/:attachment/:id_partition/:style/:filename'
-        ]
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function contentBlocks()
-    {
-        return $this->morphMany(ContentBlock::class, 'contentable');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -107,6 +80,14 @@ class Entry extends Model implements StaplerableInterface
     public function storage()
     {
         return new Storage($this);
+    }
+
+    /**
+     * @return Attachments
+     */
+    public function attachments()
+    {
+        return new Attachments($this);
     }
 
     /**
@@ -156,22 +137,5 @@ class Entry extends Model implements StaplerableInterface
         );
 
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
-    }
-
-    /**
-     * @return String
-     */
-    public function getHumanAttachmentSizeAttribute()
-    {
-        $decimals = 0;
-        $bytes = $this->attachment_file_size;
-
-        if (!$bytes) {
-            return '0 KB';
-        }
-
-        $size = [' B', ' KB', ' MB', ' GB'];
-        $factor = floor((strlen($bytes) - 1) / 3);
-        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }

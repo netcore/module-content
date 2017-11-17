@@ -66,7 +66,7 @@ Route::group([
         'uses' => 'EntryController@destroy'
     ]);
 
-    Route::delete('/content/entries/attachment/{entry}', [
+    Route::delete('/content/entries/attachment/{entry}/{language}', [
         'as' => 'entries.destroy_attachment',
         'uses' => 'EntryController@destroyAttachment'
     ]);
