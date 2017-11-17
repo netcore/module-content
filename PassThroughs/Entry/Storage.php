@@ -72,8 +72,6 @@ class Storage extends PassThrough
             // Checkboxes user array_has
             'is_active'    => $isActive,
             'is_homepage'  => $isHomepage,
-
-            'attachment' => request()->file('attachment')
         ]);
 
         // If this is homepage, then mark other pages as regular ones
@@ -93,12 +91,13 @@ class Storage extends PassThrough
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
         if (class_exists($menuItemClass)) {
             $slug = '/' . trim($entry->slug, '/');
-            app($menuItemClass)->whereValue($slug)->update([
+            app($menuItemClass)->whereHas('translations', function($subQuery) use ($slug) {
+                return $subQuery->whereValue($slug);
+            })->update([
                 'is_active' => $isActive
             ]);
         }
 
-        //dd('Transaction done');
         return $entry;
     }
 
@@ -136,8 +135,6 @@ class Storage extends PassThrough
     private function processEntryTranslation(EntryTranslation $entryTranslation, Array $contentBlocks): void
     {
 
-        info('Processing EntryTranslation ' . $entryTranslation->locale . ' (ID ' . $entryTranslation->id . ')');
-
         $existingContentBlockIds = $entryTranslation->contentBlocks()->pluck('id')->toArray();
         $receivedContentBlockIds = [];
 
@@ -145,8 +142,6 @@ class Storage extends PassThrough
 
             $contentBlockId = array_get($contentBlock, 'contentBlockId');
             $widget = array_get($contentBlock, 'widget');
-
-            info('    processing contentBlock (widget ' . $widget . ' and id ' . $contentBlockId . ')');
 
             if (is_integer($contentBlockId)) {
                 // $contentBlockId is real id in DB.
@@ -158,7 +153,6 @@ class Storage extends PassThrough
                     continue;
                 }
 
-                info('    Updating existing contentBlock ' . $contentBlockId);
                 $existingContentBlock->update([
                     'order' => ($index + 1)
                 ]);
@@ -185,8 +179,6 @@ class Storage extends PassThrough
                 $deletableContentBlockIds[] = $existingContentBlockId;
             }
         }
-
-        info('    Deleteable contentBlockIds ' . json_encode($deletableContentBlockIds));
 
         $deletableContentBlocks = $entryTranslation->contentBlocks()->whereIn('id', $deletableContentBlockIds)->get();
         foreach ($deletableContentBlocks as $deletableContentBlock) {
@@ -226,8 +218,6 @@ class Storage extends PassThrough
 
             if ($action == 'update') {
 
-                info('    in storeNewContentBlock action update (contentBlockId ' . $existingContentBlock->id . ')');
-
                 $frontendData = (array)array_get($contentBlock, 'data', []);
                 $data = $backendWorker->update($frontendData);
 
@@ -239,8 +229,6 @@ class Storage extends PassThrough
             }
 
             if ($action == 'recreate') {
-
-                info('    in storeNewContentBlock action recreate');
 
                 // Delete data in related tables
                 $backendWorker->delete($existingContentBlock);

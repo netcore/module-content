@@ -168,9 +168,6 @@ class ImageBlock implements BackendWorkerInterface
         $existingItemIds = $imageBlock->items()->pluck('id')->toArray();
         $receivedItemIds = [];
 
-        info('    Worker update frontendData - ' . json_encode($frontendData) );
-        info('    Worker update existingItemIds - ' . json_encode($existingItemIds) );
-
         $blocks = (array)array_get($frontendData, 'blocks', []);
 
         foreach ($blocks as $index => $block) {
@@ -251,9 +248,6 @@ class ImageBlock implements BackendWorkerInterface
                 $deletableItemIds[] = $existingItemId;
             }
         }
-
-        info('    Worker update receivedItemIds - ' . json_encode($receivedItemIds) );
-        info('    Worker update deletableItemIds - ' . json_encode($deletableItemIds) );
 
         $deletableItems = $imageBlock->items()->whereIn('id', $deletableItemIds)->get();
         foreach ($deletableItems as $deletableItem) {

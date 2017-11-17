@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\Entry\Attachments;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
-use Modules\Admin\Traits\SyncTranslations;
+use Modules\Translate\Traits\SyncTranslations;
 use Modules\Crud\Traits\CRUDModel;
 
 class Entry extends Model

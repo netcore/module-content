@@ -18,9 +18,9 @@
         <div class="form-group">
             <label>Attachment</label>
             <br>
-            {!! Form::file('attachment', [
-                'class' => 'form-control form-input',
-                'style' => ((isset($entry) && $entry->attachment_file_name) ? 'max-width:250px;display:inline;' : '' )
+            {!! Form::file('translations['.$language->iso_code.'][attachment]', [
+                'class' => 'form-control form-input attachment',
+                'style' => ((isset($entry) && $entry->attachments()->hasForLanguage($language)) ? 'max-width:250px;display:inline;' : '' )
             ]) !!}
 
             <span class="error-span"></span>

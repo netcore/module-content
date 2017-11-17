@@ -41,7 +41,7 @@ class EntryTranslation extends Model implements StaplerableInterface
     /**
      * @var array
      */
-    protected $staplerConfig = [
+    public $staplerConfig = [
         'attachment' => [
             'default_style' => 'original',
             'url'           => '/uploads/:class/:attachment/:id_partition/:style/:filename'

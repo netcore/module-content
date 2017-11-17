@@ -238,9 +238,13 @@ $(function() {
         });
 
         // Entry attachment
-        var attachments = $(this).closest('form').find('input[name=attachment]')[0].files;
-        $.each(attachments, function(i, file) {
-            formData.append('attachment', file);
+        var attachmentInputs = $(this).closest('form').find('input.attachment');
+        $.each(attachmentInputs, function(index, input){
+            var attachments = $(input)[0].files;
+            $.each(attachments, function(i, file) {
+                var name = $(input).attr('name');
+                formData.append(name, file);
+            });
         });
 
         $(btn).find('.not-loading').hide();
