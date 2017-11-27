@@ -410,7 +410,11 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
 
                 if($(element).hasClass('image-blocks-summernote') && $(element).hasClass('initialized')) {
                     $(element).summernote('code', value);
-                } else {
+                }
+                else if($(element).is(':checkbox')){
+                    $(element).prop('checked', value);
+                }
+                else {
                     $(element).val(value);
                 }
             });
