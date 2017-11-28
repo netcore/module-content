@@ -15,21 +15,19 @@ class ImageBlock
         $dataValue = '';
         if($fieldName != 'image') {
             $dataValue = [];
-            //foreach($languages as $language) {
 
-                $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-                $isNonJsonField = in_array($fieldName, $nonJsonFields);
+            $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
+            $isNonJsonField = in_array($fieldName, $nonJsonFields);
 
-                if($isNonJsonField) {
-                    $translation = trans_model($model, $language, $fieldName);
-                } else {
-                    $jsonString = trans_model($model, $language, 'json');
-                    $jsonDecoded = (array) json_decode($jsonString);
-                    $translation = array_get($jsonDecoded, $fieldName);
-                }
+            if($isNonJsonField) {
+                $translation = object_get($model, $fieldName);
+            } else {
+                $jsonDecoded = (array) $model->json;
+                $translation = array_get($jsonDecoded, $fieldName);
+            }
 
-                $dataValue[$language->iso_code] = $translation;
-            //}
+            $dataValue[$language->iso_code] = $translation;
+
             $dataValue = json_encode($dataValue);
         }
 
@@ -49,10 +47,9 @@ class ImageBlock
         $isNonJsonField = in_array($fieldName, $nonJsonFields);
 
         if($isNonJsonField) {
-            $value = trans_model($model, $language, $fieldName);
+            $value = object_get($model, $fieldName);
         } else {
-            $jsonString = trans_model($model, $language, 'json');
-            $jsonDecoded = (array) json_decode($jsonString);
+            $jsonDecoded = (array) object_get($model, 'json');
             $value = array_get($jsonDecoded, $fieldName);
         }
 

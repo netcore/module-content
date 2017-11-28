@@ -2,36 +2,19 @@
 
 namespace Modules\Content\Models;
 
-use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Content\Translations\ImageBlockItemTranslation;
-use Modules\Admin\Traits\StaplerAndTranslatable;
 use Modules\Admin\Traits\BootStapler;
-use Modules\Admin\Traits\SyncTranslations;
 use Codesleeve\Stapler\ORM\EloquentTrait;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 
 class ImageBlockItem extends Model implements StaplerableInterface
 {
 
-    /**
-     * Stapler and Translatable traits conflict with each other
-     * Thats why we have created custom trait to resolve this conflict
-     */
-    use StaplerAndTranslatable, BootStapler;
-
-    use Translatable {
-        StaplerAndTranslatable::getAttribute insteadof Translatable;
-        StaplerAndTranslatable::setAttribute insteadof Translatable;
-    }
+    use BootStapler;
 
     use EloquentTrait {
-        StaplerAndTranslatable::getAttribute insteadof EloquentTrait;
-        StaplerAndTranslatable::setAttribute insteadof EloquentTrait;
         BootStapler::boot insteadof EloquentTrait;
     }
-
-    use SyncTranslations;
 
     /**
      * @var string
@@ -42,31 +25,27 @@ class ImageBlockItem extends Model implements StaplerableInterface
      * @var bool
      */
     public $timestamps = false;
-    
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'json' => 'array'
+    ];
+
     /**
      * @var array
      */
     protected $fillable = [
         'image',
-        'order'
-    ];
-    
-    /**
-     * @var string
-     */
-    public $translationModel = ImageBlockItemTranslation::class;
-    
-    /**
-     * @var array
-     */
-    public $translatedAttributes = [
+        'order',
         'title',
         'subtitle',
         'content',
         'link',
         'json'
     ];
-
+    
     /**
      * @var array
      */
@@ -83,14 +62,6 @@ class ImageBlockItem extends Model implements StaplerableInterface
     public function imageBlock()
     {
         return $this->belongsTo(ImageBlock::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function getJsonDecodedAttribute()
-    {
-        return (array) json_decode($this->json);
     }
 
     /**

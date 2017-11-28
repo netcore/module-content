@@ -49,23 +49,13 @@ class CreateNetcoreContentImageBlocksTable extends Migration
             $table->string('image_content_type')->nullable();
             $table->timestamp('image_updated_at')->nullable();
 
-            $table->integer('order')->index();
-        });
-
-        Schema::create('netcore_content__image_block_item_translations', function (Blueprint $table) {
-
-            $table->increments('id');
-
-            $table->unsignedInteger('image_block_item_id');
-            $table->foreign('image_block_item_id', 'image_block_item_id_foreign')->references('id')->on('netcore_content__image_block_items')->onDelete('cascade');
-
-            $table->string('locale')->index();
-
             $table->string('title')->default('');
             $table->string('subtitle')->default('');
             $table->mediumText('content')->nullable();
             $table->string('link')->default('');
             $table->mediumText('json')->nullable();
+
+            $table->integer('order')->index();
         });
     }
 
@@ -76,7 +66,6 @@ class CreateNetcoreContentImageBlocksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('netcore_content__image_block_item_translations');
         Schema::dropIfExists('netcore_content__image_block_items');
 
         Schema::dropIfExists('netcore_content__image_block_translations');

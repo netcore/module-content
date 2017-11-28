@@ -207,32 +207,29 @@ class ImageBlock implements BackendWorkerInterface
                 ]);
             }
 
-            // Format ImageBlockItem translations
-            $imageBlockItemTranslations = [];
+            // Format ImageBlockItem attributes
+            $imageBlockItemAttributes = [];
             $fields = array_keys($attributes);
-            $locales = $this->languages->pluck('iso_code')->toArray();
-            foreach ($locales as $locale) {
-                foreach ($fields as $field) {
+            foreach ($fields as $field) {
 
-                    if ($field == 'image') {
-                        continue;
-                    }
+                if ($field == 'image') {
+                    continue;
+                }
 
-                    $fieldData = (array)array_get($attributes, $field, []);
-                    $value = array_get($fieldData, $locale, '');
+                $fieldData = (array)array_get($attributes, $field, []);
+                $fieldData = array_flatten($fieldData);
+                $value = array_get($fieldData, 0, '');
 
-                    $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-                    $isNonJsonField = in_array($field, $nonJsonFields);
-                    if ($isNonJsonField) {
-                        $imageBlockItemTranslations[$locale][$field] = $value;
-                    } else {
-                        $imageBlockItemTranslations[$locale]['json'][$field] = $value;
-                    }
+                $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
+                $isNonJsonField = in_array($field, $nonJsonFields);
+                if ($isNonJsonField) {
+                    $imageBlockItemAttributes[$field] = $value;
+                } else {
+                    $imageBlockItemAttributes['json'][$field] = $value;
                 }
             }
 
-            // Translations
-            $imageBlockItem->updateTranslations($imageBlockItemTranslations);
+            $imageBlockItem->update($imageBlockItemAttributes);
 
             // Image
             $imageAttribute = (array)array_get($attributes, 'image', []);
@@ -305,7 +302,7 @@ class ImageBlock implements BackendWorkerInterface
         $cached = isset(self::$cachedImageBlocks[$imageBlockId]);
         if($imageBlockId AND !$cached) {
             self::$cachedImageBlocks[$imageBlockId] = \Modules\Content\Models\ImageBlock::with([
-                'items.translations'
+                'items'
             ])->find($imageBlockId);
         }
 
