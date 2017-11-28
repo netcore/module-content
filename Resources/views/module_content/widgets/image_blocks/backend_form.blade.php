@@ -1,8 +1,25 @@
-<div class="add-new-container">
+<div class="add-new-container"
+     data-max-items-count="{{ $maxItemsCount }}"
+>
 
-    <a class="btn btn-xs btn-success add-new-image-block-button pull-left">
+    @php
+        $itemsCount = isset($imageBlock) ? $imageBlock->items->count() : 0;
+        $disabledAddNew = ($maxItemsCount && $itemsCount>=$maxItemsCount) ? true : false;
+    @endphp
+
+    <a
+        class="btn btn-xs btn-success add-new-image-block-button pull-left {{ $disabledAddNew ? 'disabled' : '' }}"
+    >
         Add new block
+
+        @if($maxItemsCount)
+            <span class="max-items-count">
+                Max items count: {{ $maxItemsCount }}
+            </span>
+        @endif
     </a>
+
+    <span class="clear:both;"></span>
 
     <table class="add-new-image-block-table" hidden>
         @foreach($fields as $field)

@@ -344,11 +344,14 @@ class ImageBlock implements BackendWorkerInterface
             ];
         }
 
+        $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
+
         return compact(
             'imageBlock',
             'language',
             'translations',
-            'fields'
+            'fields',
+            'maxItemsCount'
         );
     }
 }
