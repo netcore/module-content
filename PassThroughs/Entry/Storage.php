@@ -81,11 +81,14 @@ class Storage extends PassThrough
             ]);
         }
 
+        // Store/update translations
+        $entryTranslations = (array)array_get($requestData, 'translations', []);
+        $this->updateEntryTranslations($entryTranslations);
+
         $this->processContentBlocks($requestData);
 
-        // Store translations
-        $entryTranslations = (array)array_get($requestData, 'translations', []);
-        $this->storeEntryTranslations($entryTranslations);
+        // This must be after processContentBlocks
+        $this->updateEntryContentTranslation($entry);
 
         // Hide/show menu items that link to this entry
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
@@ -117,6 +120,7 @@ class Storage extends PassThrough
         }, $contentBlocks);
 
         foreach ($this->languages as $language) {
+            $entry->load('translations');
             $entryTranslation = $entry->translateOrNew($language->iso_code);
 
             $filteredContentBlocks = array_filter($contentBlocks, function ($contentBlock) use ($language) {
@@ -273,7 +277,7 @@ class Storage extends PassThrough
     /**
      * @param array $entryTranslations
      */
-    private function storeEntryTranslations(Array $entryTranslations)
+    private function updateEntryTranslations(Array $entryTranslations)
     {
         $entry = $this->entry;
 
@@ -296,11 +300,22 @@ class Storage extends PassThrough
             return $translations;
         })->toArray();
 
+        // Save translations
+        $entry->updateTranslations($entryTranslations);
+    }
+
+    /**
+     * @param Entry $entry
+     */
+    private function updateEntryContentTranslation(Entry $entry)
+    {
         foreach ($entry->translations as $entryTranslation) {
             $contentBlocks = $entryTranslation
                 ->contentBlocks()
                 ->where('data', 'LIKE', '%html_block_id%')
                 ->get();
+
+            $content = '';
 
             foreach ($contentBlocks as $contentBlock) {
 
@@ -320,13 +335,12 @@ class Storage extends PassThrough
                         $entryTranslations[$translation->locale]['content'] = '';
                     }
 
-                    $entryTranslations[$translation->locale]['content'] .= $translation->content;
+                    $content .= $translation->content;
                 }
             }
-        }
 
-        // Save translations
-        $entry->updateTranslations($entryTranslations);
+            $entryTranslation->update(compact('content'));
+        }
     }
 
     /**
