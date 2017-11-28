@@ -385,6 +385,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         });
 
         initSortable(table);
+        dontAllowMoreItemsThanMaxCount();
     };
 
     $('body').on('click', '.edit-image-block', function(){
@@ -476,5 +477,36 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         addNewRow(this);
         clearAddNewImageBlockForm(this);
     });
+
+    var dontAllowMoreItemsThanMaxCount = function(){
+        $('.image-blocks-table').each(function(index, table){
+
+            // get maximum
+            var templateContainer = $(table).closest('.template-container-body');
+            var itemsMaxCount = $(templateContainer).find('.add-new-container').data('max-items-count');
+
+            // get current
+            var itemsCurrentCount = $(table).find('tbody .image-blocks-tr').length;
+
+            // disable/enable accordingly
+            var disabled = itemsMaxCount && (itemsCurrentCount >= itemsMaxCount);
+
+            var button = $(templateContainer).find('.add-new-image-block-button');
+            if(disabled) {
+                $(button).addClass('disabled');
+            } else {
+                $(button).removeClass('disabled');
+            }
+        });
+    };
+
+    $('body').on('click', '.swal2-container', function(){
+        window.setTimeout(function(){
+            dontAllowMoreItemsThanMaxCount();
+        }, 500);
+    });
+
+    // Initial
+    dontAllowMoreItemsThanMaxCount();
 })();
 

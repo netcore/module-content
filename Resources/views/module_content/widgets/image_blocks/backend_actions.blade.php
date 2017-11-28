@@ -13,7 +13,7 @@
     data-success-title="Success"
     data-success-text="Block was deleted"
     data-fade-out-selector=".fade-out-{{ $modelId }}"
-    data-hide-on-empty=".widget-tr"
+    data-remove-on-empty=".widget-tr"
     data-remove-on-delete
 >
     Delete
