@@ -9,26 +9,26 @@ use Modules\Content\Translations\HtmlBlockTranslation;
 
 class HtmlBlock extends Model
 {
-    
+
     use Translatable, SyncTranslations;
 
     /**
      * @var string
      */
     protected $table = 'netcore_content__html_blocks';
-    
+
     /**
      * @var array
      */
     protected $fillable = [
-        
+
     ];
-    
+
     /**
      * @var string
      */
     public $translationModel = HtmlBlockTranslation::class;
-    
+
     /**
      * @var array
      */
@@ -42,6 +42,12 @@ class HtmlBlock extends Model
      */
     public function getJsonDecodedAttribute()
     {
-        return (array) json_decode($this->json);
+        try {
+            $decoded = (array)json_decode($this->json);
+        } catch (\Throwable $e) {
+            $decoded = [];
+        }
+
+        return $decoded;
     }
 }
