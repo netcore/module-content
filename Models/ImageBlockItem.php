@@ -61,6 +61,16 @@ class ImageBlockItem extends Model implements StaplerableInterface
     }
 
     /**
+     * @param String $key
+     * @return mixed
+     */
+    public function getField(String $key)
+    {
+        $field = $this->fields->where('key', $key)->first();
+        return $field ? $field->value : '';
+    }
+
+    /**
      * @return String
      */
     public function getHumanAttachmentSizeAttribute()
