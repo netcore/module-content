@@ -208,12 +208,17 @@ class ImageBlock implements BackendWorkerInterface
                 ]);
             }
 
+            $configuredFields = array_get($this->config, 'fields');
+
             // Format ImageBlockItem attributes
             $imageBlockItemFields = [];
             $fields = array_keys($attributes);
             foreach ($fields as $field) {
 
-                if ($field == 'image') {
+                $config = array_get($configuredFields, $field, []);
+                $type = array_get($config, 'type');
+
+                if ($type == 'image') {
                     continue;
                 }
 
@@ -222,24 +227,41 @@ class ImageBlock implements BackendWorkerInterface
                 $value = array_get($fieldData, 0, '');
 
                 $imageBlockItemFields[] = [
-                    'image_block_item_id' => $imageBlockItem->id,
-                    'key'                 => $field,
-                    'value'               => $value,
+                    //'image_block_item_id' => $imageBlockItem->id,
+                    'key'   => $field,
+                    'value' => $value,
+                    'type'  => $type,
                 ];
             }
 
-            $imageBlockItem->fields()->delete();
+            $existingFields = $imageBlockItem->fields()->get();
+            foreach ($imageBlockItemFields as $inMemoryField) {
 
-            ImageBlockItemField::insert($imageBlockItemFields);
+                $key = array_get($inMemoryField, 'key');
+                $value = array_get($inMemoryField, 'value');
+                $type = array_get($inMemoryField, 'type');
 
-            // Image
-            $imageAttribute = (array)array_get($attributes, 'image', []);
-            if ($imageAttribute) {
-                $name = array_get($imageAttribute, 'file');
-                $uploadedFile = request()->file($name);
-                if ($name AND $uploadedFile) {
-                    $imageBlockItem->image = $uploadedFile;
-                    $imageBlockItem->save();
+                $dbData = compact('key', 'value');
+
+                if ($type == 'file') {
+
+                    $imageAttribute = (array)array_get($attributes, $key, []);
+                    if ($imageAttribute) {
+                        $name = array_get($imageAttribute, 'file');
+                        $uploadedFile = request()->file($name);
+                        if ($name AND $uploadedFile) {
+                            $dbData['value'] = null;
+                            $dbData['image'] = $uploadedFile;
+                        }
+                    }
+                }
+
+                $existingField = $existingFields->where('key', $key)->first();
+
+                if ($existingField) {
+                    $existingField->update($dbData);
+                } else {
+                    $imageBlockItem->fields()->create($dbData);
                 }
             }
         }

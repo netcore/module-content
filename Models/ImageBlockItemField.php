@@ -7,16 +7,14 @@ use Modules\Admin\Traits\BootStapler;
 use Codesleeve\Stapler\ORM\EloquentTrait;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 
-class ImageBlockItemField extends Model /*implements StaplerableInterface*/
+class ImageBlockItemField extends Model implements StaplerableInterface
 {
 
-    /*
     use BootStapler;
 
     use EloquentTrait {
         BootStapler::boot insteadof EloquentTrait;
     }
-    */
 
     /**
      * @var string
@@ -40,9 +38,9 @@ class ImageBlockItemField extends Model /*implements StaplerableInterface*/
      */
     protected $fillable = [
         'key',
-        'value'
+        'value',
+        'image'
         /*
-        'image',
         'order',
         'title',
         'subtitle',
@@ -54,13 +52,13 @@ class ImageBlockItemField extends Model /*implements StaplerableInterface*/
     
     /**
      * @var array
+     */
     protected $staplerConfig = [
         'image' => [
             'default_style' => 'original',
             'url' => '/uploads/:class/:attachment/:id_partition/:style/:filename'
         ]
     ];
-     */
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -72,6 +70,7 @@ class ImageBlockItemField extends Model /*implements StaplerableInterface*/
 
     /**
      * @return String
+     */
     public function getHumanAttachmentSizeAttribute()
     {
         $decimals = 0;
@@ -85,5 +84,4 @@ class ImageBlockItemField extends Model /*implements StaplerableInterface*/
         $factor = floor((strlen($bytes) - 1) / 3);
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
-     */
 }

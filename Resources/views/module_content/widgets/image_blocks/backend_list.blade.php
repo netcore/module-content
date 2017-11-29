@@ -65,16 +65,21 @@
                         data-field="{{ $fieldName }}"
                         data-td-id="{{ $loop->parent->index }}-image"
                     >
-                        @if($fieldName == 'image')
-                            @if($model->image_file_name)
+                        @if($fieldType == 'file')
+
+                            @php
+                                $field = $model->fields->where('key', $fieldName)->first();
+                            @endphp
+
+                            @if($field && $field->image_file_name)
                                 <img
-                                    src="{{ $model->image->url() }}"
+                                    src="{{ $field->image->url() }}"
 
                                     alt="Image"
                                     class="img-responsive"
                                     data-toggle="tooltip"
                                     data-placement="right"
-                                    title="{{ $model->human_attachment_size }}"
+                                    title="{{ $field->human_attachment_size }}"
                                     data-container="body"
                                     style="width:{{ $imageWidth }}px;"
                                 >
