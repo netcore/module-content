@@ -4,10 +4,11 @@ namespace Modules\Content\Widgets\BackendWorkers;
 
 use Illuminate\Support\Collection;
 use Modules\Content\Models\ContentBlock;
+use Modules\Content\Models\WidgetBlockItemField;
 use Netcore\Translator\Helpers\TransHelper;
 use Netcore\Translator\Models\Language;
 
-class ImageBlock implements BackendWorkerInterface
+class WidgetBlock implements BackendWorkerInterface
 {
     /**
      * @var string "recreate" || "update"
@@ -27,10 +28,10 @@ class ImageBlock implements BackendWorkerInterface
     /**
      * @var array
      */
-    private static $cachedImageBlocks = [];
+    private static $cachedWidgetBlocks = [];
 
     /**
-     * ImageBlock constructor.
+     * WidgetBlock constructor.
      *
      * @param $config
      */
@@ -159,18 +160,18 @@ class ImageBlock implements BackendWorkerInterface
      */
     public function update(Array $frontendData): Array
     {
-        $imageBlockId = array_get($frontendData, 'imageBlockId');
+        $widgetBlockId = array_get($frontendData, 'widgetBlockId');
 
-        if (is_numeric($imageBlockId)) {
+        if (is_numeric($widgetBlockId)) {
             // Real id. Already exists in DB.
-            $imageBlock = \Modules\Content\Models\ImageBlock::with('items')->find($imageBlockId);
+            $widgetBlock = \Modules\Content\Models\WidgetBlock::with('items')->find($widgetBlockId);
         } else {
-            // $imageBlockId is random string, something like "Mfjxi"
-            $imageBlock = \Modules\Content\Models\ImageBlock::create([]);
+            // $widgetBlockId is random string, something like "Mfjxi"
+            $widgetBlock = \Modules\Content\Models\WidgetBlock::create([]);
             // todo - translatable title
         }
 
-        $existingItemIds = $imageBlock->items()->pluck('id')->toArray();
+        $existingItemIds = $widgetBlock->items()->pluck('id')->toArray();
         $receivedItemIds = [];
 
         $blocks = (array)array_get($frontendData, 'blocks', []);
@@ -180,68 +181,87 @@ class ImageBlock implements BackendWorkerInterface
             $block = (array)$block;
             $attributes = (array)array_get($block, 'attributes');
 
-            $imageBlockItemId = array_get($block, 'imageBlockItemId');
+            $widgetBlockItemId = array_get($block, 'widgetBlockItemId');
 
-            if (is_numeric($imageBlockItemId)) {
+            if (is_numeric($widgetBlockItemId)) {
 
                 // Real id. Already exists in DB.
-                $receivedItemIds[] = $imageBlockItemId;
+                $receivedItemIds[] = $widgetBlockItemId;
 
-                $imageBlockItem = $imageBlock->items->where('id', $imageBlockItemId)->first();
+                $widgetBlockItem = $widgetBlock->items->where('id', $widgetBlockItemId)->first();
 
-                if (!$imageBlockItem) {
+                if (!$widgetBlockItem) {
                     continue;
                 }
 
                 // Order
-                $imageBlockItem->update([
+                $widgetBlockItem->update([
                     'order' => ($index + 1)
                 ]);
 
             } else {
 
                 // Create new entry
-                // $imageBlockItemId is random string, something like "Mfjxi"
-                $imageBlockItem = $imageBlock->items()->create([
+                // $widgetBlockItemId is random string, something like "Mfjxi"
+                $widgetBlockItem = $widgetBlock->items()->create([
                     'order' => ($index + 1)
                 ]);
             }
 
-            // Format ImageBlockItem translations
-            $imageBlockItemTranslations = [];
+            $configuredFields = array_get($this->config, 'fields');
+
+            // Format WidgetBlockItem attributes
+            $widgetBlockItemFields = [];
             $fields = array_keys($attributes);
-            $locales = $this->languages->pluck('iso_code')->toArray();
-            foreach ($locales as $locale) {
-                foreach ($fields as $field) {
+            foreach ($fields as $field) {
 
-                    if ($field == 'image') {
-                        continue;
-                    }
+                $config = array_get($configuredFields, $field, []);
+                $type = array_get($config, 'type');
 
-                    $fieldData = (array)array_get($attributes, $field, []);
-                    $value = array_get($fieldData, $locale, '');
-
-                    $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-                    $isNonJsonField = in_array($field, $nonJsonFields);
-                    if ($isNonJsonField) {
-                        $imageBlockItemTranslations[$locale][$field] = $value;
-                    } else {
-                        $imageBlockItemTranslations[$locale]['json'][$field] = $value;
-                    }
+                if ($type == 'image') {
+                    continue;
                 }
+
+                $fieldData = (array)array_get($attributes, $field, []);
+                $fieldData = array_flatten($fieldData);
+                $value = array_get($fieldData, 0, '');
+
+                $widgetBlockItemFields[] = [
+                    //'widget_block_item_id' => $widgetBlockItem->id,
+                    'key'   => $field,
+                    'value' => $value,
+                    'type'  => $type,
+                ];
             }
 
-            // Translations
-            $imageBlockItem->updateTranslations($imageBlockItemTranslations);
+            $existingFields = $widgetBlockItem->fields()->get();
+            foreach ($widgetBlockItemFields as $inMemoryField) {
 
-            // Image
-            $imageAttribute = (array)array_get($attributes, 'image', []);
-            if ($imageAttribute) {
-                $name = array_get($imageAttribute, 'file');
-                $uploadedFile = request()->file($name);
-                if ($name AND $uploadedFile) {
-                    $imageBlockItem->image = $uploadedFile;
-                    $imageBlockItem->save();
+                $key = array_get($inMemoryField, 'key');
+                $value = array_get($inMemoryField, 'value');
+                $type = array_get($inMemoryField, 'type');
+
+                $dbData = compact('key', 'value');
+
+                if ($type == 'file') {
+
+                    $imageAttribute = (array)array_get($attributes, $key, []);
+                    if ($imageAttribute) {
+                        $name = array_get($imageAttribute, 'file');
+                        $uploadedFile = request()->file($name);
+                        if ($name AND $uploadedFile) {
+                            $dbData['value'] = null;
+                            $dbData['image'] = $uploadedFile;
+                        }
+                    }
+                }
+
+                $existingField = $existingFields->where('key', $key)->first();
+
+                if ($existingField) {
+                    $existingField->update($dbData);
+                } else {
+                    $widgetBlockItem->fields()->create($dbData);
                 }
             }
         }
@@ -254,17 +274,17 @@ class ImageBlock implements BackendWorkerInterface
             }
         }
 
-        $deletableItems = $imageBlock->items()->whereIn('id', $deletableItemIds)->get();
+        $deletableItems = $widgetBlock->items()->whereIn('id', $deletableItemIds)->get();
         foreach ($deletableItems as $deletableItem) {
             if ($deletableItem->image) {
                 $deletableItem->image = STAPLER_NULL;
                 $deletableItem->save();
             }
         }
-        $imageBlock->items()->whereIn('id', $deletableItemIds)->delete();
+        $widgetBlock->items()->whereIn('id', $deletableItemIds)->delete();
 
         return [
-            'image_block_id' => $imageBlock->id
+            'widget_block_id' => $widgetBlock->id
         ];
     }
 
@@ -298,29 +318,26 @@ class ImageBlock implements BackendWorkerInterface
     public function backendTemplateComposer(Array $data, Language $language): Array
     {
         $translations = [];
-        $imageBlock = null;
+        $widgetBlock = null;
 
-        $imageBlockId = array_get($data, 'image_block_id', null);
+        $widgetBlockId = array_get($data, 'widget_block_id', null);
 
-        $cached = isset(self::$cachedImageBlocks[$imageBlockId]);
-        if($imageBlockId AND !$cached) {
-            self::$cachedImageBlocks[$imageBlockId] = \Modules\Content\Models\ImageBlock::with([
-                'items.translations'
-            ])->find($imageBlockId);
+        $cached = isset(self::$cachedWidgetBlocks[$widgetBlockId]);
+        if ($widgetBlockId AND !$cached) {
+            self::$cachedWidgetBlocks[$widgetBlockId] = \Modules\Content\Models\WidgetBlock::with([
+                'items'
+            ])->find($widgetBlockId);
         }
 
-        if($imageBlockId) {
-            $imageBlock = array_get(self::$cachedImageBlocks, $imageBlockId);
+        if ($widgetBlockId) {
+            $widgetBlock = array_get(self::$cachedWidgetBlocks, $widgetBlockId);
         }
 
-        if ($imageBlock) {
-            foreach ($imageBlock->translations as $translation) {
-                $translations[$translation->locale] = [
-                    'title'    => $translation->title,
-                    'subtitle' => $translation->subtitle,
-                    'content'  => $translation->content,
-                    'json'     => $translation->json
-                ];
+        if ($widgetBlock) {
+            foreach ($widgetBlock->items as $widgetBlockItem) {
+                foreach ($widgetBlockItem->fields as $widgetBlockItemField) {
+                    $translations[$language->iso_code][$widgetBlockItemField->key] = $widgetBlockItemField->value;
+                }
             }
         }
 
@@ -333,7 +350,7 @@ class ImageBlock implements BackendWorkerInterface
             $styles = array_get($fieldData, 'styles');
             $options = (array)array_get($fieldData, 'options', []);
 
-            $value = $imageBlock ? object_get($imageBlock, $fieldName) : '';
+            $value = $widgetBlock ? object_get($widgetBlock, $fieldName) : '';
             $fields[] = [
                 'name'    => $fieldName,
                 'type'    => $fieldType,
@@ -344,11 +361,14 @@ class ImageBlock implements BackendWorkerInterface
             ];
         }
 
+        $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
+
         return compact(
-            'imageBlock',
+            'widgetBlock',
             'language',
             'translations',
-            'fields'
+            'fields',
+            'maxItemsCount'
         );
     }
 }
