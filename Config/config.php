@@ -89,10 +89,10 @@ return [
             'name'                => 'Text with title',
             'key'                 => 'text_with_title',
             'frontend_template'   => 'widgets.text_with_title.frontend',
-            'backend_template'    => 'content::module_content.widgets.simple_text.backend',
+            'backend_template'    => 'content::module_content.widgets.widget_blocks.backend',
             'backend_with_border' => false, // Depends on what kind of backend_template you have
-            'backend_javascript'  => 'simple_text.js',
-            'javascript_key'      => 'simple_text',
+            'backend_javascript'  => 'widget_blocks.js',
+            'javascript_key'      => 'widget_blocks',
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\SimpleText::class,
             'fields'              => [
                 'title' => [
