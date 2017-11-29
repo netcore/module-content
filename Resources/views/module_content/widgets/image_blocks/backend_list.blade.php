@@ -84,7 +84,7 @@
                         @else
 
                             @php
-                                $value = $viewHelper->getValueForTd($model, $language, $fieldName, $fieldType);
+                                $value = $viewHelper->getValueForTd($model, $fieldName, $fieldType);
                             @endphp
 
                             @if($fieldType == 'textarea')

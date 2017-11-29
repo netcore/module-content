@@ -16,17 +16,10 @@ class ImageBlock
         if($fieldName != 'image') {
             $dataValue = [];
 
-            $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-            $isNonJsonField = in_array($fieldName, $nonJsonFields);
+            $field = $model->fields->where('key', $fieldName)->first();
+            $value = $field ? $field->value : '';
 
-            if($isNonJsonField) {
-                $translation = object_get($model, $fieldName);
-            } else {
-                $jsonDecoded = (array) $model->json;
-                $translation = array_get($jsonDecoded, $fieldName);
-            }
-
-            $dataValue[$language->iso_code] = $translation;
+            $dataValue[$language->iso_code] = $value;
 
             $dataValue = json_encode($dataValue);
         }
@@ -36,22 +29,14 @@ class ImageBlock
 
     /**
      * @param $model
-     * @param $language
      * @param $fieldName
      * @param $fieldType
      * @return mixed
      */
-    public function getValueForTd($model, $language, $fieldName, $fieldType)
+    public function getValueForTd($model, $fieldName, $fieldType)
     {
-        $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-        $isNonJsonField = in_array($fieldName, $nonJsonFields);
-
-        if($isNonJsonField) {
-            $value = object_get($model, $fieldName);
-        } else {
-            $jsonDecoded = (array) object_get($model, 'json');
-            $value = array_get($jsonDecoded, $fieldName);
-        }
+        $field = $model->fields->where('key', $fieldName)->first();
+        $value = $field ? $field->value : '';
 
         if($fieldType == 'checkbox') {
             $value = $value ? 'Yes' : 'No';

@@ -7,19 +7,21 @@ use Modules\Admin\Traits\BootStapler;
 use Codesleeve\Stapler\ORM\EloquentTrait;
 use Codesleeve\Stapler\ORM\StaplerableInterface;
 
-class ImageBlockItem extends Model implements StaplerableInterface
+class ImageBlockItemField extends Model /*implements StaplerableInterface*/
 {
 
+    /*
     use BootStapler;
 
     use EloquentTrait {
         BootStapler::boot insteadof EloquentTrait;
     }
+    */
 
     /**
      * @var string
      */
-    protected $table = 'netcore_content__image_block_items';
+    protected $table = 'netcore_content__image_block_item_fields';
 
     /**
      * @var bool
@@ -28,41 +30,48 @@ class ImageBlockItem extends Model implements StaplerableInterface
 
     /**
      * @var array
+    protected $casts = [
+        'json' => 'array'
+    ];
+     */
+
+    /**
+     * @var array
      */
     protected $fillable = [
+        'key',
+        'value'
+        /*
         'image',
         'order',
+        'title',
+        'subtitle',
+        'content',
+        'link',
+        'json'
+        */
     ];
     
     /**
      * @var array
-     */
     protected $staplerConfig = [
         'image' => [
             'default_style' => 'original',
             'url' => '/uploads/:class/:attachment/:id_partition/:style/:filename'
         ]
     ];
+     */
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function imageBlock()
+    public function imageBlockItem()
     {
-        return $this->belongsTo(ImageBlock::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function fields()
-    {
-        return $this->hasMany(ImageBlockItemField::class);
+        return $this->belongsTo(ImageBlockItem::class);
     }
 
     /**
      * @return String
-     */
     public function getHumanAttachmentSizeAttribute()
     {
         $decimals = 0;
@@ -76,4 +85,5 @@ class ImageBlockItem extends Model implements StaplerableInterface
         $factor = floor((strlen($bytes) - 1) / 3);
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
+     */
 }

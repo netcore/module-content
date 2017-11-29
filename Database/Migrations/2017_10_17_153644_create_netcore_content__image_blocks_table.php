@@ -13,29 +13,11 @@ class CreateNetcoreContentImageBlocksTable extends Migration
      */
     public function up()
     {
-        /**
-         *  image_blocks and their translations
-         */
         Schema::create('netcore_content__image_blocks', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
 
-        Schema::create('netcore_content__image_block_translations', function (Blueprint $table) {
-
-            $table->increments('id');
-
-            $table->unsignedInteger('image_block_id');
-            $table->foreign('image_block_id')->references('id')->on('netcore_content__image_blocks')->onDelete('cascade');
-
-            $table->string('locale')->index();
-
-            $table->string('title');
-        });
-
-        /**
-         *  image_block_items and their translations
-         */
         Schema::create('netcore_content__image_block_items', function (Blueprint $table) {
 
             $table->increments('id');
@@ -49,13 +31,18 @@ class CreateNetcoreContentImageBlocksTable extends Migration
             $table->string('image_content_type')->nullable();
             $table->timestamp('image_updated_at')->nullable();
 
-            $table->string('title')->default('');
-            $table->string('subtitle')->default('');
-            $table->mediumText('content')->nullable();
-            $table->string('link')->default('');
-            $table->mediumText('json')->nullable();
-
             $table->integer('order')->index();
+        });
+
+        Schema::create('netcore_content__image_block_item_fields', function (Blueprint $table) {
+
+            $table->increments('id');
+
+            $table->unsignedInteger('image_block_item_id');
+            $table->foreign('image_block_item_id', 'item_id_foreign')->references('id')->on('netcore_content__image_block_items')->onDelete('cascade');
+
+            $table->string('key');
+            $table->longText('value')->nullable();
         });
     }
 
@@ -66,9 +53,9 @@ class CreateNetcoreContentImageBlocksTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('netcore_content__image_block_item_fields');
         Schema::dropIfExists('netcore_content__image_block_items');
 
-        Schema::dropIfExists('netcore_content__image_block_translations');
         Schema::dropIfExists('netcore_content__image_blocks');
     }
 }

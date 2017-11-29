@@ -4,6 +4,7 @@ namespace Modules\Content\Widgets\BackendWorkers;
 
 use Illuminate\Support\Collection;
 use Modules\Content\Models\ContentBlock;
+use Modules\Content\Models\ImageBlockItemField;
 use Netcore\Translator\Helpers\TransHelper;
 use Netcore\Translator\Models\Language;
 
@@ -208,7 +209,7 @@ class ImageBlock implements BackendWorkerInterface
             }
 
             // Format ImageBlockItem attributes
-            $imageBlockItemAttributes = [];
+            $imageBlockItemFields = [];
             $fields = array_keys($attributes);
             foreach ($fields as $field) {
 
@@ -220,16 +221,16 @@ class ImageBlock implements BackendWorkerInterface
                 $fieldData = array_flatten($fieldData);
                 $value = array_get($fieldData, 0, '');
 
-                $nonJsonFields = ['title', 'subtitle', 'content', 'link'];
-                $isNonJsonField = in_array($field, $nonJsonFields);
-                if ($isNonJsonField) {
-                    $imageBlockItemAttributes[$field] = $value;
-                } else {
-                    $imageBlockItemAttributes['json'][$field] = $value;
-                }
+                $imageBlockItemFields[] = [
+                    'image_block_item_id' => $imageBlockItem->id,
+                    'key'                 => $field,
+                    'value'               => $value,
+                ];
             }
 
-            $imageBlockItem->update($imageBlockItemAttributes);
+            $imageBlockItem->fields()->delete();
+
+            ImageBlockItemField::insert($imageBlockItemFields);
 
             // Image
             $imageAttribute = (array)array_get($attributes, 'image', []);
@@ -300,24 +301,21 @@ class ImageBlock implements BackendWorkerInterface
         $imageBlockId = array_get($data, 'image_block_id', null);
 
         $cached = isset(self::$cachedImageBlocks[$imageBlockId]);
-        if($imageBlockId AND !$cached) {
+        if ($imageBlockId AND !$cached) {
             self::$cachedImageBlocks[$imageBlockId] = \Modules\Content\Models\ImageBlock::with([
                 'items'
             ])->find($imageBlockId);
         }
 
-        if($imageBlockId) {
+        if ($imageBlockId) {
             $imageBlock = array_get(self::$cachedImageBlocks, $imageBlockId);
         }
 
         if ($imageBlock) {
-            foreach ($imageBlock->translations as $translation) {
-                $translations[$translation->locale] = [
-                    'title'    => $translation->title,
-                    'subtitle' => $translation->subtitle,
-                    'content'  => $translation->content,
-                    'json'     => $translation->json
-                ];
+            foreach ($imageBlock->items as $imageBlockItem) {
+                foreach ($imageBlockItem->fields as $imageBlockItemField) {
+                    $translations[$language->iso_code][$imageBlockItemField->key] = $imageBlockItemField->value;
+                }
             }
         }
 
