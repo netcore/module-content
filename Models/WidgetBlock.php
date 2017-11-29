@@ -4,13 +4,13 @@ namespace Modules\Content\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ImageBlock extends Model
+class WidgetBlock extends Model
 {
 
     /**
      * @var string
      */
-    protected $table = 'netcore_content__image_blocks';
+    protected $table = 'netcore_content__widget_blocks';
 
     /**
      * @var array
@@ -24,6 +24,6 @@ class ImageBlock extends Model
      */
     public function items()
     {
-        return $this->hasMany(ImageBlockItem::class);
+        return $this->hasMany(WidgetBlockItem::class);
     }
 }

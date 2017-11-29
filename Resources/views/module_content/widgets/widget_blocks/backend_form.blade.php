@@ -3,7 +3,7 @@
 >
 
     @php
-        $itemsCount = isset($imageBlock) ? $imageBlock->items->count() : 0;
+        $itemsCount = isset($widgetBlock) ? $widgetBlock->items->count() : 0;
         $disabledAddNew = ($maxItemsCount && $itemsCount>=$maxItemsCount) ? true : false;
     @endphp
 

@@ -2,7 +2,7 @@
 
 namespace Modules\Content\Widgets\BackendViewHelpers;
 
-class ImageBlock
+class WidgetBlock
 {
     /**
      * @param $model

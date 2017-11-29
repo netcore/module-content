@@ -1,12 +1,12 @@
 
 @php
-    $imageBlockId = isset($imageBlock) ? $imageBlock->id : 'newid';
-    $viewHelper = new \Modules\Content\Widgets\BackendViewHelpers\ImageBlock;
+    $widgetBlockId = isset($widgetBlock) ? $widgetBlock->id : 'newid';
+    $viewHelper = new \Modules\Content\Widgets\BackendViewHelpers\WidgetBlock;
 @endphp
 
 <table
     class="table table-bordered image-blocks-table"
-    data-image-block-id="{{ $imageBlockId }}"
+    data-image-block-id="{{ $widgetBlockId }}"
 >
     <thead>
     <tr>
@@ -37,8 +37,8 @@
     </tr>
     </thead>
     <tbody>
-    @if(isset($imageBlock))
-        @foreach( $imageBlock->items->sortBy('order') as $model )
+    @if(isset($widgetBlock))
+        @foreach( $widgetBlock->items->sortBy('order') as $model )
             <tr
                     class="fade-out-{{ $model->id }} image-blocks-tr"
                     data-image-block-item-id="{{ $model->id }}"
@@ -108,14 +108,14 @@
                     </td>
                 @endforeach
                 <td class="text-align-center vertical-align-middle width-150">
-                    @include('content::module_content.widgets.image_blocks.backend_actions', [
+                    @include('content::module_content.widgets.widget_blocks.backend_actions', [
                         'modelId' => $model->id
                     ])
                 </td>
             </tr>
         @endforeach
 
-        @if( !$imageBlock->items->count() )
+        @if( !$widgetBlock->items->count() )
             <tr class="no-blocks-tr">
                 <td colspan="100" class="text-align-center">
                     No items added...
@@ -133,7 +133,7 @@
 </table>
 
 <script type="text/template" id="image-block-actions-template">
-    @include('content::module_content.widgets.image_blocks.backend_actions', [
+    @include('content::module_content.widgets.widget_blocks.backend_actions', [
         'modelId' => 'modelId'
     ])
 </script>

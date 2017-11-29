@@ -11,7 +11,7 @@
  * widgetTr is <tr></tr> element that houses widget
  *
  */
-onWidgetAdded['image_blocks'] = function(widgetTr) {
+onWidgetAdded['widget_blocks'] = function(widgetTr) {
 };
 
 /**
@@ -22,13 +22,13 @@ onWidgetAdded['image_blocks'] = function(widgetTr) {
  * widgetTr is <tr></tr> element that houses widget
  *
  */
-widgetDataCollectors['image_blocks'] = function(widgetTr) {
+widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
     var blocks = [];
 
     $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
 
-        var imageBlockItemId = $(tr).data('image-block-item-id');
+        var widgetBlockItemId = $(tr).data('image-block-item-id');
         var order = (index+1);
         var attributes = {};
 
@@ -41,14 +41,14 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         });
 
         blocks.push({
-            'imageBlockItemId': imageBlockItemId,
+            'widgetBlockItemId': widgetBlockItemId,
             'order': order,
             'attributes': attributes
         });
     });
 
     return {
-        'imageBlockId': $(widgetTr).find('.image-blocks-table').data('image-block-id'),
+        'widgetBlockId': $(widgetTr).find('.image-blocks-table').data('image-block-id'),
         'blocks': blocks
     };
 };
@@ -65,7 +65,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         return text;
     };
 
-    var clearAddNewImageBlockForm = function(btn){
+    var clearAddNewWidgetBlockForm = function(btn){
 
         var addNewcontainer = $(btn).closest('.add-new-container');
 
@@ -222,15 +222,15 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
                 if(type == 'file') {
 
                     var addNewContainer = $(btn).closest('.add-new-container');
-                    var imageBlockUpdateId = $(addNewContainer).data('update-image-block-item-id');
-                    if(imageBlockUpdateId && !value) {
+                    var widgetBlockUpdateId = $(addNewContainer).data('update-image-block-item-id');
+                    if(widgetBlockUpdateId && !value) {
                         return true; // Continue
                     }
 
-                    var imageBlockId = imageBlockUpdateId ? imageBlockUpdateId : modelId;
+                    var widgetBlockId = widgetBlockUpdateId ? widgetBlockUpdateId : modelId;
 
                     var contentBlockId = $(btn).closest('.widget-tr').data('content-block-id');
-                    var imageName = 'image-' + contentBlockId + '-' + imageBlockId + '-' + field; // Used to retrieve image in backend
+                    var imageName = 'image-' + contentBlockId + '-' + widgetBlockId + '-' + field; // Used to retrieve image in backend
 
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
                     $.each($(input)[0].files, function(i, file) {
@@ -394,8 +394,8 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         var templateContainer = $(this).closest('.template-container-body');
         var addNewContainer = $(templateContainer).find('.add-new-container');
 
-        var imageBlockItemId = $(this).closest('.image-blocks-tr').data('image-block-item-id');
-        $(addNewContainer).data('update-image-block-item-id', imageBlockItemId);
+        var widgetBlockItemId = $(this).closest('.image-blocks-tr').data('image-block-item-id');
+        $(addNewContainer).data('update-image-block-item-id', widgetBlockItemId);
 
         $(templateContainer).find('.add-new-image-block-button').hide();
         $(templateContainer).find('.add-new-image-block-table').fadeIn();
@@ -433,7 +433,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
     });
 
     $('body').on('click', '.add-new-image-block-cancel', function(){
-        clearAddNewImageBlockForm(this);
+        clearAddNewWidgetBlockForm(this);
     });
 
     $('body').on('click', '.add-new-image-block-submit', function(){
@@ -475,7 +475,7 @@ widgetDataCollectors['image_blocks'] = function(widgetTr) {
         if(!valid){ return; }
 
         addNewRow(this);
-        clearAddNewImageBlockForm(this);
+        clearAddNewWidgetBlockForm(this);
     });
 
     var dontAllowMoreItemsThanMaxCount = function(){
