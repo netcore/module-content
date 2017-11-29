@@ -120,6 +120,7 @@
 }
 
 .add-new-image-block-button{
+    position:relative;
     margin-top:-21px;
     border-radius:0px;
 }
@@ -140,4 +141,14 @@ Override big margin from pixeladmin.css
 
 input.datepicker{
     padding: 4px 12px;
+}
+
+.max-items-count{
+    position:absolute;
+    top:23px;
+    right:-115px;
+    margin-top:-20px;
+    margin-left:7px;
+    color:dimgray;
+    font-size:12px;
 }
