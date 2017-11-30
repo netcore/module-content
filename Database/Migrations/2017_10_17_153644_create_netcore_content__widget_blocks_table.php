@@ -18,6 +18,23 @@ class CreateNetcoreContentWidgetBlocksTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('netcore_content__widget_block_fields', function (Blueprint $table) {
+
+            $table->increments('id');
+
+            $table->unsignedInteger('widget_block_id');
+            $table->foreign('widget_block_id', 'block_id_foreign')->references('id')->on('netcore_content__widget_blocks')->onDelete('cascade');
+
+            $table->string('key');
+            $table->longText('value')->nullable();
+
+            // Stapler fields
+            $table->string('image_file_name')->nullable();
+            $table->integer('image_file_size')->nullable();
+            $table->string('image_content_type')->nullable();
+            $table->timestamp('image_updated_at')->nullable();
+        });
+
         Schema::create('netcore_content__widget_block_items', function (Blueprint $table) {
 
             $table->increments('id');
@@ -56,6 +73,7 @@ class CreateNetcoreContentWidgetBlocksTable extends Migration
         Schema::dropIfExists('netcore_content__widget_block_item_fields');
         Schema::dropIfExists('netcore_content__widget_block_items');
 
+        Schema::dropIfExists('netcore_content__widget_block_fields');
         Schema::dropIfExists('netcore_content__widget_blocks');
     }
 }
