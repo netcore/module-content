@@ -93,7 +93,9 @@ return [
             'backend_with_border' => false, // Depends on what kind of backend_template you have
             'backend_javascript'  => 'widget_blocks.js',
             'javascript_key'      => 'widget_blocks',
-            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\SimpleText::class,
+            'backend_css'         => 'widget_blocks.css',
+            'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\WidgetBlock::class,
+            'max_items_count'     => 1,
             'fields'              => [
                 'title' => [
                     'type'  => 'text',
