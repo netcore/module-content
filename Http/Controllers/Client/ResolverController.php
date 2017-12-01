@@ -18,7 +18,7 @@ class ResolverController extends Controller
         $page = null;
 
         if (!$slug) {
-            $page = Entry::homepage()->with('contentBlocks')->first();
+            $page = Entry::homepage()->first();
 
             if(!$page) { // Home page is not set
                 abort(404);
