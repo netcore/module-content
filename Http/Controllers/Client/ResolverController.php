@@ -15,6 +15,7 @@ class ResolverController extends Controller
      */
     public function resolve($slug = null)
     {
+        $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
         $page = null;
 
         if (!$slug) {
@@ -74,7 +75,7 @@ class ResolverController extends Controller
             return redirect()->to('/');
         }
 
-        return view('content::module_content.resolver.page', compact('page'));
+        return view($template, compact('page'));
     }
 
 }
