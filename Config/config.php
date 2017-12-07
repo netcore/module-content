@@ -2,6 +2,8 @@
 
 return [
 
+	'resolver_template' => null, // leave null to use default
+
     'layouts' => [
         'layouts.main'  => 'Main layout',
         'layouts.contacts' => 'Contacts layout'
@@ -9,13 +11,13 @@ return [
 
     'channels' => [
         'blog'  => [
-            "template" => 'channels.blog.index'
+            'template' => 'channels.blog.index'
         ],
         'news'    => [
             'template' => 'channels.news.index'
         ],
         'reports' => [
-            "template" => 'channels.reports.index'
+            'template' => 'channels.reports.index'
         ],
     ],
 
