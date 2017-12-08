@@ -12,7 +12,8 @@ class WidgetBlock
      */
     public function getDataValueForTd($model, $fieldName, $language)
     {
-        $dataValue = '';
+        $dataValue = json_encode([]);
+
         if($fieldName != 'image') {
             $dataValue = [];
 
@@ -24,7 +25,7 @@ class WidgetBlock
             $dataValue = json_encode($dataValue);
         }
 
-        return $dataValue;
+        return base64_encode($dataValue);
     }
 
     /**
