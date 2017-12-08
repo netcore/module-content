@@ -35,7 +35,12 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         $(tr).find('td.field').each(function(i, td){
 
             var attribute = $(td).data('field');
-            var value = $(td).data('value');
+            //var value = atob($(td).data('value'));
+            var value = JSON.parse(
+                atob(
+                    $(td).data('value')
+                )
+            );
 
             attributes[attribute] = value;
         });
@@ -303,9 +308,9 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             }
 
             var tdId = trIndex + '-' + field;
-            var jsonValue = JSON.stringify(fieldsJsonValue[field]);
+            var jsonValue = btoa(JSON.stringify(fieldsJsonValue[field]));
 
-            html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value=' + "'" + jsonValue + "'" + '" data-td-id="' + tdId + '">';
+            html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value="' + jsonValue + '" data-td-id="' + tdId + '">';
 
             if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox', 'select']) !== -1 ) {
                 html += value;
@@ -403,7 +408,11 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         // Load all data, except image
         $(this).closest('.image-blocks-tr').find('td.field').each(function(i, td){
             var field = $(td).data('field');
-            var json = $(td).data('value');
+            var json = JSON.parse(
+                atob(
+                    $(td).data('value')
+                )
+            );
 
             $.each(json, function(isoCode, value){
 
