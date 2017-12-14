@@ -359,8 +359,8 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
                 var locale = $(input).data('locale');
                 var field = $(input).data('field');
-                var value = $(input).val();
 
+                var value = $(input).val();
                 if($(input).is('input[type=checkbox]')) {
                     value = $(input).is(':checked');
                 }
@@ -379,7 +379,11 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function(i, input){
 
                 var type = $(input).attr('type');
+
                 var value = $(input).val();
+                if($(input).is('input[type=checkbox]')) {
+                    value = $(input).is(':checked');
+                }
 
                 if(type == 'file') {
 
@@ -579,7 +583,8 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                     $(element).summernote('code', value);
                 }
                 else if($(element).is(':checkbox')){
-                    $(element).prop('checked', value);
+                    var bool = value == true;
+                    $(element).prop('checked', bool);
                 }
                 else {
                     $(element).val(value);
@@ -628,6 +633,11 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             }
 
             var value = $(input).val();
+
+            if($(input).is('input[type=checkbox]')) {
+                return true;
+            }
+
             if(!value) {
                 $(input).closest('.form-group').addClass('has-error');
                 $(input).closest('.form-group').find('.error-span').text('Field is required');
@@ -675,4 +685,3 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
     // Initial
     dontAllowMoreItemsThanMaxCount();
 })();
-
