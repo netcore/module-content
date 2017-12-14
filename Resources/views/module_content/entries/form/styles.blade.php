@@ -31,3 +31,6 @@
 
     <link rel="stylesheet" href="{{ $frontendPath }}">
 @endforeach
+
+{{-- It's important to have version greater than 0.8.6 because of this PR https://github.com/summernote/summernote/pull/1948 --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css">
