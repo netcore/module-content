@@ -302,9 +302,10 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                     ['style', ['style']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
-                    ['insert', ['picture', 'link']]
+                    ['insert', ['picture', 'link', 'table']]
                 ],
-                fontSizes: ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+                fontSizes: ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+                tableClassName: 'table ntc-table'
             });
         });
     };
@@ -685,3 +686,4 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
     // Initial
     dontAllowMoreItemsThanMaxCount();
 })();
+
