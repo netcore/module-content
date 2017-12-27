@@ -55,6 +55,8 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
+        $revision = $entry->revision()->make();
+
         /**
          * Regular data
          */
@@ -356,6 +358,7 @@ class Storage extends PassThrough
             ->where('netcore_content__entry_translations.slug', $originalSlug)
             ->where('netcore_content__entry_translations.locale', $locale)
             ->where('netcore_content__entries.channel_id', $channelId)
+            ->where('netcore_content__entries.type', '=', 'active')
             ->where('netcore_content__entries.id', '!=', $this->entry->id)
             ->count();
     }

@@ -201,4 +201,12 @@ class EntryController extends Controller
             'success' => true
         ]);
     }
+
+    public function preview(Entry $page)
+    {
+        $locale = app()->getLocale();
+        dd($locale);
+        $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
+        return view($template, compact('page'));
+    }
 }
