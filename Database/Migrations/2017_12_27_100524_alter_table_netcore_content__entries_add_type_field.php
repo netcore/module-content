@@ -18,12 +18,12 @@ class AlterTableNetcoreContentEntriesAddTypeField extends Migration
                 'revision',
                 'preview',
                 'draft',
-                'active'
+                'current'
             ])
-                ->default('active')
+                ->default('current')
                 ->after('layout');
 
-            $table->unsignedInteger('parent_id')->after('id');
+            $table->unsignedInteger('parent_id')->nullable()->after('id');
             $table->foreign('parent_id')->references('id')->on('netcore_content__entries')->onDelete('cascade');
         });
     }

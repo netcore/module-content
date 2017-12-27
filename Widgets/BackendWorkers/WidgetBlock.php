@@ -325,7 +325,7 @@ class WidgetBlock implements BackendWorkerInterface
         $cached = isset(self::$cachedWidgetBlocks[$widgetBlockId]);
         if ($widgetBlockId AND !$cached) {
             self::$cachedWidgetBlocks[$widgetBlockId] = \Modules\Content\Models\WidgetBlock::with([
-                'items'
+                'items.fields'
             ])->find($widgetBlockId);
         }
 

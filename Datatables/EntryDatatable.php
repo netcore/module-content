@@ -70,7 +70,7 @@ trait EntryDatatable
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::whereType('active')
+        $query = Entry::currentRevision()
             ->orderBy('is_homepage', 'DESC')// Homepage always at the top.
             ->orderBy('published_at', 'DESC')
             ->orderBy('id', 'DESC');

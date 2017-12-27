@@ -45,7 +45,7 @@ class ResolverController extends Controller
                     }
                 }
 
-                $page = Entry::active()->whereHas('translations', function ($q) use ($slug) {
+                $page = Entry::active()->currentRevision()->whereHas('translations', function ($q) use ($slug) {
                     return $q->whereSlug($slug);
                 })->first();
 
