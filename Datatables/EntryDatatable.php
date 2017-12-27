@@ -70,8 +70,9 @@ trait EntryDatatable
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::orderBy('is_homepage', 'DESC')// Homepage always at the top.
-        ->orderBy('published_at', 'DESC')
+        $query = Entry::whereType('active')
+            ->orderBy('is_homepage', 'DESC')// Homepage always at the top.
+            ->orderBy('published_at', 'DESC')
             ->orderBy('id', 'DESC');
 
         if ($channelId) {

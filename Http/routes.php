@@ -56,6 +56,11 @@ Route::group([
         'uses' => 'EntryController@edit'
     ]);
 
+    Route::get('/content/entries/{entry}/preview', [
+        'as' => 'entries.preview',
+        'uses' => 'EntryController@preview'
+    ]);
+
     Route::put('/content/entries/{entry}', [
         'as' => 'entries.update',
         'uses' => 'EntryController@update'

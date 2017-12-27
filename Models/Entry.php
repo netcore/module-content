@@ -5,6 +5,7 @@ namespace Modules\Content\Models;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\Entry\Attachments;
+use Modules\Content\PassThroughs\Entry\Revision;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
 use Modules\Translate\Traits\SyncTranslations;
@@ -80,6 +81,14 @@ class Entry extends Model
     public function storage()
     {
         return new Storage($this);
+    }
+
+    /**
+     * @return Revision
+     */
+    public function revision()
+    {
+        return new Revision($this);
     }
 
     /**
