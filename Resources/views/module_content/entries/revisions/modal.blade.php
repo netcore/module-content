@@ -14,10 +14,13 @@
                         {{ $revision->created_at->format('d.m.Y H:i:s') }}
                     </td>
                     <td>
+
                         <a
+                            {{--
                             href="{{ route('content::entries.preview', $revision) }}"
+                            --}}
                             target="_blank"
-                            class="btn btn-xs btn-info"
+                            class="btn btn-xs btn-info disabled"
                         >
                             Preview
                         </a>

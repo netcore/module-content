@@ -95,5 +95,10 @@ Route::group([
         'as' => 'entries.revisions',
         'uses' => 'EntryController@revisions'
     ]);
+
+    Route::post('/content/entries/{entry}/create-draft', [
+        'as' => 'entries.create_draft',
+        'uses' => 'EntryController@createDraft'
+    ]);
 });
 
