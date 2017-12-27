@@ -26,24 +26,51 @@
                 </div>
             </div>
 
-            <a
-                class="btn btn-lg btn-success m-t-3 pull-xs-right"
-                id="submit-button"
-            >
-                <span class="loading" hidden>
-                    <span class="fa fa-gear fa-spin"> </span>
-                    Please wait...
-                </span>
+            @if($entry->type == 'revision')
+                {{--
+                <a href="{{ route('content::entries.edit', $entry->parent_id) }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+                    Go to current version
+                </a>
 
-                <span class="not-loading">
-                    Save
-                </span>
-            </a>
+                <a href="{{ route('content::entries.edit', $entry->parent_id) }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+                    Go to current version
+                </a>
+                --}}
+            @else
+                <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+                    Back
+                </a>
 
-            <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
-                Back
-            </a>
+                <a
+                    class="btn btn-lg btn-success m-t-3 pull-xs-right"
+                    id="submit-button"
+                >
+                    <span class="loading" hidden>
+                        <span class="fa fa-gear fa-spin"> </span>
+                        Please wait...
+                    </span>
+
+                    <span class="not-loading">
+                        Save
+                    </span>
+                </a>
+            @endif
 
         </div>
     {!! Form::close() !!}
+
+    @if($entry->type == 'revision')
+
+        {!! Form::model($entry, ['route' => ['content::entries.create_draft', $entry], 'method' => 'POST']) !!}
+
+            {!! Form::submit('Create draft', [
+                'class' => 'btn btn-lg btn-success m-t-3 pull-xs-right'
+            ]) !!}
+
+        {!! Form::close() !!}
+
+        <a href="{{ route('content::entries.edit', $entry->parent_id) }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+            Go to current version
+        </a>
+    @endif
 @endsection

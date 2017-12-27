@@ -215,11 +215,26 @@ class EntryController extends Controller
         ]);
     }
 
+    /**
+     * @param Entry $page
+     * @return mixed
+     */
     public function preview(Entry $page)
     {
         $locale = app()->getLocale();
         dd($locale);
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
         return view($template, compact('page'));
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function createDraft(Entry $entry)
+    {
+        $draft = $entry->parent; // TODO copy
+
+        return redirect()->route('content::entries.edit', $draft);
     }
 }

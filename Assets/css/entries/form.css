@@ -161,7 +161,7 @@ input.datepicker{
     position: relative;
 }
 
-.trigger-revisions-modal{
+#revisions-info-container{
     position: absolute;
     top:26px;
     right:21px;
