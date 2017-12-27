@@ -2,6 +2,8 @@
     @include('translate::_partials._nav_tabs', [
         'idPrefix' => 'basic-data-'
     ])
+
+    @include('content::module_content.entries.form.revisions')
 @endif
 
 <!-- Tab panes -->

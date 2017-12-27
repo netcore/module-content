@@ -159,6 +159,19 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
+    public function revisions(Entry $entry)
+    {
+        $revisions = $entry->children()->whereType('revision')->limit(100)->get();
+
+        return view('content::module_content.entries.revisions.modal', compact(
+            'revisions'
+        ));
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
     public function destroy(Entry $entry)
     {
         // Delete content blocks
