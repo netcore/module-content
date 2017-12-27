@@ -112,9 +112,18 @@ class Entry extends Model
      * @param $query
      * @return mixed
      */
+    public function scopeCurrentRevision($query)
+    {
+        return $query->whereType('current');
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeHomepage($query)
     {
-        return $query->active()->whereIsHomepage(1);
+        return $query->active()->currentRevision()->whereIsHomepage(1);
     }
 
     /**

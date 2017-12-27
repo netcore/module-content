@@ -8,6 +8,7 @@ use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
 use Modules\Content\Models\WidgetBlock;
+use Modules\Content\Models\WidgetBlockItemField;
 use Modules\Content\PassThroughs\PassThrough;
 use Modules\Content\Translations\EntryTranslation;
 use Netcore\Translator\Helpers\TransHelper;
@@ -64,7 +65,7 @@ class Revision extends PassThrough
             $replicatedTranslation->entry_id = $replicatedEntry->id;
 
             // Stapler attachment
-            $replicatedTranslation->attachment = STAPLER_NULL; // TODO
+            $replicatedTranslation->attachment = $this->replicateEntryTranslationAttachment($originalEntryTranslation);
             $replicatedTranslation->save();
 
             // Content blocks
@@ -81,7 +82,7 @@ class Revision extends PassThrough
      * @param EntryTranslation $replicatedTranslation
      * @return mixed
      */
-    public function replicateContentBlock(ContentBlock $originalContentBlock, EntryTranslation $replicatedTranslation)
+    private function replicateContentBlock(ContentBlock $originalContentBlock, EntryTranslation $replicatedTranslation)
     {
         // Widget block
         $originalContentBlockData = $originalContentBlock->data;
@@ -105,7 +106,8 @@ class Revision extends PassThrough
             foreach ($originalWidgetBlockItem->fields as $originalWidgetBlockItemField) {
                 $replicatedWidgetBlockItemField = $originalWidgetBlockItemField->replicate();
                 $replicatedWidgetBlockItemField->widget_block_item_id = $replicatedWidgetBlockItem->id;
-                $replicatedWidgetBlockItemField->image = STAPLER_NULL; // TODO
+
+                $replicatedWidgetBlockItemField->image = $this->replicateFieldAttachment($originalWidgetBlockItemField);
                 $replicatedWidgetBlockItemField->save();
             }
         }
@@ -121,4 +123,63 @@ class Revision extends PassThrough
         return $replicatedContentBlock;
     }
 
+    /**
+     * @param EntryTranslation $originalEntryTranslation
+     * @return string
+     */
+    private function replicateEntryTranslationAttachment(EntryTranslation $originalEntryTranslation)
+    {
+        $attachmentFileName = $originalEntryTranslation->attachment_file_name;
+
+        if ($attachmentFileName) {
+
+            $source = public_path($originalEntryTranslation->attachment->url());
+            $source = urldecode($source);
+
+            $dir = storage_path('module_content');
+            if (!is_dir($dir)) {
+                mkdir($dir);
+            }
+
+            $destination = $dir . '/' . $attachmentFileName;
+
+            if (file_exists($source)) {
+                copy($source, $destination);
+            }
+
+            return $destination;
+        }
+
+        return STAPLER_NULL;
+    }
+
+    /**
+     * @param WidgetBlockItemField $originalWidgetBlockItemField
+     * @return mixed
+     */
+    private function replicateFieldAttachment(WidgetBlockItemField $originalWidgetBlockItemField)
+    {
+        $imageFileName = $originalWidgetBlockItemField->image_file_name;
+
+        if ($imageFileName) {
+
+            $source = public_path($originalWidgetBlockItemField->image->url());
+            $source = urldecode($source);
+
+            $dir = storage_path('module_content');
+            if (!is_dir($dir)) {
+                mkdir($dir);
+            }
+
+            $destination = $dir . '/' . $imageFileName;
+
+            if (file_exists($source)) {
+                copy($source, $destination);
+            }
+
+            return $destination;
+        }
+
+        return STAPLER_NULL;
+    }
 }
