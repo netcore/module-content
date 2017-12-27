@@ -90,5 +90,10 @@ Route::group([
         'as' => 'entries.widgets.index',
         'uses' => 'EntryController@widgets'
     ]);
+
+    Route::get('/content/entries/{entry}/revisions', [
+        'as' => 'entries.revisions',
+        'uses' => 'EntryController@revisions'
+    ]);
 });
 

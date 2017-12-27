@@ -183,6 +183,12 @@ $(function() {
         $(this).closest('.tab-pane').find('input.slug').val(slug);
     });
 
+    // Revisions
+    $("#revisions-modal").on("show.bs.modal", function(e) {
+        var link = $(e.relatedTarget);
+        $(this).find(".modal-body").load(link.data("href"));
+    });
+
     $('body').on('click', '#submit-button:not(.loading)', function(){
 
         var btn = $(this);

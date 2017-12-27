@@ -76,6 +76,22 @@ class Entry extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Entry::class, 'parent_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function children()
+    {
+        return $this->hasMany(Entry::class, 'parent_id');
+    }
+
+    /**
      * @return Storage
      */
     public function storage()
