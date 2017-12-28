@@ -120,6 +120,8 @@ return [
                 'actions' => 'Actions',
             ]
         ]
-    ]
+    ],
+
+    'allow_attachments' => false
 ];
 
