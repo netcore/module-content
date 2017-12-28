@@ -10,6 +10,33 @@ $(function() {
 
         var caption = $(selector).data('caption');
 
+        var columnConfig = [
+            { data: 'published_at', name: 'published_at', orderable: false, searchable: false, class: 'vertical-align-middle width-150'},
+            { data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
+            { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
+            { data: 'content', name: 'content', orderable: false, searchable: false, class: ''}
+        ];
+
+        var allowAttachment = $(selector).data('allow-attachment');
+        console.log('Allow attachment', allowAttachment);
+        if(allowAttachment) {
+            columnConfig.push(
+                { data: 'attachment', name: 'attachment', orderable: false, searchable: false, class: ''}
+            );
+        }
+
+        columnConfig.push(
+            { data: 'updated_at', name: 'updated_at', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
+        );
+
+        columnConfig.push(
+            { data: 'is_active', name: 'is_active', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'}
+        );
+
+        columnConfig.push(
+            { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
+        );
+
         var dataTable = $(selector).DataTable({
             processing: true,
             serverSide: true,
@@ -17,18 +44,7 @@ $(function() {
             //sDom: 'lftip',
             responsive: true,
             //order: [[1, "asc"]],
-            columns: [
-
-                { data: 'published_at', name: 'published_at', orderable: false, searchable: false, class: 'vertical-align-middle width-150'},
-                { data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
-                { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
-                { data: 'content', name: 'content', orderable: false, searchable: false, class: ''},
-                { data: 'attachment', name: 'attachment', orderable: false, searchable: false, class: ''},
-                { data: 'updated_at', name: 'updated_at', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'},
-                //{ data: 'is_homepage', name: 'is_homepage', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'},
-                { data: 'is_active', name: 'is_active', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'},
-                { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
-            ],
+            columns: columnConfig,
             drawCallback: function(){
 
                 // Init switchery

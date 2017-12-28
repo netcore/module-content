@@ -54,6 +54,22 @@ class Storage extends PassThrough
     private function transaction(Array $requestData): Entry
     {
         $entry = $this->entry;
+        $currentType = $entry->type;
+        $saveAs = array_get($requestData, 'save_as');
+
+        $revisionsEnabled = config('netcore.module-content.revisions_enabled', true);
+        if($revisionsEnabled) {
+            $revision = $entry->revision()->make();
+        }
+
+        if ($currentType == 'draft') {
+            if ($saveAs == 'draft') {
+                // Do nothing
+            } elseif ($saveAs == 'current') {
+                $entry->type = 'current';
+                $entry->save();
+            }
+        }
 
         /**
          * Regular data
@@ -356,6 +372,7 @@ class Storage extends PassThrough
             ->where('netcore_content__entry_translations.slug', $originalSlug)
             ->where('netcore_content__entry_translations.locale', $locale)
             ->where('netcore_content__entries.channel_id', $channelId)
+            ->where('netcore_content__entries.type', '=', 'active')
             ->where('netcore_content__entries.id', '!=', $this->entry->id)
             ->count();
     }

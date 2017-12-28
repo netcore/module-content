@@ -36,6 +36,9 @@ trait EntryDatatable
                 $title = trans_model($entry, $language, 'title');
                 return str_limit($stripped, 100) ?: $title;
             })
+            //->editColumn('type', function ($entry) use ($languages) {
+                //return view('content::module_content.entries.tds.type', compact('entry'))->render();
+            //})
             ->editColumn('updated_at', function ($entry) {
                 $updatedAt = $entry->updated_at;
                 return $updatedAt ? $updatedAt->format('d.m.Y H:i') : '-';
@@ -56,7 +59,7 @@ trait EntryDatatable
             ->addColumn('action', function ($entry) {
                 return view('content::module_content.entries.tds.action', compact('entry'))->render();
             })
-            ->rawColumns(['attachment', 'action', 'title', 'slug', 'is_active', 'is_homepage'])
+            ->rawColumns(['attachment', 'action', 'type', 'title', 'slug', 'is_active', 'is_homepage'])
             ->toJson();
     }
 
@@ -70,8 +73,9 @@ trait EntryDatatable
         $searchData = (array)request()->get('search', []);
         $keyword = (string)array_get($searchData, 'value');
 
-        $query = Entry::orderBy('is_homepage', 'DESC')// Homepage always at the top.
-        ->orderBy('published_at', 'DESC')
+        $query = Entry::whereIn('type', ['current', 'draft'])
+            ->orderBy('is_homepage', 'DESC')// Homepage always at the top.
+            ->orderBy('published_at', 'DESC')
             ->orderBy('id', 'DESC');
 
         if ($channelId) {

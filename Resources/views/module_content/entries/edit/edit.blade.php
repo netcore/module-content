@@ -21,29 +21,87 @@
                         Edit page
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body position-relative">
                     @include('content::module_content.entries.form.form')
                 </div>
             </div>
 
-            <a
-                class="btn btn-lg btn-success m-t-3 pull-xs-right"
-                id="submit-button"
-            >
-                <span class="loading" hidden>
-                    <span class="fa fa-gear fa-spin"> </span>
-                    Please wait...
-                </span>
+            @if($entry->type == 'current')
+                <a
+                    class="btn btn-lg btn-success m-t-3 pull-xs-right submit-button"
+                    data-save-as="current"
+                >
+                    <span class="loading" hidden>
+                        <span class="fa fa-gear fa-spin"> </span>
+                        Please wait...
+                    </span>
 
-                <span class="not-loading">
-                    Save
-                </span>
-            </a>
+                    <span class="not-loading">
+                        Save
+                    </span>
+                </a>
 
-            <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
-                Back
-            </a>
+                <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+                    Back
+                </a>
+
+            @elseif($entry->type == 'draft')
+
+                <a
+                    class="btn btn-lg btn-success m-t-3 m-r-1 pull-xs-right submit-button"
+                    data-save-as="draft"
+                >
+                    <span class="loading" hidden>
+                        <span class="fa fa-gear fa-spin"> </span>
+                        Please wait...
+                    </span>
+
+                    <span class="not-loading">
+                        Save, don't publish
+                    </span>
+                </a>
+
+                <a
+                        class="btn btn-lg btn-danger m-t-3 m-r-1 pull-xs-right submit-button"
+                        data-save-as="current"
+                >
+                    <span class="loading" hidden>
+                        <span class="fa fa-gear fa-spin"> </span>
+                        Please wait...
+                    </span>
+
+                    <span class="not-loading">
+                        Save and Publish
+                    </span>
+                </a>
+
+                <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+                    Back
+                </a>
+            @endif
 
         </div>
     {!! Form::close() !!}
+
+    @if($entry->type == 'revision')
+
+        {!! Form::model($entry, ['route' => ['content::entries.restore_revision', $entry], 'method' => 'POST']) !!}
+            {!! Form::submit('Restore', [
+                'class' => 'btn btn-lg btn-success m-t-3 m-r-1 pull-xs-right'
+            ]) !!}
+        {!! Form::close() !!}
+
+        {{--
+        {!! Form::model($entry, ['route' => ['content::entries.create_draft', $entry], 'method' => 'POST']) !!}
+            {!! Form::submit('Create draft', [
+                'class' => 'btn btn-lg btn-info m-t-3 m-r-1 pull-xs-right'
+            ]) !!}
+        {!! Form::close() !!}
+        --}}
+
+        <a href="{{ route('content::entries.edit', $entry->parent_id) }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
+            Go to current version
+        </a>
+    @endif
+
 @endsection

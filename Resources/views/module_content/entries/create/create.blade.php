@@ -21,7 +21,7 @@
                         Create {{ $channel ? $channel->name : 'Page' }}
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body position-relative">
                     @include('content::module_content.entries.form.form')
                 </div>
             </div>

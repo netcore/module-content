@@ -56,6 +56,11 @@ Route::group([
         'uses' => 'EntryController@edit'
     ]);
 
+    Route::get('/content/entries/{entry}/preview', [
+        'as' => 'entries.preview',
+        'uses' => 'EntryController@preview'
+    ]);
+
     Route::put('/content/entries/{entry}', [
         'as' => 'entries.update',
         'uses' => 'EntryController@update'
@@ -84,6 +89,21 @@ Route::group([
     Route::get('/content/entries/widgets', [
         'as' => 'entries.widgets.index',
         'uses' => 'EntryController@widgets'
+    ]);
+
+    Route::get('/content/entries/{entry}/revisions', [
+        'as' => 'entries.revisions',
+        'uses' => 'EntryController@revisions'
+    ]);
+
+    Route::post('/content/entries/{entry}/create-draft', [
+        'as' => 'entries.create_draft',
+        'uses' => 'EntryController@createDraft'
+    ]);
+
+    Route::post('/content/entries/{entry}/restore-revision', [
+        'as' => 'entries.restore_revision',
+        'uses' => 'EntryController@restoreRevision'
     ]);
 });
 

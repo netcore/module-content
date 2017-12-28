@@ -61,6 +61,7 @@
                     class="table table-bordered datatable"
                     data-ajax="{{ route('content::entries.pagination') }}?channel_id={{ $channel->id }}"
                     data-caption="Pages in {{ trans_model($channel, $firstLanguage, 'name') }}"
+                    data-allow-attachment="{{ $allowAttachment ? 1 : 0 }}"
                     id="channel-{{ $channel->id }}-datatable"
                 >
                     <thead>
@@ -69,7 +70,9 @@
                         <th>Title</th>
                         <th>Slug</th>
                         <th>Content</th>
-                        <th>Attachment</th>
+                        @if($allowAttachment)
+                            <th>Attachment</th>
+                        @endif
                         <th>Updated at</th>
                         {{-- <th>Homepage?</th> --}}
                         <th>Active</th>
@@ -101,6 +104,7 @@
                 class="table table-bordered datatable"
                 data-ajax="{{ route('content::entries.pagination') }}"
                 data-caption="Single pages"
+                data-allow-attachment="{{ $allowAttachment ? 1 : 0 }}"
                 id="single-entries-datatable"
             >
                 <thead>
@@ -109,7 +113,9 @@
                     <th>Title</th>
                     <th>Slug</th>
                     <th>Content</th>
-                    <th>Attachment</th>
+                    @if($allowAttachment)
+                        <th>Attachment</th>
+                    @endif
                     <th>Updated at</th>
                     {{-- <th>Homepage?</th> --}}
                     <th>Active</th>

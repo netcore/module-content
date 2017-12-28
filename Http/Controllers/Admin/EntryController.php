@@ -159,6 +159,24 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
+    public function revisions(Entry $entry)
+    {
+        $revisions = $entry->children()
+            ->whereType('revision')
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->limit(100)
+            ->get();
+
+        return view('content::module_content.entries.revisions.modal', compact(
+            'revisions'
+        ));
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
     public function destroy(Entry $entry)
     {
         // Delete content blocks
@@ -173,7 +191,9 @@ class EntryController extends Controller
         // Hide/show menu items that link to this entry
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
         if(class_exists($menuItemClass)) {
-            app($menuItemClass)->whereValue($slug)->update([
+            app($menuItemClass)->whereHas('translations', function($subq) use ($slug) {
+                return $subq->whereValue($slug);
+            })->update([
                 'is_active' => 0
             ]);
         }
@@ -200,5 +220,39 @@ class EntryController extends Controller
         return response()->json([
             'success' => true
         ]);
+    }
+
+    /**
+     * @param Entry $page
+     * @return mixed
+     */
+    public function preview(Entry $page)
+    {
+        die('Preview');
+        $locale = app()->getLocale();
+        $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
+        return view($template, compact('page'));
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function createDraft(Entry $entry)
+    {
+        $draft = $entry->revision()->make('draft');
+
+        return redirect()->route('content::entries.edit', $draft);
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function restoreRevision(Entry $entry)
+    {
+        $restored = $entry->revision()->restore();
+
+        return redirect()->route('content::entries.edit', $restored);
     }
 }

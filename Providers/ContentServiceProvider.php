@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Content\Composers\Admin\Entry\EntryTitle;
 use Modules\Content\Composers\Admin\Entry\FormHeader;
+use Modules\Content\Composers\Admin\Entry\IndexNavTabs;
+use Modules\Content\Composers\Admin\Entry\Revisions;
 use Modules\Content\Composers\Admin\Partials\LanguageTabs;
 
 class ContentServiceProvider extends ServiceProvider
@@ -120,7 +122,9 @@ class ContentServiceProvider extends ServiceProvider
     {
         $map = [
             'content::module_content.entries.form.header'    => FormHeader::class,
-            'content::module_content.partials.language_tabs' => LanguageTabs::class
+            'content::module_content.index.nav_tabs'         => IndexNavTabs::class,
+            'content::module_content.partials.language_tabs' => LanguageTabs::class,
+            'content::module_content.entries.form.revisions' => Revisions::class
         ];
 
         foreach ($map as $view => $composerClass) {
