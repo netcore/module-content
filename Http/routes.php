@@ -100,5 +100,10 @@ Route::group([
         'as' => 'entries.create_draft',
         'uses' => 'EntryController@createDraft'
     ]);
+
+    Route::post('/content/entries/{entry}/restore-revision', [
+        'as' => 'entries.restore_revision',
+        'uses' => 'EntryController@restoreRevision'
+    ]);
 });
 

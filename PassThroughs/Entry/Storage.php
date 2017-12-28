@@ -54,8 +54,22 @@ class Storage extends PassThrough
     private function transaction(Array $requestData): Entry
     {
         $entry = $this->entry;
+        $currentType = $entry->type;
+        $saveAs = array_get($requestData, 'save_as');
 
-        $revision = $entry->revision()->make();
+        $revisionsEnabled = config('netcore.module-content.revisions_enabled', true);
+        if($revisionsEnabled) {
+            $revision = $entry->revision()->make();
+        }
+
+        if ($currentType == 'draft') {
+            if ($saveAs == 'draft') {
+                // Do nothing
+            } elseif ($saveAs == 'current') {
+                $entry->type = 'current';
+                $entry->save();
+            }
+        }
 
         /**
          * Regular data

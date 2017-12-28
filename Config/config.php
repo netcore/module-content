@@ -2,15 +2,15 @@
 
 return [
 
-	'resolver_template' => null, // leave null to use default
+    'resolver_template' => null, // leave null to use default
 
     'layouts' => [
-        'layouts.main'  => 'Main layout',
+        'layouts.main'     => 'Main layout',
         'layouts.contacts' => 'Contacts layout'
     ],
 
     'channels' => [
-        'blog'  => [
+        'blog'    => [
             'template' => 'channels.blog.index'
         ],
         'news'    => [
@@ -30,7 +30,7 @@ return [
      * fields and other options.
      *
      */
-    'widgets' => [
+    'widgets'  => [
 
         [
             'name'                => 'Large slider',
@@ -99,7 +99,7 @@ return [
             'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\WidgetBlock::class,
             'max_items_count'     => 1,
             'fields'              => [
-                'title' => [
+                'title'           => [
                     'type'  => 'text',
                     'label' => 'Title'
                 ],
@@ -122,6 +122,8 @@ return [
         ]
     ],
 
-    'allow_attachments' => false
+    'allow_attachments' => false,
+
+    'revisions_enabled' => true
 ];
 

@@ -161,7 +161,12 @@ class EntryController extends Controller
      */
     public function revisions(Entry $entry)
     {
-        $revisions = $entry->children()->whereType('revision')->limit(100)->get();
+        $revisions = $entry->children()
+            ->whereType('revision')
+            ->orderBy('created_at', 'DESC')
+            ->orderBy('id', 'DESC')
+            ->limit(100)
+            ->get();
 
         return view('content::module_content.entries.revisions.modal', compact(
             'revisions'
@@ -186,7 +191,9 @@ class EntryController extends Controller
         // Hide/show menu items that link to this entry
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
         if(class_exists($menuItemClass)) {
-            app($menuItemClass)->whereValue($slug)->update([
+            app($menuItemClass)->whereHas('translations', function($subq) use ($slug) {
+                return $subq->whereValue($slug);
+            })->update([
                 'is_active' => 0
             ]);
         }
@@ -221,8 +228,8 @@ class EntryController extends Controller
      */
     public function preview(Entry $page)
     {
+        die('Preview');
         $locale = app()->getLocale();
-        dd($locale);
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
         return view($template, compact('page'));
     }
@@ -233,8 +240,19 @@ class EntryController extends Controller
      */
     public function createDraft(Entry $entry)
     {
-        $draft = $entry->parent; // TODO copy
+        $draft = $entry->revision()->make('draft');
 
         return redirect()->route('content::entries.edit', $draft);
+    }
+
+    /**
+     * @param Entry $entry
+     * @return mixed
+     */
+    public function restoreRevision(Entry $entry)
+    {
+        $restored = $entry->revision()->restore();
+
+        return redirect()->route('content::entries.edit', $restored);
     }
 }
