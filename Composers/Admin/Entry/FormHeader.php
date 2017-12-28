@@ -5,7 +5,7 @@ namespace Modules\Content\Composers\Admin\Entry;
 use Illuminate\View\View;
 use Netcore\Translator\Helpers\TransHelper;
 
-class EntryTitle
+class FormHeader
 {
     /**
      * Compose the view
@@ -15,8 +15,8 @@ class EntryTitle
      */
     public function compose(View $view)
     {
-        $languages = TransHelper::getAllLanguages();
-        
-        $view->with(compact('languages'));
+        $allowAttachment = config('netcore.module-content.allow_attachments', false);
+
+        $view->with(compact('allowAttachment'));
     }
 }
