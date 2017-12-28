@@ -359,6 +359,17 @@ $(function() {
                     }
                 });
 
+                // Switch to tab that has error
+                var firstError = $('.has-error:first');
+                var visible = $(firstError).is(':visible');
+                if (!visible) {
+                    var closestTab = $(firstError).closest('.tab-pane');
+                    if (closestTab) {
+                        var id = $(closestTab).attr('id');
+                        $('a[href="#' + id + '"]').click();
+                    }
+                }
+
                 $('html, body').animate({
                     scrollTop: $(".has-error:first").offset().top - 100
                 }, 500);
