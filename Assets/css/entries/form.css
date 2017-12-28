@@ -23,6 +23,10 @@
     text-align: right;
 }
 
+.cursor-pointer{
+    cursor: pointer;
+}
+
 .cursor-dragndrop{
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
@@ -152,3 +156,14 @@ input.datepicker{
     color:dimgray;
     font-size:12px;
 }
+
+.position-relative{
+    position: relative;
+}
+
+#revisions-info-container{
+    position: absolute;
+    top:26px;
+    right:21px;
+}
+

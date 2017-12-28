@@ -5,6 +5,7 @@ namespace Modules\Content\Models;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\PassThroughs\Entry\Attachments;
+use Modules\Content\PassThroughs\Entry\Revision;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
 use Modules\Translate\Traits\SyncTranslations;
@@ -75,11 +76,35 @@ class Entry extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Entry::class, 'parent_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function children()
+    {
+        return $this->hasMany(Entry::class, 'parent_id');
+    }
+
+    /**
      * @return Storage
      */
     public function storage()
     {
         return new Storage($this);
+    }
+
+    /**
+     * @return Revision
+     */
+    public function revision()
+    {
+        return new Revision($this);
     }
 
     /**
@@ -103,9 +128,18 @@ class Entry extends Model
      * @param $query
      * @return mixed
      */
+    public function scopeCurrentRevision($query)
+    {
+        return $query->whereType('current');
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeHomepage($query)
     {
-        return $query->active()->whereIsHomepage(1);
+        return $query->active()->currentRevision()->whereIsHomepage(1);
     }
 
     /**
