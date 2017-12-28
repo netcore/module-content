@@ -37,9 +37,10 @@ class Revision extends PassThrough
     }
 
     /**
+     * @param string $type
      * @return Entry
      */
-    public function make(): Entry
+    public function make($type = 'revision'): Entry
     {
         $originalEntry = $this->entry;
 
@@ -54,7 +55,7 @@ class Revision extends PassThrough
         // Basic Entry model. We can copy all the fields except created_at, updated_at, parent_id.
         $replicatedEntry = $originalEntry->replicate();
         $replicatedEntry->parent_id = $originalEntry->id;
-        $replicatedEntry->type = 'revision';
+        $replicatedEntry->type = $type;
         $replicatedEntry->save();
 
         // Translations
@@ -181,5 +182,41 @@ class Revision extends PassThrough
         }
 
         return STAPLER_NULL;
+    }
+
+    /**
+     * @return Entry
+     */
+    public function restore(): Entry
+    {
+        $entry = $this->entry;
+
+        $restored = DB::transaction(function () use ($entry) {
+
+            $parent = $entry->parent;
+
+            $revisionIds = $parent->children()->pluck('id')->toArray();
+
+            $replicatedEntry = $entry->revision()->make();
+            $replicatedEntry->type = 'current';
+            $replicatedEntry->parent_id = NULL;
+            $replicatedEntry->is_homepage = $parent->is_homepage;
+            $replicatedEntry->is_active = $parent->is_active;
+            $replicatedEntry->save();
+
+            $parent->type = 'revision';
+            $parent->is_homepage = 0;
+            $parent->created_at = date('Y-m-d H:i:s');
+            $parent->parent_id = $replicatedEntry->id;
+            $parent->save();
+
+            Entry::whereIn('id', $revisionIds)->update([
+                'parent_id' => $replicatedEntry->id
+            ]);
+
+            return $replicatedEntry;
+        });
+
+        return $restored;
     }
 }

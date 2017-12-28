@@ -184,12 +184,13 @@ $(function() {
     });
 
     // Revisions
+    $('#revisions-info-container').show();
     $("#revisions-modal").on("show.bs.modal", function(e) {
         var link = $(e.relatedTarget);
         $(this).find(".modal-body").load(link.data("href"));
     });
 
-    $('body').on('click', '#submit-button:not(.loading)', function(){
+    $('body').on('click', '.submit-button:not(.loading)', function(){
 
         var btn = $(this);
         $(btn).addClass('loading');
@@ -255,6 +256,10 @@ $(function() {
 
         $(btn).find('.not-loading').hide();
         $(btn).find('.loading').show();
+
+        var saveAs = $(btn).data('save-as');
+        console.log(saveAs);
+        formData.append('save_as', saveAs);
 
         // Post to backend
         $.ajax({

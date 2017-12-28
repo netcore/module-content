@@ -1,24 +1,37 @@
 
-@if(isset($entry))
+@if(isset($entry) && $revisionsEnabled)
 
-    <div id="revisions-info-container">
+    @php
+        $countOfRevisions = $entry->children()->whereType('revision')->count();
+    @endphp
+
+    <div id="revisions-info-container" hidden>
         @if($entry->type == 'revision')
-            <b class="error-span">ATTENTION - </b>
-            You are viewing a revision of
+            <b class="error-span">REVISION </b>
+            of
             <a href="{{ route('content::entries.edit', $entry->parent_id) }}">
                 this page
             </a>
             from {{ $entry->created_at->format('d.m.Y H:i:s') }}
+        @elseif($entry->type == 'draft')
+
+            <b class="error-span">
+                DRAFT
+            </b>
+
+            @if($countOfRevisions)
+                <!-- Link trigger modal -->
+                <a data-href="{{ route('content::entries.revisions', $entry) }}" data-remote="false" data-toggle="modal" data-target="#revisions-modal" class="trigger-revisions-modal cursor-pointer">
+                    ({{ $countOfRevisions }} revision{{ $countOfRevisions>1 ? 's' : '' }})
+                </a>
+            @endif
         @else
-
-            @php
-                $countOfRevisions = $entry->children()->whereType('revision')->count();
-            @endphp
-
-            <!-- Link trigger modal -->
-            <a data-href="{{ route('content::entries.revisions', $entry) }}" data-remote="false" data-toggle="modal" data-target="#revisions-modal" class="trigger-revisions-modal cursor-pointer">
-                Revisions ({{ $countOfRevisions }})
-            </a>
+            @if($countOfRevisions)
+                <!-- Link trigger modal -->
+                <a data-href="{{ route('content::entries.revisions', $entry) }}" data-remote="false" data-toggle="modal" data-target="#revisions-modal" class="trigger-revisions-modal cursor-pointer">
+                    {{ $countOfRevisions }} revision{{ $countOfRevisions>1 ? 's' : '' }}
+                </a>
+            @endif
         @endif
     </div>
 

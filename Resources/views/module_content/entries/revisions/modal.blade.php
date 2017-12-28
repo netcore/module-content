@@ -15,15 +15,15 @@
                     </td>
                     <td>
 
+                        {{--
                         <a
-                            {{--
                             href="{{ route('content::entries.preview', $revision) }}"
-                            --}}
                             target="_blank"
                             class="btn btn-xs btn-info disabled"
                         >
                             Preview
                         </a>
+                        --}}
 
                         <a
                             href="{{ route('content::entries.edit', $revision) }}"
