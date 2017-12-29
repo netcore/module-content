@@ -18,7 +18,6 @@ $(function() {
         ];
 
         var allowAttachment = $(selector).data('allow-attachment');
-        console.log('Allow attachment', allowAttachment);
         if(allowAttachment) {
             columnConfig.push(
                 { data: 'attachment', name: 'attachment', orderable: false, searchable: false, class: ''}
