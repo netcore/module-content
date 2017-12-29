@@ -1,11 +1,4 @@
 
-@php
-    if(isset($entry)) {
-        $entryTranslation = $entry->translations->where('locale', $language->iso_code)->first();
-        $entryTranslation = $entryTranslation ? $entryTranslation : (new \Modules\Content\Translations\EntryTranslation());
-    }
-@endphp
-
 <div class="widgets-container" data-locale="{{ $language->iso_code }}">
 
     <div class="no-widgets"

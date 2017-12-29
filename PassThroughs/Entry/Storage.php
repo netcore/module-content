@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
+use Modules\Content\Models\MetaTag;
 use Modules\Content\PassThroughs\PassThrough;
 use Modules\Content\Translations\EntryTranslation;
 use Netcore\Translator\Helpers\TransHelper;
@@ -58,7 +59,7 @@ class Storage extends PassThrough
         $currentType = $entry->type;
         $saveAs = array_get($requestData, 'save_as');
 
-        if($makeRevision) {
+        if ($makeRevision) {
             $revision = $entry->revision()->make();
         }
 
@@ -297,7 +298,7 @@ class Storage extends PassThrough
     {
         $entry = $this->entry;
 
-        $entryTranslations = collect($entryTranslations)->map(function ($translations, $locale) use ($entry) {
+        $mappedEntryTranslations = collect($entryTranslations)->map(function ($translations, $locale) use ($entry) {
 
             if (strlen(array_get($translations, 'slug')) == 0) {
                 $slug = str_slug(
@@ -313,11 +314,75 @@ class Storage extends PassThrough
             $translations['slug'] = $this->uniqueSlug($slug, $locale, $channelId);
             $translations['content'] = ''; // Default value
 
+            $translations = array_except($translations, 'meta_tags');
+
             return $translations;
         })->toArray();
 
         // Save translations
-        $entry->updateTranslations($entryTranslations);
+        $entry->updateTranslations($mappedEntryTranslations);
+
+        // Save meta tags
+        $this->updateMetaTags($entryTranslations);
+    }
+
+    /**
+     * @param array $entryTranslations
+     * @return bool
+     */
+    private function updateMetaTags(Array $entryTranslations)
+    {
+        $entry = $this->entry;
+        $entryTranslationObjects = $entry->translations()->get();
+
+        $configuredMetaTags = collect(config('netcore.module-content.meta_tags', []));
+        $newMetaTags = [];
+
+        foreach ($entryTranslations as $locale => $translations) {
+
+            $entryTranslationObject = $entryTranslationObjects->where('locale', $locale)->first();
+
+            if (!$entryTranslationObject) {
+                return true;
+            }
+
+            $entryTranslationObject->metaTags()->delete();
+
+            $metaTags = (array)array_get($translations, 'meta_tags', []);
+            foreach ($metaTags as $nameProperty => $value) {
+
+                $value = $value ?: ''; // Value cannot be null
+
+                if(!$value) {
+                    continue;
+                }
+
+                $isProperty = $configuredMetaTags->where('property', $nameProperty)->count();
+                $isName = $configuredMetaTags->where('name', $nameProperty)->count();
+                if ($isProperty) {
+                    $newMetaTags[] = [
+                        'entry_translation_id' => $entryTranslationObject->id,
+                        'name'                 => '',
+                        'property'             => $nameProperty,
+                        'value'                => $value,
+                    ];
+                }
+
+                if ($isName) {
+                    $newMetaTags[] = [
+                        'entry_translation_id' => $entryTranslationObject->id,
+                        'name'                 => $nameProperty,
+                        'property'             => '',
+                        'value'                => $value,
+                    ];
+                }
+            }
+        }
+
+        $table = app()->make(MetaTag::class)->getTable();
+        DB::table($table)->insert($newMetaTags);
+
+        return true;
     }
 
     /**
