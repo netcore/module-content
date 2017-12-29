@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\HtmlBlock;
+use Modules\Content\Models\MetaTag;
 use Modules\Content\Models\WidgetBlock;
 use Modules\Content\Models\WidgetBlockItemField;
 use Modules\Content\PassThroughs\PassThrough;
@@ -73,9 +74,32 @@ class Revision extends PassThrough
             foreach ($originalEntryTranslation->contentBlocks as $originalContentBlock) {
                 $this->replicateContentBlock($originalContentBlock, $replicatedTranslation);
             }
+
+            // Meta tags
+            $this->replicateMetaTags($originalEntryTranslation, $replicatedTranslation);
         }
 
         return $replicatedEntry;
+    }
+
+    /**
+     * @param EntryTranslation $originalEntryTranslation
+     * @param EntryTranslation $replicatedTranslation
+     */
+    private function replicateMetaTags(EntryTranslation $originalEntryTranslation, EntryTranslation $replicatedTranslation)
+    {
+        $newMetaTags = $originalEntryTranslation->metaTags->map(function ($originalMetaTag) use ($replicatedTranslation) {
+            $replicatedMetaTag = array_only($originalMetaTag->toArray(), [
+                'name',
+                'property',
+                'value'
+            ]);
+            $replicatedMetaTag['entry_translation_id'] = $replicatedTranslation->id;
+            return $replicatedMetaTag;
+        })->toArray();
+
+        $table = app()->make(MetaTag::class)->getTable();
+        DB::table($table)->insert($newMetaTags);
     }
 
     /**
