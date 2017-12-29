@@ -7,7 +7,7 @@
 @section('meta')
     @foreach($entryTranslation->metaTags as $metaTag)
         @if($metaTag->value)
-            <meta @if($metaTag->property)property="{{ $metaTag->property }}"@endif @if($metaTag->name)name="{{ $metaTag->name }}"@endif value="{{ $metaTag->value }}">
+            <meta @if($metaTag->property)property="{{ $metaTag->property }}"@endif @if($metaTag->name)name="{{ $metaTag->name }}"@endif content="{{ $metaTag->value }}">
         @endif
     @endforeach
 @endsection
