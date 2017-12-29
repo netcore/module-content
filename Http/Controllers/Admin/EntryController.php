@@ -54,8 +54,9 @@ class EntryController extends Controller
             ];
         }
 
+        $makeRevision = false;
         $entry = Entry::create($entryData);
-        $entry->storage()->update($requestData);
+        $entry->storage()->update($requestData, $makeRevision);
 
         session()->flash('success', 'Page has been stored!');
 
@@ -101,7 +102,9 @@ class EntryController extends Controller
     public function update(EntryRequest $request, Entry $entry)
     {
         $requestData = $request->all();
-        $entry->storage()->update($requestData);
+
+        $makeRevision = config('netcore.module-content.revisions_enabled', true);
+        $entry->storage()->update($requestData, $makeRevision);
 
         session()->flash('success', 'Page has been updated!');
 

@@ -38,10 +38,10 @@ class Storage extends PassThrough
      * @param array $requestData
      * @return Entry
      */
-    public function update(Array $requestData): Entry
+    public function update(Array $requestData, Bool $makeRevision): Entry
     {
-        $entry = DB::transaction(function () use ($requestData) {
-            return $this->transaction($requestData);
+        $entry = DB::transaction(function () use ($requestData, $makeRevision) {
+            return $this->transaction($requestData, $makeRevision);
         });
 
         return $entry;
@@ -49,16 +49,16 @@ class Storage extends PassThrough
 
     /**
      * @param array $requestData
+     * @param bool $makeRevision
      * @return Entry
      */
-    private function transaction(Array $requestData): Entry
+    private function transaction(Array $requestData, Bool $makeRevision): Entry
     {
         $entry = $this->entry;
         $currentType = $entry->type;
         $saveAs = array_get($requestData, 'save_as');
 
-        $revisionsEnabled = config('netcore.module-content.revisions_enabled', true);
-        if($revisionsEnabled) {
+        if($makeRevision) {
             $revision = $entry->revision()->make();
         }
 
