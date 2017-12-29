@@ -183,6 +183,16 @@ $(function() {
         $(this).closest('.tab-pane').find('input.slug').val(slug);
     });
 
+    // Summernote has an issue with Instert image -> Image URL
+    // If link is pasted via ctrl+v keyboard shortcut, then everything is fine
+    // However, it does not work with Right click -> Paster. Then "Insert image" button stays gray.
+    // That's why we manually trigger "keyup" event to enable "Insert image"
+    $('body').on('paste', '.note-image-url', function(){
+        window.setTimeout(function(){
+            $('.note-image-url').trigger('keyup');
+        }, 100)
+    });
+
     // Revisions
     $('#revisions-info-container').show();
     $("#revisions-modal").on("show.bs.modal", function(e) {
@@ -258,7 +268,6 @@ $(function() {
         $(btn).find('.loading').show();
 
         var saveAs = $(btn).data('save-as');
-        console.log(saveAs);
         formData.append('save_as', saveAs);
 
         // Post to backend
@@ -382,3 +391,4 @@ $(function() {
         });
     });
 });
+
