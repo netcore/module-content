@@ -72,7 +72,11 @@ class EntryController extends Controller
      */
     public function edit(Entry $entry)
     {
-        $entry->load('translations.contentBlocks');
+        $entry->load([
+            'translations' => function($subq){
+                return $subq->with(['contentBlocks', 'metaTags']);
+            }
+        ]);
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 

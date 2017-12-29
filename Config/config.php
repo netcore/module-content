@@ -124,6 +124,36 @@ return [
 
     'allow_attachments' => false,
 
-    'revisions_enabled' => true
+    'revisions_enabled' => true,
+
+    'meta_tags' => [
+        [
+            'property' => 'og:type'
+        ],
+        [
+            'property' => 'og:title'
+        ],
+        [
+            'property' => 'og:description'
+        ],
+        [
+            'property' => 'og:image'
+        ],
+        [
+            'property' => 'twitter:title'
+        ],
+        [
+            'property' => 'twitter:description'
+        ],
+        [
+            'property' => 'twitter:image'
+        ],
+        [
+            'name' => 'keywords'
+        ],
+        [
+            'name' => 'description'
+        ],
+    ]
 ];
 
