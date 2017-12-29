@@ -27,8 +27,8 @@
             </div>
 
             <a
-                class="btn btn-lg btn-success m-t-3 pull-xs-right"
-                id="submit-button"
+                class="btn btn-lg btn-success m-t-3 pull-xs-right submit-button"
+                data-save-as="current"
             >
                 Save
             </a>
