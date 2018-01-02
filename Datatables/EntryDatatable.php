@@ -41,11 +41,11 @@ trait EntryDatatable
             //})
             ->editColumn('updated_at', function ($entry) {
                 $updatedAt = $entry->updated_at;
-                return $updatedAt ? $updatedAt->format('d.m.Y H:i') : '-';
+                return $updatedAt ? $updatedAt->format(config('netcore.module-admin.date_format', 'd.m.Y H:i')) : '-';
             })
             ->addColumn('published_at', function ($entry) {
                 $publishedAt = $entry->published_at;
-                return $publishedAt ? $publishedAt->format('d.m.Y') : '-';
+                return $publishedAt ? $publishedAt->format(config('netcore.module-admin.date_format', 'd.m.Y H:i')) : '-';
             })
             ->editColumn('is_homepage', function ($entry) {
                 return view('content::module_content.entries.tds.is_homepage', compact('entry'))->render();
