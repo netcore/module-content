@@ -1,4 +1,4 @@
-
+@if(isset($entryTranslation))
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#seo-{{ $entryTranslation->id }}" style="position:absolute; bottom:-62px; left:0px;">
     SEO, meta tags
@@ -55,4 +55,4 @@
         </div>
     </div>
 </div>
-
+@endif
