@@ -1,5 +1,5 @@
 <a href="{{ route('content::entries.edit', $entry) }}" class="btn btn-primary btn-xs">
-    Edit page
+    <i class="fa fa-edit"></i> Edit
 </a>
 
 <a
@@ -13,5 +13,5 @@
     data-success-text="Page was deleted"
     data-refresh-datatable="#{{ $entry->channel_id ? 'channel-'.$entry->channel_id.'-datatable' : 'single-entries-datatable' }}"
 >
-    Delete
+    <i class="fa fa-trash"></i> Delete
 </a>

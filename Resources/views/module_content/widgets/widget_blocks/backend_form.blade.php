@@ -10,7 +10,7 @@
     <a
         class="btn btn-xs btn-success add-new-image-block-button pull-left {{ $disabledAddNew ? 'disabled' : '' }}"
     >
-        Add new block
+        <i class="fa fa-plus"></i> Add new block
 
         @if($maxItemsCount)
             <span class="max-items-count">
@@ -113,8 +113,8 @@
         <tr>
             <td></td>
             <td class="padding-5 text-align-right">
-                <a class="btn btn-xs btn-danger add-new-image-block-cancel">Cancel</a>
-                <a class="btn btn-xs btn-success add-new-image-block-submit">Save</a>
+                <a class="btn btn-xs btn-danger add-new-image-block-cancel"><i class="fa fa-undo"></i> Cancel</a>
+                <a class="btn btn-xs btn-success add-new-image-block-submit"><i class="fa fa-pencil"></i> Update</a>
             </td>
         </tr>
     </table>

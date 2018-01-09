@@ -4,7 +4,7 @@
         'id' => 'select-widget'
     ]) !!}
 
-    <a class="btn btn-xs btn-success" id="add-widget-button">Add widget</a>
+    <a class="btn btn-md btn-success" id="add-widget-button"><i class="fa fa-plus"></i> Add widget</a>
 </div>
 
 <div class="pull-right">
@@ -29,15 +29,6 @@
         {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control', 'style' => 'width:125px;']) !!}
         <span class="error-span"></span>
     </div>
-
-    @if(!$channel)
-        Homepage?
-        <span class="hidden-switchery" hidden style="margin-right:10px;">
-            {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 0), [
-                'class' => 'switchery'
-            ]) !!}
-        </span>
-    @endif
 
     Active
     <span class="hidden-switchery" hidden>

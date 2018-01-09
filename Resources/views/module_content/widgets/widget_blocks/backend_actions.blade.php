@@ -2,7 +2,7 @@
 <a
     class="btn btn-xs btn-success edit-image-block"
 >
-    Edit
+    <i class="fa fa-edit"></i> Edit
 </a>
 
 <a
@@ -16,6 +16,6 @@
     data-remove-on-empty=".widget-tr"
     data-remove-on-delete
 >
-    Delete
+    <i class="fa fa-trash"></i> Delete
 </a>
 

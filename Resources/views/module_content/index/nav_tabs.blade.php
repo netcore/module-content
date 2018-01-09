@@ -48,11 +48,11 @@
         >
             <div class="above-table">
                 <a href="{{ route('content::channels.edit', $channel) }}" class="btn btn-primary btn-xs">
-                    Edit channel
+                    <i class="fa fa-edit"></i> Edit channel
                 </a>
 
                 <a href="{{ route('content::entries.create', $channel) }}" class="btn btn-success btn-xs">
-                    Add new {{ trans_model($channel, $firstLanguage, 'name') }} page
+                    <i class="fa fa-plus"></i> Add new {{ trans_model($channel, $firstLanguage, 'name') }} page
                 </a>
             </div>
 
@@ -95,7 +95,7 @@
     >
         <div class="above-table {{ $channels->count() ? '' : 'without-channels' }}">
             <a href="{{ route('content::entries.create') }}" class="btn btn-success btn-xs">
-                Add new page
+                <i class="fa fa-plus"></i> Add new page
             </a>
         </div>
 

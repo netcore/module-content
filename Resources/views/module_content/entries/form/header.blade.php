@@ -39,11 +39,11 @@
                         data-success-text="Attachment was deleted"
                         data-refresh-page-on-success
                     >
-                        Delete
+                        <i class="fa fa-trash"></i> Delete
                     </a>
 
                     <a href="{{ $entry->attachments()->forLanguage($language)->url() }}" target="_blank">
-                        Download ({{ $entry->attachments()->humanSizeForLanguage($language) }})
+                        <i class="fa fa-file"></i> Download ({{ $entry->attachments()->humanSizeForLanguage($language) }})
                     </a>
                 @endif
             </div>
