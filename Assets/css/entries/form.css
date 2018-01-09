@@ -68,9 +68,9 @@
 
 .widgets-container .template-container-header{
     border-bottom: 1px solid #d6d6d6;
-    padding: 0px 7px;
+    padding: 5px 7px;
     background-color:lightgray;
-    height: 25px;
+    height: 35px;
 }
 
 .widgets-container .template-container-header.has-error{
@@ -83,7 +83,6 @@
     top:0px;
     left:0px;
     display:inline-block;
-    width:50px;
     text-align: center;
     height:100%;
 }
@@ -167,3 +166,6 @@ input.datepicker{
     right:21px;
 }
 
+#add-widget-button {
+	margin-top: -5px;
+}

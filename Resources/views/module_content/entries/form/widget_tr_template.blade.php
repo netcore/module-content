@@ -22,7 +22,7 @@
 
                 <span style="left: {{ (count($languages)-1) * 90 }}px;" class="no-drag">
                     <span class="" style="width:auto;">{{ $widgetName }}</span>
-                    <a class="delete-widget">Delete</a>
+                    <a class="btn btn-xs btn-danger pull-right delete-widget"><i class="fa fa-trash"></i> Delete</a>
                 </span>
 
             </div>

@@ -1,11 +1,11 @@
 @extends('admin::layouts.master')
 
 @section('styles')
-    <link rel="stylesheet" href="/assets/content/css/index/index.css">
+    <link rel="stylesheet" href="{{ versionedAsset('/assets/content/css/index/index.css') }}">
 @endsection
 
 @section('scripts')
-    <script src="/assets/content/js/index/index.js"></script>
+    <script src="{{ versionedAsset('/assets/content/js/index/index.js') }}"></script>
 @endsection
 
 @section('content')
