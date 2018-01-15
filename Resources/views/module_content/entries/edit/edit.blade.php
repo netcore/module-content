@@ -13,7 +13,7 @@
 
     {!! Form::model($entry, ['url' => crud_route('update', $entry), 'method' => 'PUT']) !!}
 
-        <div class="p-x-1">
+        <div class="p-x-1" style="padding-bottom: 140px;">
 
             <div class="panel">
                 <div class="panel-heading">
