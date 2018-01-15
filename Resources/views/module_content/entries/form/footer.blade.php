@@ -10,11 +10,26 @@
 <div class="pull-right">
 
     <div
-        class="form-group inline-block"
-        style="margin-right:15px;"
+            class="form-group inline-block"
+            style="margin-right:15px;"
     >
         {!! Form::text('published_at', (isset($entry) ? $entry->published_at->format('d.m.Y') : date('d.m.Y')), ['class' => 'form-control datepicker']) !!}
         <span class="error-span"></span>
+
+    </div>
+    <div
+            class="form-group inline-block"
+            style="margin-right:15px;"
+    >
+
+        @if(!$channel)
+            Homepage?
+            <span class="hidden-switchery" hidden style="margin-right:10px;">
+             {!! Form::checkbox('is_homepage', 1, (isset($entry) ? null : 0), [
+                 'class' => 'switchery'
+             ]) !!}
+                        </span>
+        @endif
     </div>
 
     @php
@@ -22,9 +37,9 @@
     @endphp
 
     <div
-        class="form-group {{ $multipleLayouts ? 'inline-block' : '' }}"
-        style="margin-right:15px;"
-        {{ $multipleLayouts ? '' : 'hidden' }}
+            class="form-group {{ $multipleLayouts ? 'inline-block' : '' }}"
+            style="margin-right:15px;"
+            {{ $multipleLayouts ? '' : 'hidden' }}
     >
         {!! Form::select('layout', $layoutOptions, null, ['class' => 'form-control', 'style' => 'width:125px;']) !!}
         <span class="error-span"></span>
