@@ -28,19 +28,12 @@ class EntryController extends Controller
 
         $channel = $channelId ? Channel::find($channelId) : null;
 
-        return view('content::module_content.entries.create.create', compact(
-            'channelId',
-            'channel',
-            'languages',
-            'widgetData',
-            'widgetOptions',
-            'layoutOptions'
-        ));
+        return view('content::module_content.entries.create.create', compact('channelId', 'channel', 'languages', 'widgetData', 'widgetOptions', 'layoutOptions'));
     }
 
     /**
      * @param EntryRequest $request
-     * @param null $channelId
+     * @param null         $channelId
      * @return mixed
      */
     public function store(EntryRequest $request, $channelId = null)
@@ -73,7 +66,7 @@ class EntryController extends Controller
     public function edit(Entry $entry)
     {
         $entry->load([
-            'translations' => function($subq){
+            'translations' => function ($subq) {
                 return $subq->with(['contentBlocks', 'metaTags']);
             }
         ]);
@@ -88,19 +81,13 @@ class EntryController extends Controller
             $layoutOptions = [null => ''] + $layoutOptions;
         }
 
-        return view('content::module_content.entries.edit.edit', compact(
-            'entry',
-            'channel',
-            'languages',
-            'widgetData',
-            'widgetOptions',
-            'layoutOptions'
-        ));
+        return view('content::module_content.entries.edit.edit',
+            compact('entry', 'channel', 'languages', 'widgetData', 'widgetOptions', 'layoutOptions'));
     }
 
     /**
      * @param EntryRequest $request
-     * @param Entry $entry
+     * @param Entry        $entry
      * @return mixed
      */
     public function update(EntryRequest $request, Entry $entry)
@@ -114,7 +101,6 @@ class EntryController extends Controller
 
         return response()->json([
             'success'     => true,
-            //'redirect_to' => route('content::content.index')
             'redirect_to' => route('content::entries.edit', $entry)
         ]);
     }
@@ -135,7 +121,7 @@ class EntryController extends Controller
                 return $widget;
             }
 
-            foreach($languages as $language) {
+            foreach ($languages as $language) {
 
                 $composed = [];
 
@@ -144,7 +130,7 @@ class EntryController extends Controller
                     $composed = $worker->backendTemplateComposer([], $language);
                 }
 
-                if(!is_array($widget['backend_template'])) {
+                if (!is_array($widget['backend_template'])) {
                     $widget['backend_template'] = [];
                 }
 
@@ -168,16 +154,15 @@ class EntryController extends Controller
      */
     public function revisions(Entry $entry)
     {
-        $revisions = $entry->children()
+        $revisions = $entry
+            ->children()
             ->whereType('revision')
             ->orderBy('created_at', 'DESC')
             ->orderBy('id', 'DESC')
             ->limit(100)
             ->get();
 
-        return view('content::module_content.entries.revisions.modal', compact(
-            'revisions'
-        ));
+        return view('content::module_content.entries.revisions.modal', compact('revisions'));
     }
 
     /**
@@ -197,8 +182,8 @@ class EntryController extends Controller
 
         // Hide/show menu items that link to this entry
         $menuItemClass = '\Modules\Admin\Models\MenuItem';
-        if(class_exists($menuItemClass)) {
-            app($menuItemClass)->whereHas('translations', function($subq) use ($slug) {
+        if (class_exists($menuItemClass)) {
+            app($menuItemClass)->whereHas('translations', function ($subq) use ($slug) {
                 return $subq->whereValue($slug);
             })->update([
                 'is_active' => 0
@@ -211,15 +196,13 @@ class EntryController extends Controller
     }
 
     /**
-     * @param Entry $entry
+     * @param Entry    $entry
      * @param Language $language
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroyAttachment(Entry $entry, Language $language)
     {
-        $entryTranslation = $entry->translations()
-            ->whereLocale($language->iso_code)
-            ->firstOrFail();
+        $entryTranslation = $entry->translations()->whereLocale($language->iso_code)->firstOrFail();
 
         $entryTranslation->attachment = STAPLER_NULL;
         $entryTranslation->save();
@@ -238,6 +221,7 @@ class EntryController extends Controller
         die('Preview');
         $locale = app()->getLocale();
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
+
         return view($template, compact('page'));
     }
 

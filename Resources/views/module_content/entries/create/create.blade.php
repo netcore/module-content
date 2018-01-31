@@ -26,17 +26,6 @@
                 </div>
             </div>
 
-            <a
-                class="btn btn-lg btn-success m-t-3 pull-xs-right submit-button"
-                data-save-as="current"
-            >
-                Save
-            </a>
-
-            <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
-                Back
-            </a>
-
         </div>
     {!! Form::close() !!}
 @endsection
