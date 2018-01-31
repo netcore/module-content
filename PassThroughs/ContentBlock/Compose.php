@@ -31,12 +31,9 @@ class Compose extends PassThrough
 
         $templateData = [];
         $backendWorker = $contentBlock->config->backend_worker;
-        if($backendWorker) {
+        if ($backendWorker) {
             $worker = new $backendWorker($contentBlock->config->all());
-            $templateData = $worker->backendTemplateComposer(
-                $contentBlock->data,
-                $language
-            );
+            $templateData = $worker->backendTemplateComposer($contentBlock->data, $language);
         }
 
         return $templateData;

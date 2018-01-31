@@ -12,11 +12,12 @@ abstract class PassThrough
     public function __get($name)
     {
         $camelized = $this->camelize($name);
+
         return $this->$camelized();
     }
 
     /**
-     * @param $input
+     * @param        $input
      * @param string $separator
      * @return mixed
      */

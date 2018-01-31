@@ -37,6 +37,7 @@ class Config extends PassThrough
     public function all()
     {
         $config = collect(config('netcore.module-content.widgets'))->where('key', $this->contentBlock->widget)->first();
+
         return $config;
     }
 

@@ -26,7 +26,7 @@ class WidgetBlockItem extends Model
     protected $fillable = [
         'order',
     ];
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -50,6 +50,7 @@ class WidgetBlockItem extends Model
     public function getField(String $key)
     {
         $field = $this->fields->where('key', $key)->first();
+
         return $field ? $field->value : '';
     }
 
@@ -60,6 +61,7 @@ class WidgetBlockItem extends Model
     public function getStaplerObj(String $key)
     {
         $field = $this->fields->where('key', $key)->first();
+
         return $field ? $field->image : null;
     }
 }

@@ -49,7 +49,8 @@ class ChannelController extends Controller
         $requestData = $request->all();
         $channel->storage()->update($requestData);
 
-        return redirect()->route('content::content.index')
+        return redirect()
+            ->route('content::content.index')
             ->withSuccess('Channel has been updated!');
     }
 

@@ -150,10 +150,7 @@ class Entry extends Model
         $replaced = str_replace('</p>', ' </p>', $this->content);
         $replaced = html_entity_decode($replaced);
 
-        return str_limit(
-            strip_tags($replaced),
-            $length
-        );
+        return str_limit(strip_tags($replaced), $length);
     }
 
     /**
@@ -162,13 +159,9 @@ class Entry extends Model
      */
     public function readMoreIfPreviewIs($length)
     {
-        $lengthOfPreview = mb_strlen(
-            $this->preview($length)
-        );
+        $lengthOfPreview = mb_strlen($this->preview($length));
 
-        $lengthOfPreviewPlusOne = mb_strlen(
-            $this->preview($length + 1)
-        );
+        $lengthOfPreviewPlusOne = mb_strlen($this->preview($length + 1));
 
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
     }

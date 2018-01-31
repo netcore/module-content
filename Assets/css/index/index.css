@@ -1,31 +1,45 @@
 
-#nav-tabs-container{
+#nav-tabs-container {
     position: relative;
 }
 
-.above-table{
+.above-table {
     margin-bottom: 10px;
     text-align: right;
-    position:absolute;
-    top:5px;
-    right:7px;
-    width:300px;
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    width: 300px;
 }
 
-.above-table.without-channels{
-    top:-15px;
+.above-table.without-channels {
+    top: -15px;
 }
 
-.default-cursor{
-    cursor:default;
+.default-cursor {
+    cursor: default;
 }
 
-.default-cursor .switchery{
-    cursor:default;
+.default-cursor .switchery {
+    cursor: default;
 }
 
-.width-100{ width: 100px; }
-.width-150{ width: 150px; }
-.width-200{ width: 200px; }
-.width-250{ width: 250px; }
-.width-300{ width: 300px; }
+.width-100 {
+    width: 100px;
+}
+
+.width-150 {
+    width: 150px;
+}
+
+.width-200 {
+    width: 200px;
+}
+
+.width-250 {
+    width: 250px;
+}
+
+.width-300 {
+    width: 300px;
+}
