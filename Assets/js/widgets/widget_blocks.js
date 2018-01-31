@@ -1,4 +1,3 @@
-
 /**
  *
  *  Base64 encode / decode
@@ -11,16 +10,14 @@ var Base64 = {
     _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
 
     // public method for encoding
-    , encode: function (input)
-    {
+    , encode: function (input) {
         var output = "";
         var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
         var i = 0;
 
         input = Base64._utf8_encode(input);
 
-        while (i < input.length)
-        {
+        while (i < input.length) {
             chr1 = input.charCodeAt(i++);
             chr2 = input.charCodeAt(i++);
             chr3 = input.charCodeAt(i++);
@@ -30,12 +27,10 @@ var Base64 = {
             enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
             enc4 = chr3 & 63;
 
-            if (isNaN(chr2))
-            {
+            if (isNaN(chr2)) {
                 enc3 = enc4 = 64;
             }
-            else if (isNaN(chr3))
-            {
+            else if (isNaN(chr3)) {
                 enc4 = 64;
             }
 
@@ -49,16 +44,14 @@ var Base64 = {
 
 
     // public method for decoding
-    ,decode: function (input)
-    {
+    , decode: function (input) {
         var output = "";
         var chr1, chr2, chr3;
         var enc1, enc2, enc3, enc4;
         var i = 0;
 
         input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-        while (i < input.length)
-        {
+        while (i < input.length) {
             enc1 = this._keyStr.indexOf(input.charAt(i++));
             enc2 = this._keyStr.indexOf(input.charAt(i++));
             enc3 = this._keyStr.indexOf(input.charAt(i++));
@@ -70,13 +63,11 @@ var Base64 = {
 
             output = output + String.fromCharCode(chr1);
 
-            if (enc3 != 64)
-            {
+            if (enc3 != 64) {
                 output = output + String.fromCharCode(chr2);
             }
 
-            if (enc4 != 64)
-            {
+            if (enc4 != 64) {
                 output = output + String.fromCharCode(chr3);
             }
 
@@ -89,26 +80,21 @@ var Base64 = {
 
 
     // private method for UTF-8 encoding
-    ,_utf8_encode: function (string)
-    {
+    , _utf8_encode: function (string) {
         var utftext = "";
         string = string.replace(/\r\n/g, "\n");
 
-        for (var n = 0; n < string.length; n++)
-        {
+        for (var n = 0; n < string.length; n++) {
             var c = string.charCodeAt(n);
 
-            if (c < 128)
-            {
+            if (c < 128) {
                 utftext += String.fromCharCode(c);
             }
-            else if ((c > 127) && (c < 2048))
-            {
+            else if ((c > 127) && (c < 2048)) {
                 utftext += String.fromCharCode((c >> 6) | 192);
                 utftext += String.fromCharCode((c & 63) | 128);
             }
-            else
-            {
+            else {
                 utftext += String.fromCharCode((c >> 12) | 224);
                 utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                 utftext += String.fromCharCode((c & 63) | 128);
@@ -120,30 +106,25 @@ var Base64 = {
     } // End Function _utf8_encode
 
     // private method for UTF-8 decoding
-    ,_utf8_decode: function (utftext)
-    {
+    , _utf8_decode: function (utftext) {
         var string = "";
         var i = 0;
         var c, c1, c2, c3;
         c = c1 = c2 = 0;
 
-        while (i < utftext.length)
-        {
+        while (i < utftext.length) {
             c = utftext.charCodeAt(i);
 
-            if (c < 128)
-            {
+            if (c < 128) {
                 string += String.fromCharCode(c);
                 i++;
             }
-            else if ((c > 191) && (c < 224))
-            {
+            else if ((c > 191) && (c < 224)) {
                 c2 = utftext.charCodeAt(i + 1);
                 string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
                 i += 2;
             }
-            else
-            {
+            else {
                 c2 = utftext.charCodeAt(i + 1);
                 c3 = utftext.charCodeAt(i + 2);
                 string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
@@ -169,7 +150,7 @@ var Base64 = {
  * widgetTr is <tr></tr> element that houses widget
  *
  */
-onWidgetAdded['widget_blocks'] = function(widgetTr) {
+onWidgetAdded['widget_blocks'] = function (widgetTr) {
 };
 
 /**
@@ -180,17 +161,17 @@ onWidgetAdded['widget_blocks'] = function(widgetTr) {
  * widgetTr is <tr></tr> element that houses widget
  *
  */
-widgetDataCollectors['widget_blocks'] = function(widgetTr) {
+widgetDataCollectors['widget_blocks'] = function (widgetTr) {
 
     var blocks = [];
 
-    $(widgetTr).find('.image-blocks-tr').each(function(index, tr){
+    $(widgetTr).find('.image-blocks-tr').each(function (index, tr) {
 
         var widgetBlockItemId = $(tr).data('image-block-item-id');
-        var order = (index+1);
+        var order = (index + 1);
         var attributes = {};
 
-        $(tr).find('td.field').each(function(i, td){
+        $(tr).find('td.field').each(function (i, td) {
 
             var attribute = $(td).data('field');
             var value = JSON.parse(
@@ -215,9 +196,9 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
     };
 };
 
-(function(){
+(function () {
 
-    var randomString = function() {
+    var randomString = function () {
         var text = "";
         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -227,7 +208,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         return text;
     };
 
-    var clearAddNewWidgetBlockForm = function(btn){
+    var clearAddNewWidgetBlockForm = function (btn) {
 
         var addNewcontainer = $(btn).closest('.add-new-container');
 
@@ -235,13 +216,13 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         $(addNewcontainer).find('.add-new-image-block-button').show();
 
         // Empty input fields
-        $(addNewcontainer).find('.add-new-image-block-table input').each(function(index, input){
+        $(addNewcontainer).find('.add-new-image-block-table input').each(function (index, input) {
             $(input).val(null);
         });
 
         // Empty wysiwyg
-        $(addNewcontainer).find('.add-new-image-block-table textarea.image-blocks-summernote').each(function(index, textarea){
-            if($(textarea).hasClass('initialized')) {
+        $(addNewcontainer).find('.add-new-image-block-table textarea.image-blocks-summernote').each(function (index, textarea) {
+            if ($(textarea).hasClass('initialized')) {
                 $(textarea).summernote('code', '');
             } else {
                 $(textarea).val('');
@@ -256,19 +237,19 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         $(btn).closest('.add-new-container').find('.add-new-image-block-table').hide();
     };
 
-    var replaceAll = function(search, replacement, source) {
+    var replaceAll = function (search, replacement, source) {
         return source.split(search).join(replacement);
     };
 
-    var initSortable = function(table){
+    var initSortable = function (table) {
 
         // Orderable shop images
         $(table).sortable({
             containerSelector: '.image-blocks-table',
-            itemPath : '> tbody',
-            itemSelector : '.image-blocks-tr',
-            handle : '.image-blocks-handle',
-            onDrop : function($item, container, _super, event) {
+            itemPath: '> tbody',
+            itemSelector: '.image-blocks-tr',
+            handle: '.image-blocks-handle',
+            onDrop: function ($item, container, _super, event) {
 
                 $item.removeClass(container.group.options.draggedClass).removeAttr("style");
                 $("body").removeClass(container.group.options.bodyClass);
@@ -276,21 +257,21 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                 var order = [];
                 var id;
 
-                $.each( $(container.el).find('tr'), function (i, tr) {
-                    if( id = $(tr).data('id') ) {
-                        order.push( id );
+                $.each($(container.el).find('tr'), function (i, tr) {
+                    if (id = $(tr).data('id')) {
+                        order.push(id);
                     }
                 });
             }
         });
     };
 
-    var initSummernote = function(btn){
+    var initSummernote = function (btn) {
 
         // Initialize
         var widgetTr = $(btn).closest('.widget-tr');
         var textareas = $(widgetTr).find('.image-blocks-summernote:not(.initialized)');
-        $.each(textareas, function(i, object){
+        $.each(textareas, function (i, object) {
             $(object).addClass('initialized').summernote({
                 height: 100,
                 width: 800,
@@ -311,13 +292,13 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
     };
 
     // Init sortable on page load
-    $('.image-blocks-table').each(function(index, table){
+    $('.image-blocks-table').each(function (index, table) {
         initSortable(table);
     });
 
-    var initImageTooltips = function(){
+    var initImageTooltips = function () {
 
-        $('.image-blocks-tr .field.has-image img').each(function(index, img){
+        $('.image-blocks-tr .field.has-image img').each(function (index, img) {
 
             var title = $(img).attr('title');
             var naturalWidth = $(img)[0].naturalWidth;
@@ -333,16 +314,16 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
     initImageTooltips();
 
-    var getFieldsJsonValue = function(btn, modelId){
+    var getFieldsJsonValue = function (btn, modelId) {
 
         var translatableFields = [];
         var regularFields = [];
-        $(btn).closest('.add-new-container').find('input[data-field], textarea[data-field], select[data-field]').each(function(index, input){
+        $(btn).closest('.add-new-container').find('input[data-field], textarea[data-field], select[data-field]').each(function (index, input) {
 
             var field = $(input).data('field');
 
             var locale = $(input).data('locale');
-            if(locale) {
+            if (locale) {
                 translatableFields.push(field);
             } else {
                 regularFields.push(field);
@@ -351,18 +332,18 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
         var fieldsJsonValue = {};
 
-        $(translatableFields).each(function(i, field){
+        $(translatableFields).each(function (i, field) {
 
             var jsonValue = {};
 
             var inputCheckboxTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"], select[data-field="' + field + '"]';
-            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function(i, input){
+            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function (i, input) {
 
                 var locale = $(input).data('locale');
                 var field = $(input).data('field');
 
                 var value = $(input).val();
-                if($(input).is('input[type=checkbox]')) {
+                if ($(input).is('input[type=checkbox]')) {
                     value = $(input).is(':checked');
                 }
 
@@ -372,25 +353,25 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             fieldsJsonValue[field] = jsonValue;
         });
 
-        $(regularFields).each(function(i, field){
+        $(regularFields).each(function (i, field) {
 
             var jsonValue = {};
 
             var inputCheckboxTextarea = 'input[data-field="' + field + '"], textarea[data-field="' + field + '"], select[data-field="' + field + '"]';
-            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function(i, input){
+            $(btn).closest('.add-new-container').find(inputCheckboxTextarea).each(function (i, input) {
 
                 var type = $(input).attr('type');
 
                 var value = $(input).val();
-                if($(input).is('input[type=checkbox]')) {
+                if ($(input).is('input[type=checkbox]')) {
                     value = $(input).is(':checked');
                 }
 
-                if(type == 'file') {
+                if (type == 'file') {
 
                     var addNewContainer = $(btn).closest('.add-new-container');
                     var widgetBlockUpdateId = $(addNewContainer).data('update-image-block-item-id');
-                    if(widgetBlockUpdateId && !value) {
+                    if (widgetBlockUpdateId && !value) {
                         return true; // Continue
                     }
 
@@ -400,7 +381,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                     var imageName = 'image-' + contentBlockId + '-' + widgetBlockId + '-' + field; // Used to retrieve image in backend
 
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
-                    $.each($(input)[0].files, function(i, file) {
+                    $.each($(input)[0].files, function (i, file) {
                         formDataImages[imageName] = file;
                     });
 
@@ -416,14 +397,14 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         return fieldsJsonValue;
     };
 
-    var addNewRow = function(btn){
+    var addNewRow = function (btn) {
 
         var modelId = randomString();
         var containerBody = $(btn).closest('.template-container-body');
         var addNewContainer = $(btn).closest('.add-new-container');
         var updateId = $(addNewContainer).data('update-image-block-item-id');
 
-        if(updateId) {
+        if (updateId) {
             modelId = updateId;
         }
 
@@ -441,47 +422,47 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         // For each input - one td
         var fieldsJsonValue = getFieldsJsonValue(btn, modelId);
 
-        $(addNewContainer).find('input[data-field], textarea[data-field], select[data-field]').each(function(index, input){
+        $(addNewContainer).find('input[data-field], textarea[data-field], select[data-field]').each(function (index, input) {
 
             var value = $(input).val();
-            if($(input).is('input[type=checkbox]')) {
+            if ($(input).is('input[type=checkbox]')) {
                 value = $(input).is(':checked') ? 'Yes' : 'No';
             }
 
-            if($(input).is('select')) {
+            if ($(input).is('select')) {
                 value = $(input).find('option:selected').text();
             }
 
             var type = $(input).attr('type');
 
-            if( $(input).is('textarea') ) {
+            if ($(input).is('textarea')) {
                 type = 'textarea';
             }
 
-            if( $(input).is('select') ) {
+            if ($(input).is('select')) {
                 type = 'select';
             }
 
             var field = $(input).data('field');
             var trIndex = $(btn).closest('.template-container-body').find('.image-blocks-tr').length;
 
-            if(updateId) {
+            if (updateId) {
                 trIndex--; // Index is zero based.
             }
 
             var tdId = trIndex + '-' + field;
             var jsonValue = Base64.encode(JSON.stringify(fieldsJsonValue[field]));
 
-            html += '<td class="field ' + (type==='file' ? 'has-image' : '') + '" data-field="' + field + '" data-value="' + jsonValue + '" data-td-id="' + tdId + '">';
+            html += '<td class="field ' + (type === 'file' ? 'has-image' : '') + '" data-field="' + field + '" data-value="' + jsonValue + '" data-td-id="' + tdId + '">';
 
-            if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox', 'select']) !== -1 ) {
+            if ($.inArray(type, ['text', 'number', 'textarea', 'checkbox', 'select']) !== -1) {
                 html += value;
-            } else if( type === 'file' && value) {
-                var src = URL.createObjectURL( input.files[0] );
+            } else if (type === 'file' && value) {
+                var src = URL.createObjectURL(input.files[0]);
                 var imageWidth = $(input).data('image-width') || 50;
                 html += '<img class="img-responsive" data-initialized="0" data-toggle="tooltip" data-placement="right" title="Test" data-container="body" style="width:' + imageWidth + 'px;" src="' + src + '">';
             }
-            else if( type === 'file' && !value && updateId ) { // UPDATE, with image intact
+            else if (type === 'file' && !value && updateId) { // UPDATE, with image intact
 
                 var existingImage = $(containerBody)
                     .find('.image-blocks-table tbody tr[data-image-block-item-id="' + updateId + '"]')
@@ -490,7 +471,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
                 html += existingImage;
             }
-            else if( type === 'file' && !value && !updateId ) { // INSERT, with image not required
+            else if (type === 'file' && !value && !updateId) { // INSERT, with image not required
 
                 html += 'No image';
             }
@@ -505,7 +486,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
         html += '</tr>';
 
-        if(updateId) {
+        if (updateId) {
 
             // Find that row. And replace html.
 
@@ -520,7 +501,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             $(containerBody).find('.image-blocks-table .no-blocks-tr').remove();
             var countOfTrsInBody = $(containerBody).find('.image-blocks-table tbody tr').length;
 
-            if(countOfTrsInBody) {
+            if (countOfTrsInBody) {
                 $(containerBody).find('.image-blocks-table tbody tr:last').after(html);
             } else {
                 $(containerBody).find('.image-blocks-table tbody').html(html);
@@ -530,13 +511,13 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
 
         var table = $(btn).closest('.template-container-body').find('.image-blocks-table');
 
-        $(table).find('[data-toggle="tooltip"][data-initialized=0]').each(function(i, img){
+        $(table).find('[data-toggle="tooltip"][data-initialized=0]').each(function (i, img) {
 
-            if($(img).data('initialized')) {
+            if ($(img).data('initialized')) {
                 return true;
             }
 
-            img.onload = function(){
+            img.onload = function () {
 
                 var title = '';
                 var naturalWidth = $(img)[0].naturalWidth;
@@ -555,7 +536,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         dontAllowMoreItemsThanMaxCount();
     };
 
-    $('body').on('click', '.edit-image-block', function(){
+    $('body').on('click', '.edit-image-block', function () {
 
         // Show form
         var templateContainer = $(this).closest('.template-container-body');
@@ -568,7 +549,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         $(templateContainer).find('.add-new-image-block-table').fadeIn();
 
         // Load all data, except image
-        $(this).closest('.image-blocks-tr').find('td.field').each(function(i, td){
+        $(this).closest('.image-blocks-tr').find('td.field').each(function (i, td) {
             var field = $(td).data('field');
             var json = JSON.parse(
                 Base64.decode(
@@ -576,14 +557,14 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                 )
             );
 
-            $.each(json, function(isoCode, value){
+            $.each(json, function (isoCode, value) {
 
                 var element = $(addNewContainer).find('[data-field="' + field + '"][data-locale="' + isoCode + '"]');
 
-                if($(element).hasClass('image-blocks-summernote') && $(element).hasClass('initialized')) {
+                if ($(element).hasClass('image-blocks-summernote') && $(element).hasClass('initialized')) {
                     $(element).summernote('code', value);
                 }
-                else if($(element).is(':checkbox')){
+                else if ($(element).is(':checkbox')) {
                     var bool = value == true;
                     $(element).prop('checked', bool);
                 }
@@ -597,18 +578,18 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         initSummernote(this);
     });
 
-    $('body').on('click', '.add-new-image-block-button', function(){
+    $('body').on('click', '.add-new-image-block-button', function () {
         $(this).hide();
         $(this).closest('.add-new-container').find('.add-new-image-block-table').fadeIn();
 
         initSummernote(this);
     });
 
-    $('body').on('click', '.add-new-image-block-cancel', function(){
+    $('body').on('click', '.add-new-image-block-cancel', function () {
         clearAddNewWidgetBlockForm(this);
     });
 
-    $('body').on('click', '.add-new-image-block-submit', function(){
+    $('body').on('click', '.add-new-image-block-submit', function () {
 
         var valid = true;
 
@@ -619,27 +600,27 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         $(addNewContainer).find('.error-span').text('');
 
         // Input
-        $(addNewContainer).find('input[data-field], textarea[data-field]').each(function(index, input){
+        $(addNewContainer).find('input[data-field], textarea[data-field]').each(function (index, input) {
 
             var type = $(input).attr('type');
             var notRequired = $(input).data('not-required') || false;
             var isUpdate = $(this).closest('.add-new-container').data('update-image-block-item-id');
 
-            if(type == 'file' && isUpdate) {
+            if (type == 'file' && isUpdate) {
                 return true; // continue
             }
 
-            if(notRequired) {
+            if (notRequired) {
                 return true;
             }
 
             var value = $(input).val();
 
-            if($(input).is('input[type=checkbox]')) {
+            if ($(input).is('input[type=checkbox]')) {
                 return true;
             }
 
-            if(!value) {
+            if (!value) {
                 $(input).closest('.form-group').addClass('has-error');
                 $(input).closest('.form-group').find('.error-span').text('Field is required');
                 valid = false;
@@ -649,14 +630,16 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             }
         });
 
-        if(!valid){ return; }
+        if (!valid) {
+            return;
+        }
 
         addNewRow(this);
         clearAddNewWidgetBlockForm(this);
     });
 
-    var dontAllowMoreItemsThanMaxCount = function(){
-        $('.image-blocks-table').each(function(index, table){
+    var dontAllowMoreItemsThanMaxCount = function () {
+        $('.image-blocks-table').each(function (index, table) {
 
             // get maximum
             var templateContainer = $(table).closest('.template-container-body');
@@ -669,7 +652,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             var disabled = itemsMaxCount && (itemsCurrentCount >= itemsMaxCount);
 
             var button = $(templateContainer).find('.add-new-image-block-button');
-            if(disabled) {
+            if (disabled) {
                 $(button).addClass('disabled');
             } else {
                 $(button).removeClass('disabled');
@@ -677,8 +660,8 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
         });
     };
 
-    $('body').on('click', '.swal2-container', function(){
-        window.setTimeout(function(){
+    $('body').on('click', '.swal2-container', function () {
+        window.setTimeout(function () {
             dontAllowMoreItemsThanMaxCount();
         }, 500);
     });

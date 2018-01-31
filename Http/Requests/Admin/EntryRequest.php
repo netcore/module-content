@@ -28,7 +28,7 @@ class EntryRequest extends FormRequest
     {
         $rules = [
             'published_at' => 'required|date_format:d.m.Y',
-            'widgets'    => new AreWidgetsValid
+            'widgets'      => new AreWidgetsValid
         ];
 
         $languagesInSystem = TransHelper::getAllLanguages();

@@ -50,7 +50,7 @@ class Storage extends PassThrough
 
     /**
      * @param array $requestData
-     * @param bool $makeRevision
+     * @param bool  $makeRevision
      * @return Entry
      */
     private function transaction(Array $requestData, Bool $makeRevision): Entry
@@ -142,6 +142,7 @@ class Storage extends PassThrough
 
             $filteredContentBlocks = array_filter($contentBlocks, function ($contentBlock) use ($language) {
                 $locale = array_get($contentBlock, 'locale');
+
                 return $locale == $language->iso_code;
             });
 
@@ -151,7 +152,7 @@ class Storage extends PassThrough
 
     /**
      * @param EntryTranslation $entryTranslation
-     * @param array $contentBlocks
+     * @param array            $contentBlocks
      */
     private function processEntryTranslation(EntryTranslation $entryTranslation, Array $contentBlocks): void
     {
@@ -216,8 +217,8 @@ class Storage extends PassThrough
 
     /**
      * @param ContentBlock $existingContentBlock
-     * @param array $contentBlock
-     * @param Int $index
+     * @param array        $contentBlock
+     * @param Int          $index
      */
     private function storeNewContentBlock(ContentBlock $existingContentBlock, Array $contentBlock, Int $index)
     {
@@ -301,13 +302,9 @@ class Storage extends PassThrough
         $mappedEntryTranslations = collect($entryTranslations)->map(function ($translations, $locale) use ($entry) {
 
             if (strlen(array_get($translations, 'slug')) == 0) {
-                $slug = str_slug(
-                    array_get($translations, 'title')
-                );
+                $slug = str_slug(array_get($translations, 'title'));
             } else {
-                $slug = str_slug(
-                    array_get($translations, 'slug')
-                );
+                $slug = str_slug(array_get($translations, 'slug'));
             }
 
             $channelId = $entry->channel_id;
@@ -353,7 +350,7 @@ class Storage extends PassThrough
 
                 $value = $value ?: ''; // Value cannot be null
 
-                if(!$value) {
+                if (!$value) {
                     continue;
                 }
 
@@ -391,10 +388,7 @@ class Storage extends PassThrough
     private function updateEntryContentTranslation(Entry $entry)
     {
         foreach ($entry->translations as $entryTranslation) {
-            $contentBlocks = $entryTranslation
-                ->contentBlocks()
-                ->where('data', 'LIKE', '%html_block_id%')
-                ->get();
+            $contentBlocks = $entryTranslation->contentBlocks()->where('data', 'LIKE', '%html_block_id%')->get();
 
             $content = '';
 

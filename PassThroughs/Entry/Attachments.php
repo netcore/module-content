@@ -47,6 +47,7 @@ class Attachments extends PassThrough
     {
         $entry = $this->entry;
         $entryTranslation = $entry->translations->where('locale', $language->iso_code)->first();
+
         return $entryTranslation ? $entryTranslation->attachment : null;
     }
 
@@ -72,6 +73,7 @@ class Attachments extends PassThrough
 
         $size = [' B', ' KB', ' MB', ' GB'];
         $factor = floor((strlen($bytes) - 1) / 3);
+
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }

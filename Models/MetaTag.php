@@ -7,7 +7,7 @@ use Modules\Content\Translations\EntryTranslation;
 
 class MetaTag extends Model
 {
-    
+
     /**
      * @var string
      */
