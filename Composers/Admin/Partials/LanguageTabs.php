@@ -16,7 +16,7 @@ class LanguageTabs
     public function compose(View $view)
     {
         $languages = TransHelper::getAllLanguages();
-        
+
         $view->with(compact('languages'));
     }
 }

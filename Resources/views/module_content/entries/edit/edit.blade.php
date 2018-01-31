@@ -26,60 +26,6 @@
                 </div>
             </div>
 
-            @if($entry->type == 'current')
-                <a
-                    class="btn btn-lg btn-success m-t-3 pull-xs-right submit-button"
-                    data-save-as="current"
-                >
-                    <span class="loading" hidden>
-                        <span class="fa fa-gear fa-spin"> </span>
-                        Please wait...
-                    </span>
-
-                    <span class="not-loading">
-                        Save
-                    </span>
-                </a>
-
-                <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
-                    Back
-                </a>
-
-            @elseif($entry->type == 'draft')
-
-                <a
-                    class="btn btn-lg btn-success m-t-3 m-r-1 pull-xs-right submit-button"
-                    data-save-as="draft"
-                >
-                    <span class="loading" hidden>
-                        <span class="fa fa-gear fa-spin"> </span>
-                        Please wait...
-                    </span>
-
-                    <span class="not-loading">
-                        Save, don't publish
-                    </span>
-                </a>
-
-                <a
-                        class="btn btn-lg btn-danger m-t-3 m-r-1 pull-xs-right submit-button"
-                        data-save-as="current"
-                >
-                    <span class="loading" hidden>
-                        <span class="fa fa-gear fa-spin"> </span>
-                        Please wait...
-                    </span>
-
-                    <span class="not-loading">
-                        Save and Publish
-                    </span>
-                </a>
-
-                <a href="{{ route('content::content.index') }}{{ $channel ? '?channel='.$channel->slug : '' }}" class="btn btn-lg btn-default m-t-3 m-r-1 pull-xs-right">
-                    Back
-                </a>
-            @endif
-
         </div>
     {!! Form::close() !!}
 

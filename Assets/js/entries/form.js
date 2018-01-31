@@ -120,7 +120,7 @@ $(function () {
         error: function (xhr) {
             $.growl.error({
                 title: 'Error!',
-                message: 'Sorry, there ws an error. Please try again later or inform technical staff about this problem.',
+                message: 'Sorry, there was an error. Please try again later or inform technical staff about this problem.',
                 duration: 10000
             });
         }
@@ -187,20 +187,20 @@ $(function () {
     // If link is pasted via ctrl+v keyboard shortcut, then everything is fine
     // However, it does not work with Right click -> Paster. Then "Insert image" button stays gray.
     // That's why we manually trigger "keyup" event to enable "Insert image"
-    $('body').on('paste', '.note-image-url', function(){
-        window.setTimeout(function(){
+    $('body').on('paste', '.note-image-url', function () {
+        window.setTimeout(function () {
             $('.note-image-url').trigger('keyup');
         }, 100)
     });
 
     // Revisions
     $('#revisions-info-container').show();
-    $("#revisions-modal").on("show.bs.modal", function(e) {
+    $("#revisions-modal").on("show.bs.modal", function (e) {
         var link = $(e.relatedTarget);
         $(this).find(".modal-body").load(link.data("href"));
     });
 
-    $('body').on('click', '.submit-button:not(.loading)', function(){
+    $('body').on('click', '.submit-button:not(.loading)', function () {
 
         var btn = $(this);
         $(btn).addClass('loading');
@@ -306,7 +306,7 @@ $(function () {
 
                     $.growl.error({
                         title: 'Error!',
-                        message: 'Sorry, there ws an error. Please try again later or inform technical staff about this problem.',
+                        message: 'Sorry, there was an error. Please try again later or inform technical staff about this problem.',
                         duration: 10000
                     });
 

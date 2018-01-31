@@ -21,7 +21,7 @@ class ResolverController extends Controller
         if (!$slug) {
             $page = Entry::homepage()->first();
 
-            if(!$page) { // Home page is not set
+            if (!$page) { // Home page is not set
                 abort(404);
             }
 
@@ -37,10 +37,10 @@ class ResolverController extends Controller
                     return $q->whereSlug($slug);
                 })->first();
 
-                if($channel) {
+                if ($channel) {
                     // @TODO - its not a valid approach to use $channel->slug. Must come up with something better.
-                    $channelTemplate = config('netcore.module-content.channels.'.$channel->slug.'.template');
-                    if($channelTemplate) {
+                    $channelTemplate = config('netcore.module-content.channels.' . $channel->slug . '.template');
+                    if ($channelTemplate) {
                         return view($channelTemplate, compact('channel'));
                     }
                 }
@@ -64,10 +64,10 @@ class ResolverController extends Controller
                     return redirect()->to('/');
                 }
 
-                $page = Entry::active()->whereChannelId($channel->id)
-                    ->whereHas('translations', function ($q) use ($entrySlug) {
-                        return $q->whereSlug($entrySlug);
-                    })->first();
+                $page = Entry::active()->whereChannelId($channel->id)->whereHas('translations',
+                        function ($q) use ($entrySlug) {
+                            return $q->whereSlug($entrySlug);
+                        })->first();
             }
         }
 

@@ -11,10 +11,7 @@ use Modules\Crud\Traits\CRUDModel;
 
 class Channel extends Model
 {
-
-    use Translatable, SyncTranslations;
-
-    use CRUDModel;
+    use Translatable, SyncTranslations, CRUDModel;
 
     /**
      * @var string

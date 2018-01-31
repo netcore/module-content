@@ -9,9 +9,9 @@ use Modules\Crud\Traits\CRUDModel;
 
 class ContentBlock extends Model
 {
-    
+
     use CRUDModel;
-    
+
     /**
      * @var string
      */
@@ -59,6 +59,9 @@ class ContentBlock extends Model
         return new Config($this);
     }
 
+    /**
+     * @return Compose
+     */
     public function compose()
     {
         return new Compose($this);
