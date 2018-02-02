@@ -168,3 +168,9 @@ input.datepicker {
 #add-widget-button {
     margin-top: -5px;
 }
+
+.placeholder {
+    list-style: none;
+    border: 1px dotted grey;
+    height: 35px;
+}
