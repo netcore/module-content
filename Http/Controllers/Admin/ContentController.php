@@ -12,20 +12,20 @@ use Netcore\Translator\Helpers\TransHelper;
 class ContentController extends Controller
 {
     /**
-     *
      * @var String
      */
     private $viewNamespace = 'content::module_content';
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $languages = TransHelper::getAllLanguages();
         $firstLanguage = $languages->first();
         $channels = Channel::orderBy('id')->get();
-        return view($this->viewNamespace . '.index.index', compact(
-            'channels',
-            'firstLanguage'
-        ));
+
+        return view($this->viewNamespace . '.index.index', compact('channels', 'firstLanguage'));
     }
 
 }

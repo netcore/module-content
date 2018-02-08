@@ -43,12 +43,6 @@ class CreateNetcoreContentEntriesTable extends Migration
 
             $table->string('slug')->default('');
 
-            // Stapler fields
-            $table->string('attachment_file_name')->nullable();
-            $table->integer('attachment_file_size')->nullable();
-            $table->string('attachment_content_type')->nullable();
-            $table->timestamp('attachment_updated_at')->nullable();
-
         });
     }
 

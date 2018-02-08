@@ -11,6 +11,7 @@
 | this file as you want.
 |
 */
+include 'helpers.php';
 
 if (!app()->routesAreCached()) {
     require __DIR__ . '/Http/routes.php';

@@ -3,6 +3,7 @@
 namespace Modules\Content\PassThroughs\ContentBlock;
 
 use Modules\Content\Models\ContentBlock;
+use Modules\Content\Modules\Widget;
 use Modules\Content\PassThroughs\PassThrough;
 
 class Config extends PassThrough
@@ -36,7 +37,8 @@ class Config extends PassThrough
      */
     public function all()
     {
-        $config = collect(config('netcore.module-content.widgets'))->where('key', $this->contentBlock->widget)->first();
+        $config = Widget::where('key', $this->contentBlock->widget)->first()->config;
+
         return $config;
     }
 

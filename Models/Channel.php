@@ -4,6 +4,7 @@ namespace Modules\Content\Models;
 
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Content\Modules\Field;
 use Modules\Content\PassThroughs\Channel\Storage;
 use Modules\Admin\Traits\SyncTranslations;
 use Modules\Content\Translations\ChannelTranslation;
@@ -11,10 +12,7 @@ use Modules\Crud\Traits\CRUDModel;
 
 class Channel extends Model
 {
-
-    use Translatable, SyncTranslations;
-
-    use CRUDModel;
+    use Translatable, SyncTranslations, CRUDModel;
 
     /**
      * @var string
@@ -26,7 +24,8 @@ class Channel extends Model
      */
     protected $fillable = [
         'layout',
-        'is_active'
+        'is_active',
+        'allow_attachments',
     ];
 
     /**
@@ -48,6 +47,14 @@ class Channel extends Model
     public function entries()
     {
         return $this->hasMany(Entry::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function fields()
+    {
+        return $this->belongsToMany(Field::class, 'netcore_content__channel_field', 'channel_id', 'field_id');
     }
 
     /**

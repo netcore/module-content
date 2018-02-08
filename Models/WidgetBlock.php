@@ -22,6 +22,14 @@ class WidgetBlock extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function fields()
+    {
+        return $this->hasMany(WidgetBlockField::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function items()
     {
         return $this->hasMany(WidgetBlockItem::class);

@@ -28,27 +28,20 @@ class WidgetBlockItemField extends Model implements StaplerableInterface
 
     /**
      * @var array
-    protected $casts = [
-        'json' => 'array'
-    ];
-     */
-
-    /**
-     * @var array
      */
     protected $fillable = [
         'key',
         'value',
-        'image'
+        'image',
     ];
-    
+
     /**
      * @var array
      */
     protected $staplerConfig = [
         'image' => [
             'default_style' => 'original',
-            'url' => '/uploads/:class/:attachment/:id_partition/:style/:filename'
+            'url'           => '/uploads/:class/:attachment/:id_partition/:style/:filename'
         ]
     ];
 
@@ -74,6 +67,7 @@ class WidgetBlockItemField extends Model implements StaplerableInterface
 
         $size = [' B', ' KB', ' MB', ' GB'];
         $factor = floor((strlen($bytes) - 1) / 3);
+
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 }

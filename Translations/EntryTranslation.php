@@ -7,6 +7,7 @@ use Codesleeve\Stapler\ORM\StaplerableInterface;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Content\Models\ContentBlock;
 use Modules\Admin\Traits\BootStapler;
+use Modules\Content\Models\EntryTranslationField;
 use Modules\Content\Models\MetaTag;
 
 class EntryTranslation extends Model implements StaplerableInterface
@@ -55,6 +56,14 @@ class EntryTranslation extends Model implements StaplerableInterface
     public function contentBlocks()
     {
         return $this->morphMany(ContentBlock::class, 'contentable');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fields()
+    {
+        return $this->hasMany(EntryTranslationField::class);
     }
 
     /**

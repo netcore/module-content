@@ -25,13 +25,43 @@ $(function () {
         });
     };
 
+    var initSummernote = function(btn){
+        // Initialize
+
+        var widgetTr = $(btn).closest('.widget-tr');
+        var textareas = $(widgetTr).find('.image-blocks-summernote:not(.initialized)');
+        if(!btn) {
+            var textareas = $('.image-blocks-summernote:not(.initialized)');
+        }
+        $.each(textareas, function(i, object){
+            $(object).addClass('initialized').summernote({
+                height: 100,
+                width: 800,
+                focus: true,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['style', ['style']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']]
+                ],
+                fontSizes: ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+                tableClassName: 'table ntc-table'
+            });
+        });
+    };
+
+    initSummernote();
+
     var initDatepicker = function () {
         // Datepicker assets need to be fixed
         /*
-        $('.datepicker').datepicker({
-            dateFormat: 'dd.mm.yy'
-        });
-        */
+         $('.datepicker').datepicker({
+         dateFormat: 'dd.mm.yy'
+         });
+         */
     };
 
     var hideOrShowCountMessage = function () {
@@ -66,6 +96,15 @@ $(function () {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
+    };
+
+    var initMainWidgetFields = function () {
+        $('.widget-tr').each(function(index, widget){
+            var id = $(widget).data('content-block-id');
+            $(widget).find('.js-main-fields-block .js-input').each(function (i, field) {
+                $(field).attr('name', 'main_fields[' + id + '][' + $(field).data('name') + ']');
+            });
+        });
     };
 
     $.ajax({
@@ -112,6 +151,11 @@ $(function () {
                     var widgetTr = $(tbody).find('.widget-tr:last');
                     callable(widgetTr);
                 }
+
+                $('.js-main-fields-block').each(function(index, block){
+                    initSummernote(block);
+                });
+                initMainWidgetFields();
             });
 
             // On page load - show wysiwyg, if there are no widgets
@@ -246,6 +290,8 @@ $(function () {
 
         var formData = new FormData();
 
+        console.log(dataForBackend);
+
         $(dataForBackend).each(function (index, object) {
             formData.append(object.name, object.value);
         });
@@ -253,6 +299,14 @@ $(function () {
         $.each(formDataImages, function (imageName, file) {
             formData.append(imageName, file);
         });
+
+        var contentBlockFileInput = $('.js-block-file');
+        $.each(contentBlockFileInput, function (i, block) {
+            $.each($(block)[0].files, function (i, file) {
+                formData.append($(block).attr('name'), file);
+            });
+        });
+
 
         // Entry attachment
         var attachmentInputs = $(this).closest('form').find('input.attachment');

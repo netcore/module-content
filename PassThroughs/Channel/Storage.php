@@ -22,26 +22,24 @@ class Storage extends PassThrough
         $this->channel = $channel;
     }
 
+    /**
+     * @param array $requestData
+     * @return Channel
+     */
     public function update(Array $requestData): Channel
     {
         $channel = $this->channel;
 
-        $channel->update(
-            array_only($requestData, ['layout'])
-        );
+        $channel->update(array_only($requestData, ['layout']));
 
         $channelTranslations = array_get($requestData, 'translations', []);
 
         $channelTranslations = collect($channelTranslations)->map(function ($translations, $locale) {
 
             if (strlen(array_get($translations, 'slug')) == 0) {
-                $slug = str_slug(
-                    array_get($translations, 'name')
-                );
+                $slug = str_slug(array_get($translations, 'name'));
             } else {
-                $slug = str_slug(
-                    array_get($translations, 'slug')
-                );
+                $slug = str_slug(array_get($translations, 'slug'));
             }
 
             $translations['slug'] = $this->uniqueSlug($slug, $locale);
@@ -49,9 +47,7 @@ class Storage extends PassThrough
             return $translations;
         })->toArray();
 
-        $channel->updateTranslations(
-            $channelTranslations
-        );
+        $channel->updateTranslations($channelTranslations);
 
         return $channel;
     }

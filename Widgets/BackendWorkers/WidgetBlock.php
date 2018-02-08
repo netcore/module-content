@@ -42,7 +42,6 @@ class WidgetBlock implements BackendWorkerInterface
     }
 
     /**
-     *
      * getErrors() method accept widget's data as it comes from frontend
      * and then returns any validation errors
      *
@@ -103,12 +102,8 @@ class WidgetBlock implements BackendWorkerInterface
                         $clientMimeType = $uploadedFile->getClientMimeType();
 
                         $isImage = false;
-                        if (
-                            substr($serverMimeType, 0, 5) == 'image'
-                            OR
-                            // Here we trust admins not to upload malicious .svg file. That's odd, but at the moment I dont's see a way to validate .svg images.
-                            ($serverMimeType == 'text/html' AND $clientMimeType == 'image/svg+xml')
-                        ) {
+                        if (substr($serverMimeType, 0, 5) == 'image' OR // Here we trust admins not to upload malicious .svg file. That's odd, but at the moment I dont's see a way to validate .svg images.
+                            ($serverMimeType == 'text/html' AND $clientMimeType == 'image/svg+xml')) {
                             $isImage = true;
                         }
 
@@ -128,10 +123,8 @@ class WidgetBlock implements BackendWorkerInterface
     }
 
     /**
-     *
      * store() method needs to return data that will be json encoded
      * and put into "data" column in "content_blocks" table
-     *
      * Additionally, it should put data in any other related tables.
      * For example, if we have widget "gallery_slider", we might store
      * ["gallery_id" => 1] in "data" column and put any actual data
@@ -146,10 +139,8 @@ class WidgetBlock implements BackendWorkerInterface
     }
 
     /**
-     *
      * update() method needs to return data that will be json encoded
      * and put into "data" column in "content_blocks" table
-     *
      * Additionally, it should put data in any other related tables.
      * For example, if we have widget "gallery_slider", we might store
      * ["gallery_id" => 1] in "data" column and put any actual data
@@ -161,20 +152,28 @@ class WidgetBlock implements BackendWorkerInterface
     public function update(Array $frontendData): Array
     {
         $widgetBlockId = array_get($frontendData, 'widgetBlockId');
+        $requestedData = request()->all();
 
         if (is_numeric($widgetBlockId)) {
             // Real id. Already exists in DB.
             $widgetBlock = \Modules\Content\Models\WidgetBlock::with('items')->find($widgetBlockId);
+//            $mainFields = isset($requestedData['main_fields'][$widgetBlock->id]) ? $requestedData['main_fields'][$widgetBlock->id] : [];
         } else {
             // $widgetBlockId is random string, something like "Mfjxi"
+//            $mainFields = isset($requestedData['main_fields'][$frontendData['contentBlockId']]) ? $requestedData['main_fields'][$frontendData['contentBlockId']] : [];
+
             $widgetBlock = \Modules\Content\Models\WidgetBlock::create([]);
             // todo - translatable title
         }
+
+
 
         $existingItemIds = $widgetBlock->items()->pluck('id')->toArray();
         $receivedItemIds = [];
 
         $blocks = (array)array_get($frontendData, 'blocks', []);
+
+
 
         foreach ($blocks as $index => $block) {
 
@@ -289,10 +288,8 @@ class WidgetBlock implements BackendWorkerInterface
     }
 
     /**
-     *
      * delete() gets called right before we execute $contentBlock->delete()
      * This is a good place to remove data in other related tables.
-     *
      * For example, if we have ["gallery_id" => 1] in $contentBlock->data,
      * then we should delete that gallery here
      *
@@ -303,15 +300,13 @@ class WidgetBlock implements BackendWorkerInterface
     }
 
     /**
-     *
      * backendTemplateComposer() takes data from "data" column in content_blocks table
      * and transforms to structure that will be injected in widget's backend template
-     *
      * For example, there might be ["gallery_id" => 1] in "data" column (content_blocks table)
      * This function would do something like Gallery::find(array_get($data, 'gallery_id'))
      * And then return it.
      *
-     * @param $data
+     * @param          $data
      * @param Language $language
      * @return mixed
      */
@@ -342,6 +337,7 @@ class WidgetBlock implements BackendWorkerInterface
         }
 
         $configuredFields = array_get($this->config, 'fields');
+        $configuredMainFields = array_get($this->config, 'main_fields');
         $fields = [];
         foreach ($configuredFields as $fieldName => $fieldData) {
 
@@ -361,14 +357,32 @@ class WidgetBlock implements BackendWorkerInterface
             ];
         }
 
+        $mainFields = [];
+        foreach ($configuredMainFields as $fieldName => $fieldData) {
+
+            $fieldType = array_get($fieldData, 'type');
+            $fieldLabel = array_get($fieldData, 'label');
+            $styles = array_get($fieldData, 'styles');
+            $options = (array)array_get($fieldData, 'options', []);
+
+            $value = $widgetBlock ? object_get($widgetBlock, $fieldName) : '';
+            $mainFields[] = [
+                'name'    => $fieldName,
+                'type'    => $fieldType,
+                'label'   => $fieldLabel,
+                'styles'  => $styles,
+                'options' => $options,
+                'value'   => $value,
+            ];
+        }
+
         $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
 
-        return compact(
-            'widgetBlock',
-            'language',
-            'translations',
-            'fields',
-            'maxItemsCount'
-        );
+        $contentBlock = null;
+        if($widgetBlock) {
+            $contentBlock = ContentBlock::with('items')->whereData('{"widget_block_id":' . $widgetBlock->id . '}')->first();
+        }
+
+        return compact('widgetBlock', 'language', 'translations', 'fields', 'maxItemsCount', 'mainFields', 'contentBlock');
     }
 }

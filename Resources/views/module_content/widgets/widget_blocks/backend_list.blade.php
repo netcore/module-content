@@ -3,7 +3,6 @@
     $widgetBlockId = isset($widgetBlock) ? $widgetBlock->id : 'newid';
     $viewHelper = new \Modules\Content\Widgets\BackendViewHelpers\WidgetBlock;
 @endphp
-
 <table
     class="table table-bordered image-blocks-table"
     data-image-block-id="{{ $widgetBlockId }}"
@@ -37,7 +36,9 @@
     </tr>
     </thead>
     <tbody>
+
     @if(isset($widgetBlock))
+
         @foreach( $widgetBlock->items->sortBy('order') as $model )
             <tr
                     class="fade-out-{{ $model->id }} image-blocks-tr"
@@ -73,15 +74,15 @@
 
                             @if($field && $field->image_file_name)
                                 <img
-                                    src="{{ $field->image->url() }}"
+                                        src="{{ $field->image->url() }}"
 
-                                    alt="Image"
-                                    class="img-responsive"
-                                    data-toggle="tooltip"
-                                    data-placement="right"
-                                    title="{{ $field->human_attachment_size }}"
-                                    data-container="body"
-                                    style="width:{{ $imageWidth }}px;"
+                                        alt="Image"
+                                        class="img-responsive"
+                                        data-toggle="tooltip"
+                                        data-placement="right"
+                                        title="{{ $field->human_attachment_size }}"
+                                        data-container="body"
+                                        style="width:{{ $imageWidth }}px;"
                                 >
                             @else
                                 No image
@@ -90,6 +91,7 @@
 
                             @php
                                 $value = $viewHelper->getValueForTd($model, $fieldName, $fieldType);
+
                             @endphp
 
                             @if($fieldType == 'textarea')
