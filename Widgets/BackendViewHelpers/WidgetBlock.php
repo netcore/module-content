@@ -14,7 +14,7 @@ class WidgetBlock
     {
         $dataValue = json_encode([]);
 
-        if($fieldName != 'image') {
+        if ($fieldName != 'image') {
             $dataValue = [];
 
             $field = $model->fields->where('key', $fieldName)->first();
@@ -39,7 +39,7 @@ class WidgetBlock
         $field = $model->fields->where('key', $fieldName)->first();
         $value = $field ? $field->value : '';
 
-        if($fieldType == 'checkbox') {
+        if ($fieldType == 'checkbox') {
             $value = $value ? 'Yes' : 'No';
         }
 

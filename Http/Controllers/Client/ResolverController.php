@@ -16,12 +16,13 @@ class ResolverController extends Controller
     public function resolve($slug = null)
     {
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
+
         $page = null;
 
         if (!$slug) {
-            $page = Entry::homepage()->first();
+            $page = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields'])->homepage()->first();
 
-            if(!$page) { // Home page is not set
+            if (!$page) { // Home page is not set
                 abort(404);
             }
 
@@ -33,19 +34,19 @@ class ResolverController extends Controller
 
                 // Single page (or channel)
 
-                $channel = Channel::active()->whereHas('translations', function ($q) use ($slug) {
+                $channel = Channel::with('fields')->active()->whereHas('translations', function ($q) use ($slug) {
                     return $q->whereSlug($slug);
                 })->first();
 
-                if($channel) {
+                if ($channel) {
                     // @TODO - its not a valid approach to use $channel->slug. Must come up with something better.
-                    $channelTemplate = config('netcore.module-content.channels.'.$channel->slug.'.template');
-                    if($channelTemplate) {
+                    $channelTemplate = config('netcore.module-content.channels.' . $channel->slug . '.template');
+                    if ($channelTemplate) {
                         return view($channelTemplate, compact('channel'));
                     }
                 }
 
-                $page = Entry::active()->currentRevision()->whereHas('translations', function ($q) use ($slug) {
+                $page = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields'])->active()->currentRevision()->whereHas('translations', function ($q) use ($slug) {
                     return $q->whereSlug($slug);
                 })->first();
 
@@ -64,10 +65,10 @@ class ResolverController extends Controller
                     return redirect()->to('/');
                 }
 
-                $page = Entry::active()->whereChannelId($channel->id)
-                    ->whereHas('translations', function ($q) use ($entrySlug) {
-                        return $q->whereSlug($entrySlug);
-                    })->first();
+                $page = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields'])->whereChannelId($channel->id)->whereHas('translations',
+                        function ($q) use ($entrySlug) {
+                            return $q->whereSlug($entrySlug);
+                        })->first();
             }
         }
 

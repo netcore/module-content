@@ -1,16 +1,14 @@
-
 <div class="widgets-container" data-locale="{{ $language->iso_code }}">
-
     <div class="no-widgets"
-        @if(isset($entry))
+    @if(isset($entry))
         {{ $entryTranslation->contentBlocks->count() ? 'hidden' : '' }}
-        @endif
+            @endif
     >
         Currently there are no {{ strtoupper($language->iso_code) }} widgets added!
     </div>
 
     <table
-        class="table widgets-table"
+            class="table widgets-table"
     >
         <tbody class="widgets-table-tbody">
         @if(isset($entry))
@@ -25,13 +23,15 @@
                     }
                 @endphp
 
+
                 @include('content::module_content.entries.form.widget_tr_template', [
+                    'contentBlock'   => $contentBlock,
                     'contentBlockId' => $contentBlock->id,
                     'key'            => $contentBlock->config->key,
                     'javascriptKey'  => $contentBlock->config->javascript_key,
                     'withBorder'     => $contentBlock->config->backend_with_border ? 'with-border' : '',
                     'template'       => $template,
-                    'widgetName'     => $contentBlock->config->name
+                    'widgetName'     => $contentBlock->config->name,
                 ])
             @endforeach
         @endif

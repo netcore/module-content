@@ -284,10 +284,9 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             }
         });
     };
-
     var initSummernote = function(btn){
-
         // Initialize
+
         var widgetTr = $(btn).closest('.widget-tr');
         var textareas = $(widgetTr).find('.image-blocks-summernote:not(.initialized)');
         $.each(textareas, function(i, object){
@@ -314,6 +313,21 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
     $('.image-blocks-table').each(function(index, table){
         initSortable(table);
     });
+
+    $('.js-main-fields-block').each(function(index, block){
+        initSummernote(block);
+    });
+
+    var initMainWidgetFields = function () {
+        $('.widget-tr').each(function(index, widget){
+            var id = $(widget).data('content-block-id');
+            $(widget).find('.js-main-fields-block .js-input').each(function (i, field) {
+                $(field).attr('name', 'main_fields[' + id + '][' + $(field).data('name') + ']');
+            });
+        });
+    };
+
+    initMainWidgetFields();
 
     var initImageTooltips = function(){
 
@@ -400,6 +414,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                     var imageName = 'image-' + contentBlockId + '-' + widgetBlockId + '-' + field; // Used to retrieve image in backend
 
                     //Append file (we use loop, but since this is not multiple, then there is only one image)
+
                     $.each($(input)[0].files, function(i, file) {
                         formDataImages[imageName] = file;
                     });
@@ -477,9 +492,12 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
             if( $.inArray(type, ['text', 'number', 'textarea', 'checkbox', 'select']) !== -1 ) {
                 html += value;
             } else if( type === 'file' && value) {
-                var src = URL.createObjectURL( input.files[0] );
-                var imageWidth = $(input).data('image-width') || 50;
-                html += '<img class="img-responsive" data-initialized="0" data-toggle="tooltip" data-placement="right" title="Test" data-container="body" style="width:' + imageWidth + 'px;" src="' + src + '">';
+                $.each(input.files, function (i, file) {
+                    var src = URL.createObjectURL( file );
+                    var imageWidth = $(input).data('image-width') || 75;
+                    html += '<img class="img-responsive" data-initialized="0" data-toggle="tooltip" data-placement="right" title="Test" data-container="body" style="width:' + imageWidth + 'px;" src="' + src + '"> <br>';
+                });
+
             }
             else if( type === 'file' && !value && updateId ) { // UPDATE, with image intact
 

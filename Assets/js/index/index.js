@@ -1,39 +1,63 @@
-$(function() {
+$(function () {
 
-    var onTabChange = function(activeTab){
+    var onTabChange = function (activeTab) {
 
         // Entries datatable
         var selector = '.tab-pane.active .datatable';
-        if ( $.fn.DataTable.isDataTable(selector) ) {
+        if ($.fn.DataTable.isDataTable(selector)) {
             return;
         }
 
         var caption = $(selector).data('caption');
 
         var columnConfig = [
-            { data: 'published_at', name: 'published_at', orderable: false, searchable: false, class: 'vertical-align-middle width-150'},
-            { data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
-            { data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
-            { data: 'content', name: 'content', orderable: false, searchable: false, class: ''}
+            {
+                data: 'published_at',
+                name: 'published_at',
+                orderable: false,
+                searchable: false,
+                class: 'vertical-align-middle width-150'
+            },
+            {data: 'title', name: 'title', orderable: false, searchable: false, class: 'width-250'},
+            {data: 'slug', name: 'slug', orderable: false, searchable: false, class: 'width-250'},
+            {data: 'content', name: 'content', orderable: false, searchable: false, class: ''}
         ];
 
         var allowAttachment = $(selector).data('allow-attachment');
-        if(allowAttachment) {
+        if (allowAttachment) {
             columnConfig.push(
-                { data: 'attachment', name: 'attachment', orderable: false, searchable: false, class: ''}
+                {data: 'attachment', name: 'attachment', orderable: false, searchable: false, class: ''}
             );
         }
 
         columnConfig.push(
-            { data: 'updated_at', name: 'updated_at', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
+            {
+                data: 'updated_at',
+                name: 'updated_at',
+                orderable: false,
+                searchable: false,
+                class: 'text-center vertical-align-middle width-150'
+            }
         );
 
         columnConfig.push(
-            { data: 'is_active', name: 'is_active', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-100'}
+            {
+                data: 'is_active',
+                name: 'is_active',
+                orderable: false,
+                searchable: false,
+                class: 'text-center vertical-align-middle width-100'
+            }
         );
 
         columnConfig.push(
-            { data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center vertical-align-middle width-150'}
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                class: 'text-center vertical-align-middle width-150'
+            }
         );
 
         var dataTable = $(selector).DataTable({
@@ -44,10 +68,10 @@ $(function() {
             responsive: true,
             //order: [[1, "asc"]],
             columns: columnConfig,
-            drawCallback: function(){
+            drawCallback: function () {
 
                 // Init switchery
-                $('.changeable-state:visible, .regular-switchery:visible').each(function(i, switcher) {
+                $('.changeable-state:visible, .regular-switchery:visible').each(function (i, switcher) {
                     new Switchery(switcher);
                 });
             }

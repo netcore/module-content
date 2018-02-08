@@ -10,6 +10,7 @@ use Modules\Content\Composers\Admin\Entry\IndexNavTabs;
 use Modules\Content\Composers\Admin\Entry\MetaTags;
 use Modules\Content\Composers\Admin\Entry\Revisions;
 use Modules\Content\Composers\Admin\Partials\LanguageTabs;
+use Modules\Content\Repositories\ContentModuleRepository;
 
 class ContentServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,9 @@ class ContentServiceProvider extends ServiceProvider
     {
         // Load stapler (it is not shipped with package auto-discovery)
         $this->app->register(\Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class);
+        $this->app->singleton('content', function ($app) {
+            return new ContentModuleRepository();
+        });
     }
 
     /**

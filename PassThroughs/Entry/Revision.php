@@ -67,8 +67,8 @@ class Revision extends PassThrough
             $replicatedTranslation->entry_id = $replicatedEntry->id;
 
             // Stapler attachment
-            $replicatedTranslation->attachment = $this->replicateEntryTranslationAttachment($originalEntryTranslation);
-            $replicatedTranslation->save();
+//            $replicatedTranslation->attachment = $this->replicateEntryTranslationAttachment($originalEntryTranslation);
+//            $replicatedTranslation->save();
 
             // Content blocks
             foreach ($originalEntryTranslation->contentBlocks as $originalContentBlock) {
@@ -86,15 +86,19 @@ class Revision extends PassThrough
      * @param EntryTranslation $originalEntryTranslation
      * @param EntryTranslation $replicatedTranslation
      */
-    private function replicateMetaTags(EntryTranslation $originalEntryTranslation, EntryTranslation $replicatedTranslation)
-    {
-        $newMetaTags = $originalEntryTranslation->metaTags->map(function ($originalMetaTag) use ($replicatedTranslation) {
+    private function replicateMetaTags(
+        EntryTranslation $originalEntryTranslation,
+        EntryTranslation $replicatedTranslation
+    ) {
+        $newMetaTags = $originalEntryTranslation->metaTags->map(function ($originalMetaTag) use ($replicatedTranslation
+        ) {
             $replicatedMetaTag = array_only($originalMetaTag->toArray(), [
                 'name',
                 'property',
                 'value'
             ]);
             $replicatedMetaTag['entry_translation_id'] = $replicatedTranslation->id;
+
             return $replicatedMetaTag;
         })->toArray();
 
@@ -139,6 +143,7 @@ class Revision extends PassThrough
 
         // Content block
         $replicatedContentBlock = $originalContentBlock->replicate();
+        $replicatedTranslation = $replicatedTranslation->first();
         $replicatedContentBlock->contentable_id = $replicatedTranslation->id;
         $replicatedContentBlock->data = [
             'widget_block_id' => $replicatedWidgetBlock->id
@@ -223,7 +228,7 @@ class Revision extends PassThrough
 
             $replicatedEntry = $entry->revision()->make();
             $replicatedEntry->type = 'current';
-            $replicatedEntry->parent_id = NULL;
+            $replicatedEntry->parent_id = null;
             $replicatedEntry->is_homepage = $parent->is_homepage;
             $replicatedEntry->is_active = $parent->is_active;
             $replicatedEntry->save();

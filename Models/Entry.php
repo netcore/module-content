@@ -84,6 +84,14 @@ class Entry extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments()
+    {
+        return $this->hasMany(EntryAttachment::class);
+    }
+
+    /**
      * @return mixed
      */
     public function children()
@@ -105,14 +113,6 @@ class Entry extends Model
     public function revision()
     {
         return new Revision($this);
-    }
-
-    /**
-     * @return Attachments
-     */
-    public function attachments()
-    {
-        return new Attachments($this);
     }
 
     /**
@@ -150,10 +150,7 @@ class Entry extends Model
         $replaced = str_replace('</p>', ' </p>', $this->content);
         $replaced = html_entity_decode($replaced);
 
-        return str_limit(
-            strip_tags($replaced),
-            $length
-        );
+        return str_limit(strip_tags($replaced), $length);
     }
 
     /**
@@ -162,13 +159,9 @@ class Entry extends Model
      */
     public function readMoreIfPreviewIs($length)
     {
-        $lengthOfPreview = mb_strlen(
-            $this->preview($length)
-        );
+        $lengthOfPreview = mb_strlen($this->preview($length));
 
-        $lengthOfPreviewPlusOne = mb_strlen(
-            $this->preview($length + 1)
-        );
+        $lengthOfPreviewPlusOne = mb_strlen($this->preview($length + 1));
 
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
     }

@@ -49,7 +49,7 @@ class CreateNetcoreContentWidgetBlocksTable extends Migration
 
             $table->increments('id');
 
-            $table->unsignedInteger('widget_block_item_id');
+            $table->unsignedInteger('widget_block_item_id')->nullable();
             $table->foreign('widget_block_item_id', 'item_id_foreign')->references('id')->on('netcore_content__widget_block_items')->onDelete('cascade');
 
             $table->string('key');

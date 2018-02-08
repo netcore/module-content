@@ -19,6 +19,7 @@ class CreateNetcoreContentChannelsTable extends Migration
 
             $table->string('layout')->nullable();
             $table->boolean('is_active')->default(0);
+            $table->boolean('allow_attachments')->default(0);
 
             $table->softDeletes();
             $table->timestamps();

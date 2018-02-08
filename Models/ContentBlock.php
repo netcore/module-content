@@ -9,9 +9,9 @@ use Modules\Crud\Traits\CRUDModel;
 
 class ContentBlock extends Model
 {
-    
+
     use CRUDModel;
-    
+
     /**
      * @var string
      */
@@ -23,7 +23,8 @@ class ContentBlock extends Model
     protected $fillable = [
         'widget',
         'data',
-        'order'
+        'order',
+        'contentable_id',
     ];
 
     /**
@@ -44,6 +45,14 @@ class ContentBlock extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function items()
+    {
+        return $this->hasMany(ContentBlockItem::class);
+    }
+
+    /**
      * @return Config
      */
     public function getConfigAttribute()
@@ -59,6 +68,9 @@ class ContentBlock extends Model
         return new Config($this);
     }
 
+    /**
+     * @return Compose
+     */
     public function compose()
     {
         return new Compose($this);
