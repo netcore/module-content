@@ -27,37 +27,20 @@ class Widget extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function withoutMainFields()
-    {
-        return $this->belongsToMany(Field::class, 'netcore_content__widget_field', 'widget_id',
-            'field_id')->withoutMain();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function withMainFields()
-    {
-        return $this->belongsToMany(Field::class, 'netcore_content__widget_field', 'widget_id', 'field_id')->withMain();
-    }
-
-    /**
      *
      */
     public function getConfigAttribute()
     {
         $fields = [];
         $mainFields = [];
-        foreach ($this->withoutMainFields as $field) {
+        foreach ($this->fields->where('is_main', 0) as $field) {
             $fields[$field->key] = [
                 'type'  => $field->type,
                 'label' => $field->title,
             ];
         }
 
-        foreach ($this->withMainFields as $field) {
+        foreach ($this->fields->where('is_main', 1) as $field) {
             $mainFields[$field->key] = [
                 'type'  => $field->type,
                 'label' => $field->title,

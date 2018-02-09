@@ -27,6 +27,8 @@ class CreateNetcoreContentEntryTranslationFieldsTable extends Migration
             $table->integer('image_file_size')->nullable();
             $table->string('image_content_type')->nullable();
             $table->timestamp('image_updated_at')->nullable();
+            $table->index(['key']);
+
         });
     }
 

@@ -19,6 +19,8 @@ class CreateNetcoreContentWidgetsTable extends Migration
             $table->string('key');
             $table->boolean('is_enabled')->default(1);
             $table->timestamps();
+
+            $table->index(['key']);
         });
     }
 

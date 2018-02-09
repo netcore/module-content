@@ -43,6 +43,7 @@ class CreateNetcoreContentEntriesTable extends Migration
 
             $table->string('slug')->default('');
 
+            $table->index(['slug', 'locale']);
         });
     }
 

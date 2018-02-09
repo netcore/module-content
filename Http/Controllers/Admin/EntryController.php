@@ -24,7 +24,7 @@ class EntryController extends Controller
     {
         $languages = TransHelper::getAllLanguages();
 
-        $widgets = Widget::with('withoutMainFields')->get();
+        $widgets = Widget::with('fields')->get();
         $widgetData = $this->widgets($widgets);
         $widgetOptions = $widgets->pluck('title', 'key');
 
@@ -70,17 +70,18 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function edit(Entry $entry)
+    public function edit($entry)
     {
-        $entry->load([
-            'translations' => function ($subq) {
-                return $subq->with(['contentBlocks', 'metaTags']);
-            }
-        ]);
+        $entry = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields', 'translations.metaTags', 'channel'])->find($entry);
+//        $entry->load([
+//            'translations' => function ($subq) {
+//                return $subq->with(['contentBlocks', 'metaTags']);
+//            }
+//        ]);
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 
-        $widgets = Widget::with('withoutMainFields')->get();
+        $widgets = Widget::with(['fields'])->get();
         $widgetData = $this->widgets($widgets);
         $widgetOptions = $widgets->pluck('title', 'key');
 
@@ -162,7 +163,7 @@ class EntryController extends Controller
         $languages = TransHelper::getAllLanguages();
 
         if(!$widgets) {
-            $widgets = Widget::with('withoutMainFields')->get();
+            $widgets = Widget::with(['fields'])->get();
         }
 
         $widgetList = [];
