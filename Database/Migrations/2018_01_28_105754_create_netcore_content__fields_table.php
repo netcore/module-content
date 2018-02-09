@@ -23,6 +23,8 @@ class CreateNetcoreContentFieldsTable extends Migration
             $table->text('data')->nullable();
 
             $table->timestamps();
+            $table->index(['key']);
+
         });
     }
 

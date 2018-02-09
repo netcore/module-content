@@ -61,6 +61,17 @@ class ContentBlock extends Model
     }
 
     /**
+     * @param String $key
+     * @return mixed
+     */
+    public function getField(String $key)
+    {
+        $field = $this->items->where('key', $key)->first();
+
+        return $field ? $field->value : '';
+    }
+
+    /**
      * @return Config
      */
     public function config()

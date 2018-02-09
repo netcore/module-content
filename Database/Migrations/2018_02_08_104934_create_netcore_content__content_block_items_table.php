@@ -29,6 +29,8 @@ class CreateNetcoreContentContentBlockItemsTable extends Migration
             $table->timestamp('image_updated_at')->nullable();
 
             $table->timestamps();
+            $table->index(['key']);
+
         });
     }
 

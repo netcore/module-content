@@ -33,6 +33,9 @@ class CreateNetcoreContentWidgetBlocksTable extends Migration
             $table->integer('image_file_size')->nullable();
             $table->string('image_content_type')->nullable();
             $table->timestamp('image_updated_at')->nullable();
+
+            $table->index(['key']);
+
         });
 
         Schema::create('netcore_content__widget_block_items', function (Blueprint $table) {
@@ -60,6 +63,8 @@ class CreateNetcoreContentWidgetBlocksTable extends Migration
             $table->integer('image_file_size')->nullable();
             $table->string('image_content_type')->nullable();
             $table->timestamp('image_updated_at')->nullable();
+            $table->index(['key']);
+
         });
     }
 
