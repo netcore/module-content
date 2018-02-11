@@ -51,6 +51,7 @@
                     type="text"
                     name="translations[entry][{{ $language->iso_code }}][{{ $fieldName }}]"
                     class="form-control"
+                    value="{{ isset($translation->fields) ? object_get($translation->fields->where('key', $fieldName)->first(), 'value') : null }}"
             >
         @endif
     </div>

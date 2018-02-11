@@ -1,5 +1,5 @@
 <div class="panel" style="padding-bottom: 20px;">
-    @if(count($mainFields))
+    @if(isset($mainFields) && count($mainFields))
     <div class="panel" style="margin: 5px;">
         <div class="panel-heading">
             <div class="panel-title">

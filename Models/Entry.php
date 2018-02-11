@@ -165,4 +165,25 @@ class Entry extends Model
 
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
     }
+
+    public function getFieldsAttribute()
+    {
+        $translation = $this->translations->where('locale', $this->locale())->first();
+        if($translation) {
+            return $translation->fields;
+        }
+
+        return collect([]);
+    }
+
+    /**
+     * @param String $key
+     * @return mixed
+     */
+    public function getField(String $key)
+    {
+        $field = $this->fields->where('key', $key)->first();
+
+        return $field ? $field->value : '';
+    }
 }

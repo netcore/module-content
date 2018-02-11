@@ -44,6 +44,7 @@ class ContentServiceProvider extends ServiceProvider
     {
         // Load stapler (it is not shipped with package auto-discovery)
         $this->app->register(\Codesleeve\LaravelStapler\Providers\L5ServiceProvider::class);
+        $this->app->register(\Intervention\Image\ImageServiceProvider::class);
         $this->app->singleton('content', function ($app) {
             return new ContentModuleRepository();
         });

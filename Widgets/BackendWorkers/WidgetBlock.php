@@ -3,6 +3,7 @@
 namespace Modules\Content\Widgets\BackendWorkers;
 
 use Illuminate\Support\Collection;
+use Intervention\Image\Facades\Image;
 use Modules\Content\Models\ContentBlock;
 use Modules\Content\Models\WidgetBlockItemField;
 use Netcore\Translator\Helpers\TransHelper;
@@ -157,10 +158,8 @@ class WidgetBlock implements BackendWorkerInterface
         if (is_numeric($widgetBlockId)) {
             // Real id. Already exists in DB.
             $widgetBlock = \Modules\Content\Models\WidgetBlock::with('items')->find($widgetBlockId);
-//            $mainFields = isset($requestedData['main_fields'][$widgetBlock->id]) ? $requestedData['main_fields'][$widgetBlock->id] : [];
         } else {
             // $widgetBlockId is random string, something like "Mfjxi"
-//            $mainFields = isset($requestedData['main_fields'][$frontendData['contentBlockId']]) ? $requestedData['main_fields'][$frontendData['contentBlockId']] : [];
 
             $widgetBlock = \Modules\Content\Models\WidgetBlock::create([]);
             // todo - translatable title
@@ -173,7 +172,11 @@ class WidgetBlock implements BackendWorkerInterface
 
         $blocks = (array)array_get($frontendData, 'blocks', []);
 
+            $contentBlock = ContentBlock::find(array_get($frontendData, 'contentBlockId'));
 
+            if($contentBlock) {
+                $widget = widgets()->where('key', $contentBlock->widget)->first();
+            }
 
         foreach ($blocks as $index => $block) {
 
@@ -248,9 +251,26 @@ class WidgetBlock implements BackendWorkerInterface
                     if ($imageAttribute) {
                         $name = array_get($imageAttribute, 'file');
                         $uploadedFile = request()->file($name);
+
                         if ($name AND $uploadedFile) {
                             $dbData['value'] = null;
-                            $dbData['image'] = $uploadedFile;
+
+                            if(isset($widget)) {
+                                $widgetField = $widget->fields->where('key', $key)->first();
+                                $fieldOptions = json_decode($widgetField->data);
+
+                                if(isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                                    $newImage  = public_path('uploads/temp/' .str_random(8) . '.jpg');
+
+                                    Image::make($uploadedFile->getRealPath())->resize($fieldOptions->width, $fieldOptions->height)->save($newImage);
+                                    $dbData['image'] = $newImage;
+                                }
+                            }
+
+                            if(!isset($dbData['image'])) {
+                                $dbData['image'] = $uploadedFile;
+                            }
+
                         }
                     }
                 }

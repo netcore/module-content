@@ -242,7 +242,7 @@ class Storage extends PassThrough
         $entryTranslation = $entry->translateOrNew($locale);
 
         $key = array_get($contentBlock, 'widget');
-        $widget = Widget::with('fields')->where('key', $key)->first();
+        $widget = widgets()->where('key', $key)->first();
         $config = $widget->config;
         $backendWorker = array_get($config, 'backend_worker');
         $requestedData = request()->all();
