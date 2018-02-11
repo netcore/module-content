@@ -72,6 +72,17 @@ class ContentBlock extends Model
     }
 
     /**
+     * @param String $key
+     * @return mixed
+     */
+    public function getStaplerObj(String $key)
+    {
+        $field = $this->items->where('key', $key)->first();
+
+        return $field ? $field->image : null;
+    }
+
+    /**
      * @return Config
      */
     public function config()
