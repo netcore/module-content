@@ -37,7 +37,7 @@ class Config extends PassThrough
      */
     public function all()
     {
-        $widget = Widget::with('fields')->where('key', $this->contentBlock->widget)->first();
+        $widget = widgets()->where('key', $this->contentBlock->widget)->first();
         $config = $widget ? $widget->config : [];
 
         return $config;

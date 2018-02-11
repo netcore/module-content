@@ -24,13 +24,13 @@ class EntryController extends Controller
     {
         $languages = TransHelper::getAllLanguages();
 
-        $widgets = Widget::with('fields')->get();
+        $widgets = widgets();
         $widgetData = $this->widgets($widgets);
         $widgetOptions = $widgets->pluck('title', 'key');
 
         $layoutOptions = config('netcore.module-content.layouts', []);
 
-        $channel = $channelId ? Channel::with('fields')->find($channelId) : null;
+        $channel = $channelId ? Channel::find($channelId) : null;
 
         return view('content::module_content.entries.create.create', compact('channelId', 'channel', 'languages', 'widgetData', 'widgetOptions', 'layoutOptions'));
     }
@@ -73,15 +73,11 @@ class EntryController extends Controller
     public function edit($entry)
     {
         $entry = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields', 'translations.metaTags', 'channel'])->find($entry);
-//        $entry->load([
-//            'translations' => function ($subq) {
-//                return $subq->with(['contentBlocks', 'metaTags']);
-//            }
-//        ]);
+
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
 
-        $widgets = Widget::with(['fields'])->get();
+        $widgets = widgets();
         $widgetData = $this->widgets($widgets);
         $widgetOptions = $widgets->pluck('title', 'key');
 
@@ -163,12 +159,14 @@ class EntryController extends Controller
         $languages = TransHelper::getAllLanguages();
 
         if(!$widgets) {
-            $widgets = Widget::with(['fields'])->get();
+            $widgets = widgets();
         }
 
         $widgetList = [];
         foreach ($widgets as $widget) {
             $fields = [];
+
+
 
             foreach($widget->fields as $field) {
                 $fields[$field->key] = [
@@ -182,10 +180,13 @@ class EntryController extends Controller
             $view = array_get($widgetData, 'backend_template');
             $worker = array_get($widgetData, 'backend_worker');
 
+            if (!$view) {
+                return $widget;
+            }
+
             foreach ($languages as $language) {
-
-
                 $composed = [];
+
 
                 if ($worker) {
                     $worker = new $worker($widgetData);
@@ -197,12 +198,16 @@ class EntryController extends Controller
                 }
 
                 $widgetData['backend_template'][$language->iso_code] = view($view, $composed)->render();
+
             }
 
 
 
             $widgetList[$widget->key] = $widgetData;
+
         }
+
+
 
         return $widgetList;
     }

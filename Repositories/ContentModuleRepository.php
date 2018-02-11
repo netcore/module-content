@@ -3,6 +3,7 @@
 namespace Modules\Content\Repositories;
 
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 use Modules\Content\Models\Channel;
 use Modules\Content\Models\Entry;
 use Modules\Content\Models\MetaTag;
@@ -23,6 +24,7 @@ class ContentModuleRepository
                 $this->createEntry($channel, $item);
             }
         }
+        cache()->forget('content_widgets');
     }
 
     /**
@@ -38,6 +40,7 @@ class ContentModuleRepository
                 'key'        => $key,
                 'title'      => $title,
                 'is_enabled' => $widget['is_enabled'],
+                'data'       => json_encode(isset($widget['options']) ? $widget['options'] : [])
             ]);
 
             if (isset($widget['widget_fields'])) {
@@ -51,6 +54,8 @@ class ContentModuleRepository
 
             }
         }
+
+        cache()->forget('content_widgets');
     }
 
     /**
@@ -72,6 +77,7 @@ class ContentModuleRepository
                 $channel->fields()->sync($fields);
             }
         }
+        cache()->forget('content_widgets');
     }
 
     /**
@@ -86,10 +92,12 @@ class ContentModuleRepository
             $field['key'] = str_slug($fieldName, '_');
             $field['title'] = $fieldName;
             $field['is_main'] = $isMain;
+            $field['data'] = isset($field['options']) ? json_encode($field['options']) : json_encode([]);
 
-            $createdField = Field::firstOrCreate($field);
+            $createdField = Field::firstOrCreate(array_except($field, ['options']));
             $fieldsIds[] = $createdField->id;
         }
+        cache()->forget('content_widgets');
 
         return $fieldsIds;
     }
@@ -220,6 +228,10 @@ class ContentModuleRepository
         return $entry;
     }
 
+    /**
+     * @param $entry
+     * @param $data
+     */
     private function seedEntryData($entry, $data)
     {
         $widgets = $data['widgets'];
@@ -236,12 +248,24 @@ class ContentModuleRepository
                     $widgetBlockItem = $widgetBlock->items()->create(['order' => $i]);
                     foreach ($item as $key => $field) {
                         if (file_exists($field)) {
+                            $widgetObject = widgets()->where('key', $widget)->first();
+                            $fieldObj = $widgetObject->fields->where('key', $key)->first();
+                            $fieldOptions = json_decode($fieldObj->data);
+
+
                             $image = new \Symfony\Component\HttpFoundation\File\File($field);
                             $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
                                 $image);
-                            copy($image, $newImage);
 
+
+                            if (isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                                Image::make($image->getRealPath())->resize($fieldOptions->width,
+                                    $fieldOptions->height)->save($newImage);
+                            } else {
+                                copy($image, $newImage);
+                            }
                             $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
+
 
                             $widgetBlockItem->fields()->create([
                                 'key'   => $key,

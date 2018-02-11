@@ -17,6 +17,7 @@
         "php": ">=7.0",
         "dimsav/laravel-translatable": "^8.0",
         "yajra/laravel-datatables-oracle": "~8.0",
+        "intervention/image": "~2.4",
         "codesleeve/laravel-stapler": "^1.0"
     },
     "minimum-stability": "dev"

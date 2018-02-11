@@ -8,6 +8,8 @@ use Netcore\Translator\Helpers\TransHelper;
 class Widget extends Model
 {
 
+    private static $staticFieldsCache = [];
+
     /**
      * @var string
      */
@@ -16,7 +18,7 @@ class Widget extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'key', 'is_enabled'];
+    protected $fillable = ['title', 'key', 'is_enabled', 'data'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -24,6 +26,11 @@ class Widget extends Model
     public function fields()
     {
         return $this->belongsToMany(Field::class, 'netcore_content__widget_field', 'widget_id', 'field_id');
+    }
+
+    public function getOptionsAttribute()
+    {
+        return json_decode($this->data);
     }
 
     /**
@@ -56,11 +63,21 @@ class Widget extends Model
             "backend_javascript"  => "widget_blocks.js",
             "javascript_key"      => "widget_blocks",
             "backend_css"         => "widget_blocks.css",
-            'max_items_count'     => 3,
+            'max_items_count'     => 0,
             "backend_worker"      => \Modules\Content\Widgets\BackendWorkers\WidgetBlock::class,
             'fields'              => $fields,
             'main_fields'         => $mainFields
         ];
+
+        if($this->options) {
+            foreach($this->options as $index => $value) {
+                $widgetData[$index] = $value;
+            }
+        }
+
+        if($this->title == 'Faq list block') {
+//            dd($widgetData);
+        }
 
         return $widgetData;
     }

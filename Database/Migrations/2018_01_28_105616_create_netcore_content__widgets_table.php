@@ -18,6 +18,7 @@ class CreateNetcoreContentWidgetsTable extends Migration
             $table->string('title');
             $table->string('key');
             $table->boolean('is_enabled')->default(1);
+            $table->text('data')->nullable();
             $table->timestamps();
 
             $table->index(['key']);
