@@ -16,7 +16,7 @@ Any not so common fields, like links, buttons or other non-standard information 
 
 In order to add a new widget to your page, you would perform only the following actions:
 
-1. Configure new widget in ```config/netcore/module-content.php```
+1. Seed new widget in database
 2. Create custom frontend template file for that widget
 
 And that's it! Backend will be generated automatically. You can reorder, edit, and add new widgets to pages.
@@ -60,8 +60,7 @@ However, in most cases add this to your RouteServiceProvider.php (typically in `
         \Modules\Content\Http\ResolverRouter::register($router);
     });
 
-After installation, you should start editing ```config/netcore/module-content.php``` and put there your own widgets
-according to "Adding a new widget" instructions.
+After installation, you should config ```config/netcore/module-content.php``` file.
 
 
 
@@ -93,19 +92,148 @@ For example - page "Post 1" in "Blog" channel.
 
 ## Adding a new widget
 
-1. Configure fields for new widget. Open ```config/netcore/module-content.php```. This file includes some example widgets
-that should help you as a starting point for your own. You can (and should) delete them later.
-2. Add new item to ```widgets``` array. In most cases you will want to customize name, key, frontend_template, javascript_key, backend_worker and fields.
-However, in most cases your will not customize backend_template and backend_worker. These are usually universal.
-3. Create template that you specified as ```frontend_template``` in step one.
-4. All done. Backend is generated automatically.
+1. Start with seeding widget 
+```
+$widgets = [
+            'Employees widget' => [
+                'is_enabled'    => 1,
+                'widget_fields' => [
+                    'Block title'       => [ // These are our employees
+                        'type' => 'text',
+                    ],
+                    'Block description' => [ // We have many different employees, you can see every one of them here.
+                        'type' => 'textarea',
+                    ],
+                ],
+                'item_fields'   => [
+                    'Name'        => [ // John Doe
+                        'type' => 'text',
+                    ],
+                    'Job title'   => [ // Backend developer
+                        'type' => 'text',
+                    ],
+                    'Description' => [ // My job is to do some stuff.
+                        'type' => 'textarea',
+                    ],
+                    'Picture'     => [ // Picture of John Doe
+                        'type' => 'file',
+                        'options' => [ // options are optional
+                            'width'  => 555, // image width
+                            'height' => 200, //image heght
+                        ]
+                    ],
+                ],
+                'options'       => []
+            ]
+        ];
+```
+Widget fields are meant for widget main information. For example, title.
+Item fields are meant for items which will be stored in widget. You can store multiple items in one widget.
+You can customize widget options, available options:
 
+```
+'options'       => [
+    'frontend_template'   => 'widgets.text_with_title.frontend', // by default "widgets.{widget_name}.frontend"
+    'backend_template'    => 'content::module_content.widgets.widget_blocks.backend', 
+    'backend_with_border' => false, // Depends on what kind of backend_template you have
+    'backend_javascript'  => 'widget_blocks.js',
+    'javascript_key'      => 'widget_blocks',
+    'backend_css'         => 'widget_blocks.css',
+    'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\WidgetBlock::class,
+    'max_items_count'     => 1, // put "0" if you want to allow unlimmited amount of items
+]
+```
+
+2. Seed created widgets with ```content()->storeWidgets($widgets);```
+
+3. In most cases you will want to customize name, key, frontend_template, javascript_key, backend_worker and fields.
+However, in most cases your will not customize backend_template and backend_worker. These are usually universal.
+4. Create template that you specified as ```frontend_template``` in step one.
+5. All done. Backend is generated automatically.
+
+## Creating pages and seeding widget content
+
+You can seed multiple pages per channel. By default there is always default channel (Main) which contains static pages, but there is cases where you would want to create another channel for News.
+
+Below there is an example for seeding pages per channel
+
+```
+ $pages = [
+            'static'   => [
+                [
+                    'name'        => 'Home page',
+                    'layout'      => 'layouts.main',
+                    'is_active'   => 1,
+                    'is_homepage' => 1,
+                    'data'        => $homepageData
+                ]
+            ],
+            'news' => [
+                // news pages
+            ],
+        ];
+```
+
+$homepageData looks like
+
+```
+$homepageData = [
+            'widgets'     => [
+                [
+                    'widget'     => 'Employees widget',
+                    'main_items' => [
+                        'block_title'       => 'Get to know our employees',
+                        'block_description' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam consequatur, esse libero omnis sapiente sequi sint sit totam. Magni, ratione.</p>',
+                    ],
+                    'items'      => [
+                        [
+                            'name'        => 'John Doe',
+                            'job_title'   => 'Backend developer',
+                            'description' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, quam?</p>',
+                            'picture'     => resource_path('seed_widgets/employees_widget/1.jpg')
+                        ],
+                        [
+                            'name'        => 'Doe John',
+                            'job_title'   => 'Backend developer 2',
+                            'description' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, quam? 2</p>',
+                            'picture'     => resource_path('seed_widgets/employees_widget/2.jpg')
+                        ],
+                    ]
+                ]
+            ],
+            'attachments' => [ // optional, used for news channel 
+                resource_path('seed_widgets/articles_images/1.jpg'),
+                resource_path('seed_widgets/articles_images/2.jpg'),
+            ],
+            'entry_data'  => [ // optional, used for news channel
+                'article_content' => '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusamus ad aperiam architecto consequuntur corporis cum dignissimos dolorem doloribus, ea earum eius enim error esse fugit hic id illum impedit, labore minus mollitia necessitatibus non obcaecati optio placeat quas quasi quia quod similique sit sunt suscipit temporibus, tenetur ut voluptas voluptate voluptatum! Alias dolores ea eaque eos eveniet, explicabo facilis ipsam iste nemo nobis optio placeat quae reprehenderit rerum tempore totam vero? Ipsam laboriosam nostrum officia perferendis quidem similique sunt! Adipisci architecto asperiores cum, ducimus, facere facilis id itaque nobis nostrum officia omnis repellat rerum soluta vel, veniam vero voluptatibus.</p>'
+            ]
+        ];
+```
 
 
 ## Adding a new channel
 
-Channels should be added via database seeding. They are typically hardcoded, so administrator shouldn't have any user
-interface to add new channels.
+If you want to create new channels, for example, you may want to create news channel where you would store news articles.
+
+```
+$channels = [
+            [
+                'layout'            => 'layouts.main',
+                'is_active'         => 1,
+                'slug'              => 'news',
+                'name'              => 'News',
+                'allow_attachments' => 1, // attachments may be used for storing pictures of news
+                'fields'            => [ // may add multiple fields, for example "Author"
+                    'Article content' => [
+                        'type' => 'textarea',
+                    ],
+                ]
+            ],
+        ];
+```
+
+Seed created channels with ```content()->storeChannels($channels);```
 
 However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
 
@@ -116,3 +244,5 @@ However, you need to configure and create a template for each of your channels i
 1.0 properly supports translatable websites. SimpleText and ImageBlocks widgets are deleted in favor of more universal WidgetBlock widget.
 Additionally, fields for widget items are no longer stored as JSON.
 
+2.0 
+TODO
