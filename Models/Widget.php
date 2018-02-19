@@ -51,6 +51,7 @@ class Widget extends Model
             $mainFields[$field->key] = [
                 'type'  => $field->type,
                 'label' => $field->title,
+                'options' => (array) json_decode($field->data)
             ];
         }
 
@@ -73,10 +74,6 @@ class Widget extends Model
             foreach($this->options as $index => $value) {
                 $widgetData[$index] = $value;
             }
-        }
-
-        if($this->title == 'Faq list block') {
-//            dd($widgetData);
         }
 
         return $widgetData;
