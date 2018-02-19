@@ -172,11 +172,11 @@ class WidgetBlock implements BackendWorkerInterface
 
         $blocks = (array)array_get($frontendData, 'blocks', []);
 
-            $contentBlock = ContentBlock::find(array_get($frontendData, 'contentBlockId'));
+        $contentBlock = ContentBlock::find(array_get($frontendData, 'contentBlockId'));
 
-            if($contentBlock) {
-                $widget = widgets()->where('key', $contentBlock->widget)->first();
-            }
+        if($contentBlock) {
+            $widget = widgets()->where('key', $contentBlock->widget)->first();
+        }
 
         foreach ($blocks as $index => $block) {
 
@@ -386,7 +386,7 @@ class WidgetBlock implements BackendWorkerInterface
             $options = (array)array_get($fieldData, 'options', []);
 
             $value = $widgetBlock ? object_get($widgetBlock, $fieldName) : '';
-            $mainFields[] = [
+            $fieldDatas = [
                 'name'    => $fieldName,
                 'type'    => $fieldType,
                 'label'   => $fieldLabel,
@@ -394,6 +394,15 @@ class WidgetBlock implements BackendWorkerInterface
                 'options' => $options,
                 'value'   => $value,
             ];
+
+            if($fieldType == 'select') {
+                if(isset($options['relation']) && $options['relation']) {
+                    $selectData = $options['relation_model']::get()->pluck($options['relation_columns'][1], $options['relation_columns'][0])->toArray();
+                    $fieldDatas['select_data'] = $selectData;
+                }
+            }
+
+            $mainFields[] = $fieldDatas;
         }
 
         $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
