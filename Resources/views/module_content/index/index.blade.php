@@ -12,7 +12,7 @@
     <ol class="breadcrumb page-breadcrumb">
         <li><a href="{{url('/admin')}}">Admin</a></li>
         <li>
-            <a href="{{crud_route('index')}}">
+            <a href="{{content_crud_route('index')}}">
                 Content
             </a>
         </li>
