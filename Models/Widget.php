@@ -44,6 +44,7 @@ class Widget extends Model
             $fields[$field->key] = [
                 'type'  => $field->type,
                 'label' => $field->title,
+                'options' => (array) json_decode($field->data)
             ];
         }
 
