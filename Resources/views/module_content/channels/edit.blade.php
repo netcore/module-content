@@ -14,7 +14,7 @@
     @include('admin::_partials._messages')
     --}}
 
-    {!! Form::model($channel, ['url' => crud_route('update', $channel), 'method' => 'PUT']) !!}
+    {!! Form::model($channel, ['url' => content_crud_route('update', $channel), 'method' => 'PUT']) !!}
 
         <div class="p-x-1">
 

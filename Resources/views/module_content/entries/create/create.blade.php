@@ -11,7 +11,7 @@
 @section('content')
     @include('admin::_partials._messages')
 
-    {!! Form::open(['url' => crud_route('store', $channelId), 'method' => 'POST']) !!}
+    {!! Form::open(['url' => content_crud_route('store', $channelId), 'method' => 'POST']) !!}
 
         <div class="p-x-1">
 
