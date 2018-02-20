@@ -63,8 +63,11 @@
                             data-name="translations[{{ $fieldName }}][{{ $language->iso_code }}]"
                             class="form-control"
                     >
-                        @foreach($fieldOptions as $label => $value)
-                            <option {{ $value==$fieldValue ? 'checked' : '' }} value="{{ $value }}">{{ $label }}</option>
+                        @php
+                            $selectData = array_get($field, 'select_data');
+                        @endphp
+                        @foreach($selectData as $id => $name)
+                            <option {{ $fieldValue==$id ? 'checked' : '' }} value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 @else

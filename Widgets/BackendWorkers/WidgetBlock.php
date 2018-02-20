@@ -367,7 +367,7 @@ class WidgetBlock implements BackendWorkerInterface
             $options = (array)array_get($fieldData, 'options', []);
 
             $value = $widgetBlock ? object_get($widgetBlock, $fieldName) : '';
-            $fields[] = [
+            $fieldDatas = [
                 'name'    => $fieldName,
                 'type'    => $fieldType,
                 'label'   => $fieldLabel,
@@ -375,6 +375,15 @@ class WidgetBlock implements BackendWorkerInterface
                 'options' => $options,
                 'value'   => $value,
             ];
+
+            if($fieldType == 'select') {
+                if(isset($options['relation']) && $options['relation']) {
+                    $selectData = $options['relation_model']::get()->pluck($options['relation_columns'][1], $options['relation_columns'][0])->toArray();
+                    $fieldDatas['select_data'] = $selectData;
+                }
+            }
+
+            $fields[] = $fieldDatas;
         }
 
         $mainFields = [];
