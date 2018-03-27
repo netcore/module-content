@@ -380,6 +380,8 @@ class WidgetBlock implements BackendWorkerInterface
                 if(isset($options['relation']) && $options['relation']) {
                     $selectData = $options['relation_model']::get()->pluck($options['relation_columns'][1], $options['relation_columns'][0])->toArray();
                     $fieldDatas['select_data'] = $selectData;
+                } else {
+                    $fieldDatas['select_data'] = array_get($options, 'items', []);
                 }
             }
 
@@ -408,6 +410,8 @@ class WidgetBlock implements BackendWorkerInterface
                 if(isset($options['relation']) && $options['relation']) {
                     $selectData = $options['relation_model']::get()->pluck($options['relation_columns'][1], $options['relation_columns'][0])->toArray();
                     $fieldDatas['select_data'] = $selectData;
+                } else {
+                    $fieldDatas['select_data'] = array_get($options, 'items', []);
                 }
             }
 
