@@ -46,7 +46,7 @@
                                         data-name="{{ $fieldName }}"
                                         class="form-control image-blocks-summernote width-800 js-input"
                                 >
-                                @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first())
+                                @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first() && $blockField->value == 1)
                                         {!! $blockField->value !!}
                                     @endif
                             </textarea>
@@ -58,6 +58,9 @@
                                         data-locale="{{ $language->iso_code }}"
                                         data-not-required="{{ $notRequired }}"
                                         data-name="{{ $fieldName }}"
+                                        @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first())
+                                            checked
+                                        @endif
                                         class=" js-input"
                                 >
                             @elseif($fieldType == 'select')
