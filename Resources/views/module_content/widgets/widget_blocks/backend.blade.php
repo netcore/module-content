@@ -35,7 +35,9 @@
                                         data-not-required="{{ $notRequired }}"
                                 >
                                 @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first())
-                                    <img src="{{ $blockField->image->url('original') }}" alt="{{ ucfirst($fieldLabel) }}" style="max-width: 100%; max-height: 100px; margin-top: 10px;">
+                                    <img src="{{ $blockField->image->url('original') }}"
+                                         alt="{{ ucfirst($fieldLabel) }}"
+                                         style="max-width: 100%; max-height: 100px; margin-top: 10px;">
                                 @endif
                             @elseif($fieldType == 'textarea')
                                 <textarea
@@ -46,7 +48,7 @@
                                         data-name="{{ $fieldName }}"
                                         class="form-control image-blocks-summernote width-800 js-input"
                                 >
-                                @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first() && $blockField->value == 1)
+                                @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first())
                                         {!! $blockField->value !!}
                                     @endif
                             </textarea>
@@ -59,7 +61,9 @@
                                         data-not-required="{{ $notRequired }}"
                                         data-name="{{ $fieldName }}"
                                         @if(isset($contentBlock) && $blockField = $contentBlock->items->where('key', $fieldName)->first())
-                                            checked
+                                            @if($blockField->value == 1)
+                                                checked
+                                            @endif
                                         @endif
                                         class=" js-input"
                                 >
