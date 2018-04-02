@@ -30,6 +30,7 @@ class Entry extends Model
         'channel_id',
         'is_active',
         'is_homepage',
+        'key',
         'layout',
         'published_at'
     ];
