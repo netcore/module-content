@@ -17,7 +17,10 @@ class ContentModuleRepository
 
     use ChannelSeederTrait;
 
-    public function pagesSeeder($pages)
+    /**
+     * @param $pages
+     */
+    public function storePages($pages)
     {
         foreach ($pages as $channel => $items) {
             foreach ($items as $item) {
@@ -25,6 +28,25 @@ class ContentModuleRepository
             }
         }
         cache()->forget('content_widgets');
+        cache_content_entries();
+    }
+
+    /**
+     * @param null $key
+     * @return null
+     */
+    public function getUrl($key = null)
+    {
+        $entries = cache_content_entries();
+
+        if($key) {
+            $entry = $entries->where('key', $key)->first();
+            if($entry) {
+                return url($entry->slug);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -112,6 +134,7 @@ class ContentModuleRepository
 
         $entryData = array_except($item, ['type', 'name', 'translations', 'data']);
         $entryData['published_at'] = date('Y-m-d') . ' 00:00:00';
+        $entryData['key'] = null;
         $entryData['channel_id'] = isset($channel) ? $channel->id : null;
 
         $entry = Entry::forceCreate($entryData);

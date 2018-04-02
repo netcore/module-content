@@ -78,6 +78,7 @@ class Storage extends PassThrough
          * Regular data
          */
         $publishedAt = array_get($requestData, 'published_at');
+        $key = array_get($requestData, 'key');
         $publishedAtCarbon = Carbon::createFromFormat('d.m.Y', $publishedAt)->startOfDay();
         $publishedAtFormatted = $publishedAtCarbon ? $publishedAtCarbon->format('Y-m-d H:i:s') : date('Y-m-d H:i:s');
 
@@ -87,6 +88,7 @@ class Storage extends PassThrough
         $entry->update([
             'layout'       => array_get($requestData, 'layout'),
             'published_at' => $publishedAtFormatted,
+            'key'          => $key,
 
             // Checkboxes user array_has
             'is_active'    => $isActive,
@@ -293,7 +295,7 @@ class Storage extends PassThrough
                     $contentBlockItemData = [];
                     $contentBlockItemData['key'] = $field;
 
-                    if(is_object($value)) {
+                    if (is_object($value)) {
                         $contentBlockItemData['value'] = null;
                         $contentBlockItemData['image'] = $value;
 

@@ -46,6 +46,12 @@
         </div>
 
         <div class="form-group">
+            <label>Key <small>(Page identifier)</small></label><br>
+            {!! Form::text('key', (isset($entry) ? $entry->key: null), ['class' => 'form-control']) !!}
+            <span class="error-span"></span>
+        </div>
+
+        <div class="form-group">
             @if(!$channel)
                 <label>Homepage?</label><br>
                 <span class="hidden-switchery" hidden style="margin-right:10px;">
