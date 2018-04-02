@@ -64,3 +64,15 @@
 
 {{-- It's important to have version greater than 0.8.6 because of this PR https://github.com/summernote/summernote/pull/1948 --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+
+<script>
+    $(document).ready(function(){
+        var firstLocale = '{{$languages->first()->iso_code}}';
+        $('.localization-content.locale-'+firstLocale).show();
+        $('.switch-content-language a').click(function(){
+            var language = $(this).data('language');
+            $('.localization-content').hide();
+            $('.localization-content.locale-'+language).show();
+        })
+    })
+</script>

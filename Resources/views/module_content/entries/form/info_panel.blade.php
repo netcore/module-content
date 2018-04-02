@@ -1,10 +1,37 @@
 <div class="panel">
     <div class="panel-heading">
-        <h4 class="panel-title">Information</h4>
+        <h4 class="panel-title">Page Control</h4>
     </div>
     <div class="panel-body">
+
+        @if( count($languages) > 1 )
+            <div class="form-group">
+                <label>Content language</label>
+                <ul role="tablist" class="nav nav-pills nav-stacked switch-content-language">
+                    @foreach($languages as $language)
+                        <li class="{{ $loop->first ? 'active bold' : '' }}"><a href="#false" data-language="{{ $language->iso_code }}" aria-controls="{{ $language->iso_code }}"
+                                    role="tab"
+                                    data-toggle="tab">
+                                {{$language->title}}
+
+                            </a>
+
+                            <label class="switcher switcher-sm pull-right">
+                                <input type="checkbox" checked>
+                                <div class="switcher-indicator">
+                                    <div class="switcher-yes"><i class="fa fa-check"></i></div>
+                                    <div class="switcher-no"><i class="fa fa-close"></i></div>
+                                </div>
+                            </label>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
         <div class="form-group">
-            <label>Published?</label><br>
+            <label>Is page published?</label><br>
             <span class="hidden-switchery" hidden>
                 {!! Form::checkbox('is_active', 1, (isset($entry) ? null : 0), [
                     'class' => 'switchery'

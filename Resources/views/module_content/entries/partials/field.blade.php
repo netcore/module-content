@@ -9,8 +9,7 @@
     }
 @endphp
 @if($fieldType == 'file')
-    <label for="" class="form-label">{{ ucfirst($fieldLabel) }}
-        </label>
+    <label for="" class="form-label">{{ ucfirst($fieldLabel) }}   <span class="label label-light">{{$language->iso_code}}</span></label>
             <div class="form-group no-margin">
                 <input
                         type="file"
@@ -21,7 +20,7 @@
             </div>
 @else
     <div class="form-group">
-        <label for="" class="form-label">{{ ucfirst($fieldLabel) }}</label>
+        <label for="" class="form-label">{{ ucfirst($fieldLabel) }} <span class="label label-light">{{$language->iso_code}}</span></label>
 
         @if($fieldType == 'textarea')
             <textarea
