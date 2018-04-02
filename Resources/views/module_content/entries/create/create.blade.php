@@ -12,20 +12,8 @@
     @include('admin::_partials._messages')
 
     {!! Form::open(['url' => content_crud_route('store', $channelId), 'method' => 'POST']) !!}
-
         <div class="p-x-1">
-
-            <div class="panel">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        Create {{ $channel ? $channel->name : 'Page' }}
-                    </div>
-                </div>
-                <div class="panel-body position-relative">
-                    @include('content::module_content.entries.form.form')
-                </div>
-            </div>
-
+            @include('content::module_content.entries.form.form')
         </div>
     {!! Form::close() !!}
 @endsection

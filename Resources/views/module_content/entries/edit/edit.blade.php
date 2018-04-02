@@ -12,20 +12,8 @@
     @include('admin::_partials._messages')
 
     {!! Form::model($entry, ['url' => content_crud_route('update', $entry), 'method' => 'PUT']) !!}
-
         <div class="p-x-1" style="padding-bottom: 140px;">
-
-            <div class="panel">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        Edit page
-                    </div>
-                </div>
-                <div class="panel-body position-relative">
-                    @include('content::module_content.entries.form.form')
-                </div>
-            </div>
-
+            @include('content::module_content.entries.form.form')
         </div>
     {!! Form::close() !!}
 
