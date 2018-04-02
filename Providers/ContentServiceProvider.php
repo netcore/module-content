@@ -127,11 +127,9 @@ class ContentServiceProvider extends ServiceProvider
     public function registerComposers()
     {
         $map = [
-            'content::module_content.entries.form.header'    => FormHeader::class,
+            'content::module_content.entries.form.form'      => FormHeader::class,
             'content::module_content.index.nav_tabs'         => IndexNavTabs::class,
-            'content::module_content.partials.language_tabs' => LanguageTabs::class,
-            'content::module_content.entries.form.revisions' => Revisions::class,
-            'content::module_content.entries.form.meta_tags' => MetaTags::class
+            'content::module_content.partials.language_tabs' => LanguageTabs::class
         ];
 
         foreach ($map as $view => $composerClass) {

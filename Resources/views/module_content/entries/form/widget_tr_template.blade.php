@@ -14,15 +14,30 @@
     data-javascript-key="{{ $javascriptKey }}"
     class="widget-tr"
 >
-    <td>
+    <td style="padding-bottom: 30px">
         <div class="template-container {{ $withBorder }}">
 
-            <div class="template-container-header cursor-dragndrop widget-tr-handle">
-                <span class="fa fa-icon fa-arrows"></span>
+            <div class="template-container-header ">
+                <span class="fa fa-icon fa-arrows cursor-dragndrop widget-tr-handle"></span>
 
-                <span style="left: {{ (count($languages)-1) * 90 }}px;" class="no-drag">
-                    <span class="" style="width:auto;">{{ $widgetName }}</span>
-                    <a class="btn btn-xs btn-danger pull-right delete-widget"><i class="fa fa-trash"></i> Delete</a>
+                {{--<span style="left: {{ (count($languages)-1) * 90 }}px; position:relative;" class="no-drag">--}}
+                <span style=" position:relative;" class="no-drag">
+                    <span class="panel-title">{{ $widgetName }}</span>
+
+                    <div class="panel-heading-controls">
+
+                        <div class="btn-group btn-group-xs">
+                            <a class="btn btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-gear"></i></a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#">Collapse</a></li>
+                                <li><a href="#">Disable</a></li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:;" class="delete-widget"><i class="fa fa-trash"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </span>
 
             </div>

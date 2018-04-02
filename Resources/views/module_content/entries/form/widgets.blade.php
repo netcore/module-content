@@ -1,10 +1,11 @@
-<div class="widgets-container" data-locale="{{ $language->iso_code }}">
+<div class="widgets-container localization-content locale-{{ $language->iso_code }}" data-locale="{{ $language->iso_code }}">
     <div class="no-widgets"
     @if(isset($entry))
         {{ $entryTranslation->contentBlocks->count() ? 'hidden' : '' }}
             @endif
     >
         Currently there are no {{ strtoupper($language->iso_code) }} widgets added!
+
     </div>
 
     <table

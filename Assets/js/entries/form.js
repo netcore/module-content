@@ -224,7 +224,8 @@ $(function () {
     $('body').on('keyup', 'input.title', function () {
         var title = $(this).val();
         var slug = Netcore.slugify(title);
-        $(this).closest('.tab-pane').find('input.slug').val(slug);
+        var lang = $(this).data('language')
+        $('input.slug.slug-'+lang).val(slug);
     });
 
     // Summernote has an issue with Instert image -> Image URL
