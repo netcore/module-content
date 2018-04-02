@@ -54,29 +54,24 @@
     position: relative;
 }
 
-.widgets-container .language-tabs {
-    position: absolute;
-    z-index: 999;
-    top: 0px;
-    left: 32px;
-}
-
-.widgets-container .language-tabs li a {
-    height: 25px;
-    line-height: 1;
-}
-
 .widgets-container .template-container-header {
-    border-bottom: 1px solid #d6d6d6;
+    border-bottom: 1px solid #f1f1f1;
     padding: 5px 7px;
-    background-color: lightgray;
+    background-color: #f9f7f7;
     height: 35px;
+    font-size: 11px;
+    color: grey;
+}
+
+.widgets-container .template-container-header .panel-title{
+    font-size:12px;
 }
 
 .widgets-container .template-container-header.has-error {
     background-color: #da3434;
 }
 
+/*
 .widgets-container .template-container-header a {
     cursor: pointer;
     position: relative;
@@ -85,7 +80,7 @@
     display: inline-block;
     text-align: center;
     height: 100%;
-}
+}*/
 
 .widgets-container .template-container-header.has-error .no-drag span {
     font-weight: bold;
@@ -173,4 +168,21 @@ input.datepicker {
     list-style: none;
     border: 1px dotted grey;
     height: 35px;
+}
+
+.widgets-container{
+    display:none;
+}
+
+.label-light{
+    border-color: #b1b5b9;
+    background: #bdbdbd;
+}
+
+.localization-content{
+    display:none;
+}
+
+.switch-content-language .switcher-sm{
+    top: -15px;
 }
