@@ -8,7 +8,7 @@
         @endphp
 
 
-        <div class="row localization-content locale-{{$language->iso_code}}">
+        <div class="row localization-content locale-{{$language->iso_code}}" @if($loop->iteration != 1) style="display:none;" @endif>
             <div class="col-xs-{{ $allowAttachment ? 4 : 6 }}">
                 <div class="form-group">
                     <label>Title <span class="label label-light">{{$language->iso_code}}</span></label>

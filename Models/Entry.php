@@ -30,6 +30,7 @@ class Entry extends Model
         'channel_id',
         'is_active',
         'is_homepage',
+        'key',
         'layout',
         'published_at'
     ];
@@ -169,7 +170,7 @@ class Entry extends Model
     public function getFieldsAttribute()
     {
         $translation = $this->translations->where('locale', $this->locale())->first();
-        if($translation) {
+        if ($translation) {
             return $translation->fields;
         }
 
@@ -185,5 +186,74 @@ class Entry extends Model
         $field = $this->fields->where('key', $key)->first();
 
         return $field ? $field->value : '';
+    }
+
+    /**
+     * @param null $locale
+     * @return array
+     */
+    public function formatResponse($locale = null)
+    {
+        $item = $this;
+
+        $entryFieldList = $item->channel->fields;
+        $translation = $item->translateOrNew($locale);
+
+        $entryFields = [
+            'title' => $translation->title
+        ];
+        foreach ($entryFieldList as $field) {
+            if ($field->type != 'file') {
+                $entryFields[$field->key] = $item->getField($field->key);
+            }
+        }
+
+        $widgets = [];
+        foreach ($translation->contentBlocks->sortBy('order') as $contentBlock) {
+            $widgetKey = $contentBlock->widget;
+            $widget = widgets()->where('key', $contentBlock->widget)->first();
+            $widgetFields = $widget->fields->groupBy('is_main');
+            $widgets[$widgetKey]['fields'] = [];
+            $widgets[$widgetKey]['items'] = [];
+
+            if (isset($widgetFields['1'])) {
+                foreach ($widgetFields['1'] as $field) {
+                    if ($field->type != 'file') {
+                        $widgets[$widgetKey]['fields'][$field->key] = $contentBlock->getField($field->key);
+                    } else {
+                        $widgets[$widgetKey]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
+                    }
+                }
+            }
+
+            if (isset($widgetFields['0'])) {
+                $widgetBlock = WidgetBlock::with('items.fields')->find(array_get($contentBlock->data,
+                    'widget_block_id'));
+
+
+                $items = [];
+                $i = 0;
+                foreach ($widgetBlock->items->sortBy('order') as $widgetItem) {
+                    foreach ($widgetFields['0'] as $field) {
+                        if ($field->type != 'file') {
+                            $items[$i][$field->key] = $widgetItem->getField($field->key);
+                        } else {
+                            $items[$i][$field->key] = $widgetItem->getStaplerObj($field->key);
+                        }
+                    }
+                    $i++;
+                }
+                $widgets[$widgetKey]['items'][] = $items;
+
+            }
+        }
+
+        return [
+            'key'         => $item->key,
+            'slug'        => $item->slug,
+            'is_homepage' => $item->is_homepage,
+            'page_data'   => $entryFields,
+            'widgets'     => $widgets,
+        ];
     }
 }
