@@ -1,4 +1,4 @@
-<div class="widgets-container localization-content locale-{{ $language->iso_code }}" data-locale="{{ $language->iso_code }}">
+<div class="widgets-container localization-content locale-{{ $language->iso_code }}" data-locale="{{ $language->iso_code }}"  @if($loop->iteration != 1) style="display:none;" @endif>
     <div class="no-widgets"
     @if(isset($entry))
         {{ $entryTranslation->contentBlocks->count() ? 'hidden' : '' }}

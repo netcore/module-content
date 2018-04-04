@@ -1,4 +1,6 @@
 <?php
+use Modules\Content\Models\Entry;
+
 if (!function_exists('content')) {
     /**
      * @return \Illuminate\Foundation\Application
@@ -40,5 +42,17 @@ if (!function_exists('content_crud_route')) {
         }
 
         return route($routeName);
+    }
+}
+if (!function_exists('cache_content_entries')) {
+    /**
+     *
+     */
+    function cache_content_entries()
+    {
+        cache()->forget('content_entries');
+        return cache()->rememberForever('content_entries', function () {
+            return Entry::get();
+        });
     }
 }
