@@ -57,6 +57,7 @@ class EntryController extends Controller
 
         $this->storeEntryFields($requestData, $entry);
         $this->storeAttachments($requestData, $entry);
+        $this->saveEntriesToCache();
 
         session()->flash('success', 'Page has been stored!');
 
@@ -104,6 +105,7 @@ class EntryController extends Controller
 
         $this->storeEntryFields($requestData, $entry);
         $this->storeAttachments($requestData, $entry);
+        $this->saveEntriesToCache();
 
         session()->flash('success', 'Page has been updated!');
 
@@ -111,6 +113,14 @@ class EntryController extends Controller
             'success'     => true,
             'redirect_to' => route('content::entries.edit', $entry)
         ]);
+    }
+
+    /**
+     *
+     */
+    private function saveEntriesToCache()
+    {
+        cache_content_entries();
     }
 
     /**
