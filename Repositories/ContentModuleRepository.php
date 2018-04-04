@@ -141,7 +141,12 @@ class ContentModuleRepository
 
         $entryData = array_except($item, ['type', 'name', 'translations', 'data']);
         $entryData['published_at'] = date('Y-m-d') . ' 00:00:00';
-        $entryData['key'] = isset($item['key']) ? $item['key'] : str_slug($item['name']);
+        <<<<
+        <<< HEAD
+                $entryData['key'] = isset($item['key']) ? $item['key'] : str_slug($item['name']);
+=======
+        $entryData['key'] = null;
+>>>>>>> 7b8432bafa661d94ac704473f02a18cafcce23c5
         $entryData['channel_id'] = isset($channel) ? $channel->id : null;
 
         $entry = Entry::forceCreate($entryData);
