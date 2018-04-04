@@ -45,7 +45,7 @@
                         @include('content::module_content.entries.form.tab-values')
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tab-seo">
-{{--                        @include('content::module_content.entries.form.tab-metatags')--}}
+                        @include('content::module_content.entries.form.tab-metatags')
                     </div>
 
                     @if(isset($entry) && $revisionsEnabled)
