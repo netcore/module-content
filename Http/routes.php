@@ -106,4 +106,17 @@ Route::group([
         'uses' => 'EntryController@restoreRevision'
     ]);
 });
+Route::group([
+    'middleware' => ['web'],
+    'namespace'  => 'Modules\Content\Http\Controllers'
+], function () {
+    Route::get('/api/get-pages/{locale?}', [
+        'as' => 'api.content.get-pages',
+        'uses' => 'Api\ContentController@getPages'
+    ]);
 
+    Route::get('/api/get-page/{key}/{locale?}', [
+        'as' => 'api.content.get-page',
+        'uses' => 'Api\ContentController@getPage'
+    ]);
+});
