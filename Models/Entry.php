@@ -196,17 +196,23 @@ class Entry extends Model
     {
         $item = $this;
 
-        $entryFieldList = $item->channel->fields;
+        $channel = $item->channel;
         $translation = $item->translateOrNew($locale);
 
         $entryFields = [
             'title' => $translation->title
         ];
-        foreach ($entryFieldList as $field) {
-            if ($field->type != 'file') {
-                $entryFields[$field->key] = $item->getField($field->key);
+
+        if ($channel) {
+            $entryFieldList = $channel->fields;
+
+            foreach ($entryFieldList as $field) {
+                if ($field->type != 'file') {
+                    $entryFields[$field->key] = $item->getField($field->key);
+                }
             }
         }
+
 
         $widgets = [];
         foreach ($translation->contentBlocks->sortBy('order') as $contentBlock) {
