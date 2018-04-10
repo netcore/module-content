@@ -5,7 +5,9 @@
 @endsection
 
 @section('scripts')
+    <script src="{{ versionedAsset('assets/content/js/plugins/summernote-cleaner.js') }}"></script>
     @include('content::module_content.entries.form.scripts')
+    <script src="{{ versionedAsset('assets/content/js/plugins/summernote-cleaner.js') }}"></script>
 @endsection
 
 @section('content')

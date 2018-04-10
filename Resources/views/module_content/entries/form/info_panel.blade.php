@@ -3,26 +3,47 @@
         <h4 class="panel-title">Page Control</h4>
     </div>
     <div class="panel-body">
-
         @if( count($languages) > 1 )
             <div class="form-group">
                 <label>Content language</label>
                 <ul role="tablist" class="nav nav-pills nav-stacked switch-content-language">
                     @foreach($languages as $language)
-                        <li class="{{ $loop->first ? 'active bold' : '' }}"><a href="#false" data-language="{{ $language->iso_code }}" aria-controls="{{ $language->iso_code }}"
-                                    role="tab"
-                                    data-toggle="tab">
+                        <li class="{{ $loop->first ? 'active bold' : '' }}">
+                            <a href="#false"
+                               data-language="{{ $language->iso_code }}" aria-controls="{{ $language->iso_code }}"
+                               role="tab"
+                               data-toggle="tab"
+                            >
                                 {{$language->title}}
 
                             </a>
-
-                            <label class="switcher switcher-sm pull-right">
-                                <input type="checkbox" checked>
-                                <div class="switcher-indicator">
-                                    <div class="switcher-yes"><i class="fa fa-check"></i></div>
-                                    <div class="switcher-no"><i class="fa fa-close"></i></div>
+                            @if(isset($entry))
+                                <div style="position: absolute; right: 5px;">
+                                    <label class="switcher switcher-sm">
+                                        <input type="hidden" value="0"
+                                               name="is_language_required[{{ $language->iso_code }}]">
+                                        <input type="checkbox" value="1"
+                                               name="is_language_required[{{ $language->iso_code }}]"
+                                                {{ optional($entry->translations->where('locale', $language->iso_code)->first())->is_language_required ? 'checked' : '' }}>
+                                        <div class="switcher-indicator">
+                                            <div class="switcher-yes"><i class="fa fa-check"></i></div>
+                                            <div class="switcher-no"><i class="fa fa-close"></i></div>
+                                        </div>
+                                    </label>
                                 </div>
-                            </label>
+                            @else
+                                <div style="position: absolute; right: 5px;">
+                                    <label class="switcher switcher-sm">
+                                        <input type="hidden" value="0"
+                                               name="is_language_required[{{ $language->iso_code }}]">
+                                        <input type="checkbox" value="1" name="is_language_required[{{ $language->iso_code }}]">
+                                        <div class="switcher-indicator">
+                                            <div class="switcher-yes"><i class="fa fa-check"></i></div>
+                                            <div class="switcher-no"><i class="fa fa-close"></i></div>
+                                        </div>
+                                    </label>
+                                </div>
+                            @endif
                         </li>
                     @endforeach
                 </ul>
@@ -46,7 +67,9 @@
         </div>
 
         <div class="form-group">
-            <label>Key <small>(Page identifier)</small></label><br>
+            <label>Key
+                <small>(Page identifier)</small>
+            </label><br>
             {!! Form::text('key', (isset($entry) ? $entry->key: null), ['class' => 'form-control']) !!}
             <span class="error-span"></span>
         </div>

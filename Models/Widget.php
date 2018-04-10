@@ -48,7 +48,7 @@ class Widget extends Model
             ];
         }
 
-        foreach ($this->fields->where('is_main', 1) as $field) {
+        foreach ($this->fields->where('is_main', 1)->where('is_global', 0) as $field) {
             $mainFields[$field->key] = [
                 'type'  => $field->type,
                 'label' => $field->title,
