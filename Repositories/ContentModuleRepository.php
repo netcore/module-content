@@ -32,6 +32,14 @@ class ContentModuleRepository
     }
 
     /**
+     * @param $pages
+     */
+    public function pagesSeeder($pages)
+    {
+        $this->storePages($pages);
+    }
+
+    /**
      * @param null $key
      * @return null
      */
@@ -98,7 +106,10 @@ class ContentModuleRepository
 
             if (isset($channelData['fields'])) {
                 $fields = $this->storeField($channelData['fields']);
+
                 $channel->fields()->sync($fields);
+
+
             }
         }
         cache()->forget('content_widgets');
@@ -116,6 +127,7 @@ class ContentModuleRepository
             $field['key'] = str_slug($fieldName, '_');
             $field['title'] = $fieldName;
             $field['is_main'] = $isMain;
+            $field['is_global'] = $field['is_global'] ?? 0;
             $field['data'] = isset($field['options']) ? json_encode($field['options']) : json_encode([]);
 
             $createdField = Field::firstOrCreate(array_except($field, ['options']));

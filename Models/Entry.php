@@ -101,6 +101,14 @@ class Entry extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function globalFields()
+    {
+        return $this->hasMany(EntryField::class);
+    }
+
+    /**
      * @return Storage
      */
     public function storage()
@@ -141,6 +149,24 @@ class Entry extends Model
     public function scopeHomepage($query)
     {
         return $query->active()->currentRevision()->whereIsHomepage(1);
+    }
+
+    public function getGlobalField(String $key)
+    {
+        $field = $this->items->where('key', $key)->first();
+
+        return $field ? $field->value : '';
+    }
+
+    /**
+     * @param String $key
+     * @return mixed
+     */
+    public function getGlobalStaplerObj(String $key)
+    {
+        $field = $this->items->where('key', $key)->first();
+
+        return $field ? $field->image : null;
     }
 
     /**
