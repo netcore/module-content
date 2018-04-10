@@ -14,6 +14,7 @@ use Netcore\Translator\Models\Language;
 
 class EntryController extends Controller
 {
+
     use EntryDatatable;
 
     /**
@@ -32,12 +33,13 @@ class EntryController extends Controller
 
         $channel = $channelId ? Channel::find($channelId) : null;
 
-        return view('content::module_content.entries.create.create', compact('channelId', 'channel', 'languages', 'widgetData', 'widgetOptions', 'layoutOptions'));
+        return view('content::module_content.entries.create.create',
+            compact('channelId', 'channel', 'languages', 'widgetData', 'widgetOptions', 'layoutOptions'));
     }
 
     /**
      * @param EntryRequest $request
-     * @param null         $channelId
+     * @param null $channelId
      * @return mixed
      */
     public function store(EntryRequest $request, $channelId = null)
@@ -59,6 +61,8 @@ class EntryController extends Controller
         $this->storeAttachments($requestData, $entry);
         $this->saveEntriesToCache();
 
+        $this->updateRequiredLanguages($request, $entry);
+
         session()->flash('success', 'Page has been stored!');
 
         return response()->json([
@@ -73,7 +77,13 @@ class EntryController extends Controller
      */
     public function edit($entry)
     {
-        $entry = Entry::with(['attachments', 'translations.contentBlocks.items', 'translations.fields', 'translations.metaTags', 'channel'])->find($entry);
+        $entry = Entry::with([
+            'attachments',
+            'translations.contentBlocks.items',
+            'translations.fields',
+            'translations.metaTags',
+            'channel'
+        ])->find($entry);
 
         $channel = $entry->channel;
         $languages = TransHelper::getAllLanguages();
@@ -93,7 +103,7 @@ class EntryController extends Controller
 
     /**
      * @param EntryRequest $request
-     * @param Entry        $entry
+     * @param Entry $entry
      * @return mixed
      */
     public function update(EntryRequest $request, Entry $entry)
@@ -107,12 +117,27 @@ class EntryController extends Controller
         $this->storeAttachments($requestData, $entry);
         $this->saveEntriesToCache();
 
+        $this->updateRequiredLanguages($request, $entry);
+
         session()->flash('success', 'Page has been updated!');
 
         return response()->json([
             'success'     => true,
             'redirect_to' => route('content::entries.edit', $entry)
         ]);
+    }
+
+    /**
+     * @param $request
+     * @param $entry
+     */
+    private function updateRequiredLanguages($request, $entry)
+    {
+        if ($requiredLanguages = $request->get('is_language_required', null)) {
+            foreach ($requiredLanguages as $lang => $value) {
+                $entry->translations()->where('locale', $lang)->update(['is_language_required' => $value]);
+            }
+        }
     }
 
     /**
@@ -129,13 +154,21 @@ class EntryController extends Controller
      */
     private function storeEntryFields($requestData, $entry)
     {
-        if(isset($requestData['translations']['entry'])) {
-            foreach($requestData['translations']['entry'] as $isoCode => $data) {
+        if (isset($requestData['global_field'])) {
+            foreach ($requestData['global_field'] as $key => $value) {
+                $entry->globalFields()->updateOrCreate(['key' => $key], [
+                    'key'   => $key,
+                    'value' => $value,
+                ]);
+            }
+        }
+        if (isset($requestData['translations']['entry'])) {
+            foreach ($requestData['translations']['entry'] as $isoCode => $data) {
                 $translations = $entry->translations->where('locale', $isoCode)->first();
-                if($translations) {
-                    foreach($data as $key => $value) {
+                if ($translations) {
+                    foreach ($data as $key => $value) {
                         $translations->fields()->updateOrCreate(['key' => $key], [
-                            'key' => $key,
+                            'key'   => $key,
                             'value' => $value,
                         ]);
                     }
@@ -148,10 +181,13 @@ class EntryController extends Controller
      * @param $requestData
      * @param $entry
      */
-    private function storeAttachments($requestData, $entry)
-    {
-        if(isset($requestData['attachments'])) {
-            foreach($requestData['attachments'] as $a) {
+    private
+    function storeAttachments(
+        $requestData,
+        $entry
+    ) {
+        if (isset($requestData['attachments'])) {
+            foreach ($requestData['attachments'] as $a) {
                 $attachment = $entry->attachments()->create([]);
 
                 $attachment->image = $a;
@@ -164,11 +200,13 @@ class EntryController extends Controller
      * @param null $widgets
      * @return array
      */
-    public function widgets($widgets = null)
-    {
+    public
+    function widgets(
+        $widgets = null
+    ) {
         $languages = TransHelper::getAllLanguages();
 
-        if(!$widgets) {
+        if (!$widgets) {
             $widgets = widgets();
         }
 
@@ -177,10 +215,9 @@ class EntryController extends Controller
             $fields = [];
 
 
-
-            foreach($widget->fields as $field) {
+            foreach ($widget->fields as $field) {
                 $fields[$field->key] = [
-                    'type' => $field->type,
+                    'type'  => $field->type,
                     'label' => $field->title,
                 ];
             }
@@ -212,11 +249,9 @@ class EntryController extends Controller
             }
 
 
-
             $widgetList[$widget->key] = $widgetData;
 
         }
-
 
 
         return $widgetList;
@@ -226,8 +261,10 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function revisions(Entry $entry)
-    {
+    public
+    function revisions(
+        Entry $entry
+    ) {
         $revisions = $entry
             ->children()
             ->whereType('revision')
@@ -243,8 +280,10 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function destroy(Entry $entry)
-    {
+    public
+    function destroy(
+        Entry $entry
+    ) {
         // Delete content blocks
         $entry->storage()->deleteOldContentBlocks();
 
@@ -275,8 +314,10 @@ class EntryController extends Controller
      * @internal param Entry $entry
      * @internal param Language $language
      */
-    public function destroyAttachment($entryAttachment)
-    {
+    public
+    function destroyAttachment(
+        $entryAttachment
+    ) {
         $entryAttachment = EntryAttachment::find($entryAttachment);
         $entryAttachment->image = STAPLER_NULL;
         $entryAttachment->save();
@@ -292,8 +333,10 @@ class EntryController extends Controller
      * @param Entry $page
      * @return mixed
      */
-    public function preview(Entry $page)
-    {
+    public
+    function preview(
+        Entry $page
+    ) {
         die('Preview');
         $locale = app()->getLocale();
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
@@ -305,8 +348,10 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function createDraft(Entry $entry)
-    {
+    public
+    function createDraft(
+        Entry $entry
+    ) {
         $draft = $entry->revision()->make('draft');
 
         return redirect()->route('content::entries.edit', $draft);
@@ -316,8 +361,10 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public function restoreRevision(Entry $entry)
-    {
+    public
+    function restoreRevision(
+        Entry $entry
+    ) {
         $restored = $entry->revision()->restore();
 
         return redirect()->route('content::entries.edit', $restored);

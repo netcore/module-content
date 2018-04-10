@@ -32,6 +32,7 @@ class EntryTranslation extends Model implements StaplerableInterface
         'slug',
         'content',
         'attachment',
+        'is_language_required',
         'locale' // This is very important
     ];
 

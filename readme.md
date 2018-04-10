@@ -94,7 +94,7 @@ For example - page "Post 1" in "Blog" channel.
 
 1. Start with seeding widget 
 ```
-$widgets = [
+content()->storeWidgets([
             'Employees widget' => [
                 'is_enabled'    => 1,
                 'widget_fields' => [
@@ -125,7 +125,7 @@ $widgets = [
                 ],
                 'options'       => []
             ]
-        ];
+        ]);
 ```
 Widget fields are meant for widget main information. For example, title.
 Item fields are meant for items which will be stored in widget. You can store multiple items in one widget.
@@ -144,12 +144,10 @@ You can customize widget options, available options:
 ]
 ```
 
-2. Seed created widgets with ```content()->storeWidgets($widgets);```
-
-3. In most cases you will want to customize name, key, frontend_template, javascript_key, backend_worker and fields.
+2. In most cases you will want to customize name, key, frontend_template, javascript_key, backend_worker and fields.
 However, in most cases your will not customize backend_template and backend_worker. These are usually universal.
-4. Create template that you specified as ```frontend_template``` in step one.
-5. All done. Backend is generated automatically.
+3. Create template that you specified as ```frontend_template``` in step one.
+4. All done. Backend is generated automatically.
 
 ## Creating pages and seeding widget content
 
@@ -158,7 +156,7 @@ You can seed multiple pages per channel. By default there is always default chan
 Below there is an example for seeding pages per channel
 
 ```
- $pages = [
+  content()->storePages([
             'static'   => [
                 [
                     'name'        => 'Home page',
@@ -171,7 +169,7 @@ Below there is an example for seeding pages per channel
             'news' => [
                 // news pages
             ],
-        ];
+        ]);
 ```
 
 $homepageData looks like
@@ -217,7 +215,7 @@ $homepageData = [
 If you want to create new channels, for example, you may want to create news channel where you would store news articles.
 
 ```
-$channels = [
+$channels = content()->storeChannels([
             [
                 'layout'            => 'layouts.main',
                 'is_active'         => 1,
@@ -228,12 +226,14 @@ $channels = [
                     'Article content' => [
                         'type' => 'textarea',
                     ],
+                    'Vote count' => [
+                        'type'      => 'text',
+                        'is_global' => 1 //Channel entries will have global fields, which won't be translateable
+                    ],
                 ]
             ],
-        ];
+        ]);
 ```
-
-Seed created channels with ```content()->storeChannels($channels);```
 
 However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
 
