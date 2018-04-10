@@ -33,8 +33,10 @@ class EntryRequest extends FormRequest
 
         $languagesInSystem = TransHelper::getAllLanguages();
         foreach ($languagesInSystem as $language) {
+            if(isset($this->request->get('is_language_required')[$language->iso_code]) && (int) $this->request->get('is_language_required')[$language->iso_code] != 1) {
+                continue;
+            }
             $rules['translations.' . $language->iso_code . '.title'] = 'required';
-            //$rules['translations.' . $language->iso_code . '.slug'] = 'required';
         }
 
         return $rules;

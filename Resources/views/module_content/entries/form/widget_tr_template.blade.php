@@ -30,8 +30,8 @@
                             <a class="btn btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-gear"></i></a>
 
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li><a href="#">Collapse</a></li>
-                                <li><a href="#">Disable</a></li>
+                                {{--<li><a href="#">Collapse</a></li>--}}
+                                {{--<li><a href="#">Disable</a></li>--}}
                                 <li class="divider"></li>
                                 <li><a href="javascript:;" class="delete-widget"><i class="fa fa-trash"></i> Delete</a></li>
                             </ul>

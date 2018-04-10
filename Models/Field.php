@@ -14,7 +14,7 @@ class Field extends Model
     /**
      * @var array
      */
-    protected $fillable = ['title', 'key', 'type', 'data', 'is_main'];
+    protected $fillable = ['title', 'key', 'type', 'data', 'is_main', 'is_global'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
