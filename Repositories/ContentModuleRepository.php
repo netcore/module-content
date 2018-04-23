@@ -280,7 +280,7 @@ class ContentModuleRepository
 
         foreach ($widgets as $widgetData) {
             $widget = str_slug($widgetData['widget'], '_');
-            $items = $widgetData['items'];
+            $items = isset( $widgetData['items'] ) ? $widgetData['items'] : [];
 
             $order = 0;
             foreach ($entry->translations()->get() as $entryTranslation) {
