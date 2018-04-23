@@ -17,6 +17,9 @@ class ContentModuleRepository
 
     use ChannelSeederTrait;
 
+    private $channel = null;
+    private $filterByGlobal = null;
+
     /**
      * @param $pages
      */
@@ -37,6 +40,48 @@ class ContentModuleRepository
     public function pagesSeeder($pages)
     {
         $this->storePages($pages);
+    }
+
+    /**
+     * @param $slug
+     * @return $this
+     */
+    public function channel($slug)
+    {
+        $this->channel = Channel::with(['entries.globalFields'])->whereHas('translations', function ($q) use ($slug) {
+            $q->whereSlug($slug);
+        })->first();
+
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function entries()
+    {
+        if ($this->channel) {
+            return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
+                $q->where($this->filterByGlobal[0], $this->filterByGlobal[1], $this->filterByGlobal[2]);
+            })->get();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $conditions
+     * @return null
+     */
+    public function filterByGlobal($conditions)
+    {
+        if (count($conditions)) {
+            $this->filterByGlobal = $conditions;
+
+            return $this;
+        }
+
+        return null;
     }
 
     /**
@@ -185,6 +230,18 @@ class ContentModuleRepository
 
         $this->seedEntryData($entry, $item['data']);
 
+        if (isset($item['data']['entry_data'])) {
+            foreach ($item['data']['entry_data'] as $field => $value) {
+                $fieldExists = Field::where('key', $field)->whereIsGlobal(1)->first();
+                if ($fieldExists) {
+                    $entry->globalFields()->updateOrCreate(['key' => $field], [
+                        'key'   => $field,
+                        'value' => $value,
+                    ]);
+                }
+            }
+        }
+
         foreach ($entry->translations()->get() as $entryTranslationObj) {
             if (isset($item['data']['entry_data'])) {
                 foreach ($item['data']['entry_data'] as $field => $value) {
@@ -280,7 +337,7 @@ class ContentModuleRepository
 
         foreach ($widgets as $widgetData) {
             $widget = str_slug($widgetData['widget'], '_');
-            $items = isset( $widgetData['items'] ) ? $widgetData['items'] : [];
+            $items = isset($widgetData['items']) ? $widgetData['items'] : [];
 
             $order = 0;
             foreach ($entry->translations()->get() as $entryTranslation) {
