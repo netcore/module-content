@@ -107,6 +107,32 @@ class ContentModuleRepository
     }
 
     /**
+     * @param $key
+     * @return object
+     * @throws \Exception
+     */
+    public function getPage($key)
+    {
+        $entries = cache()->rememberForever('content_entries', function () {
+            return Entry::get();
+        });
+
+        $entry = $entries->where('key', $key)->first();
+
+        if (!$entry) {
+            return (object)[
+                'title' => '',
+                'url'   => url('/')
+            ];
+        }
+
+        return (object)[
+            'title' => $entry->title,
+            'url'   => url($entry->slug)
+        ];
+    }
+
+    /**
      * @param $widgets
      */
     public function storeWidgets($widgets)
