@@ -62,7 +62,7 @@ class ContentModuleRepository
     {
         if ($this->channel) {
             return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
-                $q->where($this->filterByGlobal[0], $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                $q->where('key', $this->filterByGlobal[0])->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
             })->get();
         }
 
