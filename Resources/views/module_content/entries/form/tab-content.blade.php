@@ -7,43 +7,6 @@
             }
         @endphp
 
-
-        <div class="row localization-content locale-{{$language->iso_code}}" @if($loop->iteration != 1) style="display:none;" @endif>
-            <div class="col-xs-{{ $allowAttachment ? 4 : 6 }}">
-                <div class="form-group">
-                    <label>Title <span class="label label-light">{{$language->iso_code}}</span></label>
-                    {!! Form::text('translations['.$language->iso_code.'][title]', trans_model((isset($entry) ? $entry : null), $language, 'title'), ['class' => 'form-control title','data-language' => $language->iso_code]) !!}
-                    <span class="error-span"></span>
-                </div>
-            </div>
-
-            <div class="col-xs-{{ $allowAttachment ? 4 : 6 }}">
-
-                <div class="form-group">
-                    <label>Slug <span class="label label-light">{{$language->iso_code}}</span></label>
-                    (Automatically generated if left empty)
-                    {!! Form::text('translations['.$language->iso_code.'][slug]', trans_model((isset($entry) ? $entry : null), $language, 'slug'), ['class' => 'form-control slug slug-' . $language->iso_code]) !!}
-                    <span class="error-span"></span>
-                </div>
-            </div>
-
-            @if($allowAttachment)
-                <div class="col-xs-4">
-                    <div class="form-group">
-                        <label>Attachment</label>
-                        <br>
-                        {!! Form::file('translations['.$language->iso_code.'][attachment]', [
-                            'class' => 'form-control form-input attachment',
-                            'style' => ((isset($entry) && $entry->attachments()->hasForLanguage($language)) ? 'max-width:250px;display:inline;' : '' )
-                        ]) !!}
-
-                        <span class="error-span"></span>
-
-                    </div>
-                </div>
-            @endif
-        </div>
-
         @include('content::module_content.entries.form.widgets')
 
     </div>

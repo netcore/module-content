@@ -32,6 +32,8 @@ class EntryAttachment extends Model implements StaplerableInterface
      */
     protected $fillable = [
         'image',
+        'is_featured',
+        'media',
     ];
 
     /**
@@ -50,5 +52,14 @@ class EntryAttachment extends Model implements StaplerableInterface
     public function entry()
     {
         return $this->belongsTo(Entry::class);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured');
     }
 }

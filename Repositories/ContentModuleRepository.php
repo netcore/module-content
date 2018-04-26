@@ -62,7 +62,9 @@ class ContentModuleRepository
     {
         if ($this->channel) {
             return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
-                $q->where('key', $this->filterByGlobal[0])->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                $q
+                    ->where('key', $this->filterByGlobal[0])
+                    ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
             })->get();
         }
 
@@ -206,15 +208,26 @@ class ContentModuleRepository
         // seed attachments
         if (isset($item['data']['attachments'])) {
             foreach ($item['data']['attachments'] as $attachment) {
-                if (file_exists($attachment)) {
-                    $image = new \Symfony\Component\HttpFoundation\File\File($attachment);
+                $isFeatured = 0;
+                $image = $attachment;
+                $media = '';
+                if (is_array($attachment)) {
+                    $image = $attachment['image'] ?? '';
+                    $isFeatured = $attachment['is_featured'] ?? 0;
+                    $media = $attachment['media'] ?? '';
+                }
+
+                if (file_exists($image)) {
+                    $image = new \Symfony\Component\HttpFoundation\File\File($image);
                     $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(), $image);
                     copy($image, $newImage);
 
                     $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
 
                     $entry->attachments()->create([
-                        'image' => $newImage
+                        'image'       => $newImage,
+                        'is_featured' => $isFeatured,
+                        'media'       => $media,
                     ]);
                 }
             }
@@ -245,10 +258,29 @@ class ContentModuleRepository
         foreach ($entry->translations()->get() as $entryTranslationObj) {
             if (isset($item['data']['entry_data'])) {
                 foreach ($item['data']['entry_data'] as $field => $value) {
-                    $entryTranslationObj->fields()->create([
-                        'key'   => $field,
-                        'value' => $value
-                    ]);
+                    $fieldExists = Field::where('key', $field)->where('type', 'file')->first();
+                    if ($fieldExists) {
+                        if (file_exists($value)) {
+                            $image = new \Symfony\Component\HttpFoundation\File\File($value);
+                            $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
+                                $image);
+                            copy($image, $newImage);
+
+                            $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
+
+                            $entryTranslationObj->fields()->create([
+                                'key'   => $field,
+                                'value' => $value,
+                                'image' => $newImage
+                            ]);
+                        }
+                    } else {
+                        $entryTranslationObj->fields()->create([
+                            'key'   => $field,
+                            'value' => $value
+                        ]);
+                    }
+
                 }
             }
             $metaTags = [
