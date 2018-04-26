@@ -16,8 +16,6 @@ class CreateNetcoreContentEntryAttachmentsTable extends Migration
         Schema::create('netcore_content__entry_attachments', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->boolean('is_featured')->default(0);
-            $table->text('media')->nullable();
             $table->unsignedInteger('entry_id');
             $table->foreign('entry_id', 'entry_id')->references('id')->on('netcore_content__entries')->onDelete('cascade');
 
