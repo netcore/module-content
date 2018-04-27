@@ -19,6 +19,7 @@ class ContentModuleRepository
 
     private $channel = null;
     private $filterByGlobal = null;
+    private $sortByGlobal = null;
 
     /**
      * @param $pages
@@ -48,7 +49,7 @@ class ContentModuleRepository
      */
     public function channel($slug)
     {
-        $this->channel = Channel::with(['entries.globalFields'])->whereHas('translations', function ($q) use ($slug) {
+        $this->channel = Channel::with(['entries'])->whereHas('translations', function ($q) use ($slug) {
             $q->whereSlug($slug);
         })->first();
 
@@ -61,11 +62,20 @@ class ContentModuleRepository
     public function entries()
     {
         if ($this->channel) {
-            return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
-                $q
-                    ->where('key', $this->filterByGlobal[0])
-                    ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
-            })->get();
+            if($this->filterByGlobal) {
+                return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
+                    $q
+                        ->where('key', $this->filterByGlobal[0])
+                        ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                })->get();
+            }
+
+            if($this->sortByGlobal) {
+                return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
+                    $q->orderBy('value', 'desc');
+                }, 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+            }
+            return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields', 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
         }
 
         return null;
@@ -87,49 +97,45 @@ class ContentModuleRepository
     }
 
     /**
-     * @param null $key
+     * @param $conditions
      * @return null
      */
-    public function getUrl($key = null)
+    public function sortByGlobal($conditions)
     {
-        $entries = cache()->rememberForever('content_entries', function () {
-            return Entry::get();
-        });
+        if (count($conditions)) {
+            $this->sortByGlobal = $conditions;
 
-        if ($key) {
-            $entry = $entries->where('key', $key)->first();
-            if ($entry) {
-                return url($entry->slug);
-            }
+            return $this;
         }
 
         return null;
     }
 
+
     /**
-     * @param $key
-     * @return object
-     * @throws \Exception
+     * @param null $key
+     * @param bool $findById
+     * @return null
      */
-    public function getPage($key)
+    public function getUrl($key = null, $findById = false)
     {
         $entries = cache()->rememberForever('content_entries', function () {
-            return Entry::get();
+            return Entry::get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'slug' => $item->slug,
+                ];
+            });
         });
 
-        $entry = $entries->where('key', $key)->first();
-
-        if (!$entry) {
-            return (object)[
-                'title' => '',
-                'url'   => url('/')
-            ];
+        if ($key) {
+            $entry = $entries->where(($findById ? 'id' : 'slug'), $key)->first();
+            if ($entry) {
+                return url($entry['slug']);
+            }
         }
 
-        return (object)[
-            'title' => $entry->title,
-            'url'   => url($entry->slug)
-        ];
+        return '#';
     }
 
     /**
