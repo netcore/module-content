@@ -86,6 +86,11 @@ Route::group([
         'uses' => 'EntryController@store'
     ]);
 
+    Route::post('/content/attachment/state', [
+        'as' => 'entries.attachment.state',
+        'uses' => 'EntryController@attachmentState'
+    ]);
+
     Route::get('/content/entries/widgets', [
         'as' => 'entries.widgets.index',
         'uses' => 'EntryController@widgets'

@@ -95,6 +95,34 @@ class Entry extends Model
     /**
      * @return mixed
      */
+    public function getMediaAttribute()
+    {
+        return $this->attachments->map(function ($item) {
+            return [
+                'attachment'  => $item->image_file_name ? $item->image->url() : '',
+                'media'       => $item->media,
+                'is_featured' => $item->is_featured,
+            ];
+        });
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeaturedMediaAttribute()
+    {
+        return $this->attachments->where('is_featured', 1)->map(function ($item) {
+            return [
+                'attachment'  => $item->image_file_name ? $item->image->url() : '',
+                'media'       => $item->media,
+                'is_featured' => $item->is_featured,
+            ];
+        });
+    }
+
+    /**
+     * @return mixed
+     */
     public function children()
     {
         return $this->hasMany(Entry::class, 'parent_id');
@@ -201,6 +229,43 @@ class Entry extends Model
         }
 
         return collect([]);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getGlobalFieldAttribute()
+    {
+        return $this->globalFields->mapWithKeys(function ($item) {
+            if ($item->image_file_name) {
+                return [
+                    $item->key => $item->image->url()
+                ];
+            }
+
+            return [
+                $item->key => $item->value
+            ];
+        });
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFieldAttribute()
+    {
+        return $this->fields->mapWithKeys(function ($item) {
+            if ($item->image_file_name) {
+                return [
+                    $item->key => $item->image->url()
+                ];
+            }
+
+            return [
+                $item->key => $item->value
+            ];
+        });
     }
 
     /**

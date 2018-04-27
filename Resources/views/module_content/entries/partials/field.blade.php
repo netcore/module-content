@@ -9,18 +9,26 @@
     }
 @endphp
 @if($fieldType == 'file')
-    <label for="" class="form-label">{{ ucfirst($fieldLabel) }}   <span class="label label-light">{{$language->iso_code}}</span></label>
-            <div class="form-group no-margin">
-                <input
-                        type="file"
-                        data-name="html-block-images[]"
-                        class="form-control form-input inline"
-                        multiple
-                >
-            </div>
+    <label for="" class="form-label">{{ ucfirst($fieldLabel) }} <span
+                class="label label-light">{{$language->iso_code}}</span></label>
+    <div class="form-group no-margin">
+        <input
+                type="file"
+                data-name="html-block-images[]"
+                class="form-control form-input inline"
+                multiple
+        >
+    </div>
+    @if(isset($translation->fields) && object_get($translation->fields->where('key', $fieldName)->first(), 'image'))
+        <div class="form-group">
+            <br>
+            <img src="{{ object_get($translation->fields->where('key', $fieldName)->first(), 'image')->url() }}" alt="Image" style="max-width: 200px;">
+        </div>
+    @endif
 @else
     <div class="form-group">
-        <label for="" class="form-label">{{ ucfirst($fieldLabel) }} <span class="label label-light">{{$language->iso_code}}</span></label>
+        <label for="" class="form-label">{{ ucfirst($fieldLabel) }} <span
+                    class="label label-light">{{$language->iso_code}}</span></label>
 
         @if($fieldType == 'textarea')
             <textarea

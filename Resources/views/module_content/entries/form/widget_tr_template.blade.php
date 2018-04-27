@@ -14,10 +14,10 @@
     data-javascript-key="{{ $javascriptKey }}"
     class="widget-tr"
 >
-    <td style="padding-bottom: 30px">
-        <div class="template-container {{ $withBorder }}">
+    <td>
+        <div class="panel template-container {{ $withBorder }}">
 
-            <div class="template-container-header ">
+            <div class="{{-- template-container-header --}} panel-heading">
                 <span class="fa fa-icon fa-arrows cursor-dragndrop widget-tr-handle"></span>
 
                 {{--<span style="left: {{ (count($languages)-1) * 90 }}px; position:relative;" class="no-drag">--}}
