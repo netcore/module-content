@@ -1,12 +1,7 @@
-<div class="panel" style="padding-bottom: 20px;">
+<div class="" style="padding: 10px;">
     @if(isset($mainFields) && count($mainFields))
-        <div class="panel" style="margin: 5px;">
-            <div class="panel-heading">
-                <div class="panel-title">
-                    Widget main fields
-                </div>
-            </div>
-            <div class="panel-body js-main-fields-block">
+
+            <div class=" js-main-fields-block clearfix">
 
                 @foreach($mainFields as $field)
                     @php
@@ -100,8 +95,9 @@
                 @endforeach
             </div>
 
-        </div>
     @endif
+
+    @if( $fields )
     <div class="panel" style="margin: 5px;">
         <div class="panel-heading">
             <div class="panel-title">
@@ -110,6 +106,9 @@
         </div>
         @include('content::module_content.widgets.widget_blocks.backend_list')
     </div>
-    @include('content::module_content.widgets.widget_blocks.backend_form')
+            @include('content::module_content.widgets.widget_blocks.backend_form')
+    @endif
+
+
 
 </div>

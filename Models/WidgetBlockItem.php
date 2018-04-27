@@ -55,6 +55,23 @@ class WidgetBlockItem extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function getFieldAttribute()
+    {
+        return $this->fields->mapWithKeys(function ($item) {
+            if($item->image_file_name) {
+                return [
+                    $item->key => $item->image->url()
+                ];
+            }
+            return [
+                $item->key => $item->value
+            ];
+        });
+    }
+
+    /**
      * @param String $key
      * @return mixed
      */

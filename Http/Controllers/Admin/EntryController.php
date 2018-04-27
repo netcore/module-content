@@ -2,6 +2,7 @@
 
 namespace Modules\Content\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Content\Datatables\EntryDatatable;
 use Modules\Content\Http\Requests\Admin\EntryRequest;
@@ -181,17 +182,22 @@ class EntryController extends Controller
      * @param $requestData
      * @param $entry
      */
-    private
-    function storeAttachments(
-        $requestData,
-        $entry
-    ) {
+    private function storeAttachments($requestData, $entry)
+    {
         if (isset($requestData['attachments'])) {
+            $i = 1;
+            $media = '';
+            if (isset($requestData['media'])) {
+                $media = $requestData['media'];
+            }
             foreach ($requestData['attachments'] as $a) {
-                $attachment = $entry->attachments()->create([]);
+                $attachment = $entry->attachments()->create([
+                    'media' => $media
+                ]);
 
                 $attachment->image = $a;
                 $attachment->save();
+                $i++;
             }
         }
     }
@@ -200,10 +206,8 @@ class EntryController extends Controller
      * @param null $widgets
      * @return array
      */
-    public
-    function widgets(
-        $widgets = null
-    ) {
+    public function widgets($widgets = null)
+    {
         $languages = TransHelper::getAllLanguages();
 
         if (!$widgets) {
@@ -261,10 +265,8 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public
-    function revisions(
-        Entry $entry
-    ) {
+    public function revisions(Entry $entry)
+    {
         $revisions = $entry
             ->children()
             ->whereType('revision')
@@ -280,10 +282,8 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public
-    function destroy(
-        Entry $entry
-    ) {
+    public function destroy(Entry $entry)
+    {
         // Delete content blocks
         $entry->storage()->deleteOldContentBlocks();
 
@@ -314,10 +314,8 @@ class EntryController extends Controller
      * @internal param Entry $entry
      * @internal param Language $language
      */
-    public
-    function destroyAttachment(
-        $entryAttachment
-    ) {
+    public function destroyAttachment($entryAttachment)
+    {
         $entryAttachment = EntryAttachment::find($entryAttachment);
         $entryAttachment->image = STAPLER_NULL;
         $entryAttachment->save();
@@ -333,10 +331,8 @@ class EntryController extends Controller
      * @param Entry $page
      * @return mixed
      */
-    public
-    function preview(
-        Entry $page
-    ) {
+    public function preview(Entry $page)
+    {
         die('Preview');
         $locale = app()->getLocale();
         $template = config('netcore.module-content.resolver_template') ?: 'content::module_content.resolver.page';
@@ -348,10 +344,8 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public
-    function createDraft(
-        Entry $entry
-    ) {
+    public function createDraft(Entry $entry)
+    {
         $draft = $entry->revision()->make('draft');
 
         return redirect()->route('content::entries.edit', $draft);
@@ -361,12 +355,26 @@ class EntryController extends Controller
      * @param Entry $entry
      * @return mixed
      */
-    public
-    function restoreRevision(
-        Entry $entry
-    ) {
+    public function restoreRevision(Entry $entry)
+    {
         $restored = $entry->revision()->restore();
 
         return redirect()->route('content::entries.edit', $restored);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function attachmentState(Request $request)
+    {
+        EntryAttachment::where('id', $request->get('id', null))
+            ->update([
+                'is_featured' => (int)$request->get('state', 0)
+            ]);
+
+        return [
+            'state' => 'success'
+        ];
     }
 }

@@ -37,9 +37,12 @@
         @elseif($fieldType == 'select')
             <select
                     name="global_field[{{ $fieldName }}]"
-                    class="form-control"
+                    class="form-control js-input"
             >
-
+                {{ print_r(json_decode($field->data)) }}
+                @foreach(object_get(json_decode($field->data), 'items', []) as $id => $name)
+                    <option {{  (isset($entry->globalFields) ? object_get($entry->globalFields->where('key', $fieldName)->first(), 'value', null) : null) == $id ? 'selected' : '' }} value="{{ $id }}">{{ $name }}</option>
+                @endforeach
             </select>
         @else
             <input

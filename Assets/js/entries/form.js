@@ -4,6 +4,29 @@ $(function () {
         $(this).parent().parent().next().slideToggle();
     });
 
+    $('.js-toggle-attachment-featured').change(function () {
+        var isChecked = 0;
+        var id = $(this).data('id');
+        if(this.checked) {
+            var isChecked = 1;
+        }
+
+        $.ajax({
+            type: 'POST',
+            data: {
+                id: id,
+                state: isChecked
+            },
+            url: '/admin/content/attachment/state',
+            success: function (data) {
+                $.growl.success({
+                    title: 'Success!',
+                    message: 'State changed!'
+                });
+            }
+        });
+    });
+
     var initSortable = function () {
         $('.widgets-container').each(function (index, container) {
             $(container).find('.widgets-table').sortable({
