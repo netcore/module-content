@@ -10,13 +10,13 @@
             </div>
             <div class="panel-body position-relative">
                 <ul class="nav nav-tabs" role="tablist">
-                    <li class="active">
+                    <li  @isset($channel) class="active" @endisset >
                         <a href="#tab-values" role="tab" data-toggle="tab">
                             Content
                         </a>
                     </li>
 
-                    <li>
+                    <li @if(!isset($channel)) class="active" @endif>
                         <a href="#tab-content" role="tab" data-toggle="tab">
                             Widgets
                         </a>
@@ -38,10 +38,10 @@
                 </ul>
 
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane" id="tab-content">
+                    <div role="tabpanel" class="tab-pane @if(!isset($channel)) active @endif" id="tab-content">
                         @include('content::module_content.entries.form.tab-content')
                     </div>
-                    <div role="tabpanel" class="tab-pane active" id="tab-values">
+                    <div role="tabpanel" class="tab-pane @isset($channel) active @endisset" id="tab-values">
                         @include('content::module_content.entries.form.tab-values')
                     </div>
                     <div role="tabpanel" class="tab-pane" id="tab-seo">
