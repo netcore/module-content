@@ -52,7 +52,12 @@ if (!function_exists('cache_content_entries')) {
     {
         cache()->forget('content_entries');
         return cache()->rememberForever('content_entries', function () {
-            return Entry::get();
+            return Entry::get()->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'slug' => $item->slug,
+                ];
+            });
         });
     }
 }
