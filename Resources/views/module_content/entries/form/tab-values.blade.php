@@ -1,4 +1,4 @@
-@if(isset($channel))
+
     @foreach($languages as $language)
         <div>
             @php
@@ -31,7 +31,7 @@
 
         </div>
     @endforeach
-
+    @if(isset($channel))
     @include('content::module_content.entries.form.attachments')
     <div class="panel">
         <div class="panel-heading">
