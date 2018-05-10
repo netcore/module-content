@@ -95,6 +95,22 @@ class Entry extends Model
     /**
      * @return mixed
      */
+    public function children()
+    {
+        return $this->hasMany(Entry::class, 'parent_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function globalFields()
+    {
+        return $this->hasMany(EntryField::class);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getMediaAttribute()
     {
         return $this->attachments->map(function ($item) {
@@ -118,22 +134,6 @@ class Entry extends Model
                 'is_featured' => $item->is_featured,
             ];
         });
-    }
-
-    /**
-     * @return mixed
-     */
-    public function children()
-    {
-        return $this->hasMany(Entry::class, 'parent_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function globalFields()
-    {
-        return $this->hasMany(EntryField::class);
     }
 
     /**
@@ -179,6 +179,10 @@ class Entry extends Model
         return $query->active()->currentRevision()->whereIsHomepage(1);
     }
 
+    /**
+     * @param String $key
+     * @return string
+     */
     public function getGlobalField(String $key)
     {
         $field = $this->items->where('key', $key)->first();
