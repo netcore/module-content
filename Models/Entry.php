@@ -109,11 +109,24 @@ class Entry extends Model
     }
 
     /**
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     */
+    public function geturlAttribute()
+    {
+        $url =  $this->slug;
+        if($this->channel) {
+            $url =  $this->channel->slug . '/' . $this->slug;
+        }
+
+        return url($url);
+    }
+
+    /**
      * @return mixed
      */
     public function getMediaAttribute()
     {
-        return $this->attachments->map(function ($item) {
+        return $this->attachments->where('is_featured', 0)->map(function ($item) {
             return [
                 'attachment'  => $item->image_file_name ? $item->image->url() : '',
                 'media'       => $item->media,
