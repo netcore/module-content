@@ -62,18 +62,29 @@ class ContentModuleRepository
     public function entries()
     {
         if ($this->channel) {
-            if($this->filterByGlobal) {
+            if($this->filterByGlobal && !$this->sortByGlobal) {
                 return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
                     $q
                         ->where('key', $this->filterByGlobal[0])
                         ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
-                })->get();
+                });
             }
 
-            if($this->sortByGlobal) {
+            if($this->sortByGlobal && !$this->filterByGlobal) {
                 return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
                     $q->orderBy('value', 'desc');
                 }, 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+            }
+
+            if($this->sortByGlobal && $this->filterByGlobal) {
+                return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
+                    $q->orderBy('value', 'desc')
+                    ;
+                }, 'attachments', 'translations.contentBlocks', 'translations.metaTags'])->whereHas('globalFields', function ($q) {
+                    $q
+                        ->where('key', $this->filterByGlobal[0])
+                        ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                });
             }
             return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields', 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
         }
