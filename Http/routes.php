@@ -12,7 +12,7 @@ Route::group([
      */
 
     Route::get('/content', [
-        'as' => 'content.index',
+        'as'   => 'content.index',
         'uses' => 'ContentController@index'
     ]);
 
@@ -22,7 +22,7 @@ Route::group([
      */
 
     Route::get('/content/sections/pagination', [
-        'as' => 'sections.pagination',
+        'as'   => 'sections.pagination',
         'uses' => 'SectionController@pagination'
     ]);
 
@@ -32,96 +32,99 @@ Route::group([
      */
 
     Route::get('/content/channels/{channel}/edit', [
-        'as' => 'channels.edit',
+        'as'   => 'channels.edit',
         'uses' => 'ChannelController@edit'
     ]);
 
     Route::put('/content/channels/{channel}', [
-        'as' => 'channels.update',
+        'as'   => 'channels.update',
         'uses' => 'ChannelController@update'
     ]);
 
-    
+
     /**
      * Entries
      */
 
     Route::get('/content/entries/pagination', [
-        'as' => 'entries.pagination',
+        'as'   => 'entries.pagination',
         'uses' => 'EntryController@pagination'
     ]);
-    
+
     Route::get('/content/entries/{entry}/edit', [
-        'as' => 'entries.edit',
+        'as'   => 'entries.edit',
         'uses' => 'EntryController@edit'
     ]);
 
     Route::get('/content/entries/{entry}/preview', [
-        'as' => 'entries.preview',
+        'as'   => 'entries.preview',
         'uses' => 'EntryController@preview'
     ]);
 
     Route::put('/content/entries/{entry}', [
-        'as' => 'entries.update',
+        'as'   => 'entries.update',
         'uses' => 'EntryController@update'
     ]);
 
     Route::delete('/content/entries/{entry}', [
-        'as' => 'entries.destroy',
+        'as'   => 'entries.destroy',
         'uses' => 'EntryController@destroy'
     ]);
 
     Route::delete('/content/entries/attachment/{attachment}', [
-        'as' => 'entries.destroy_attachment',
+        'as'   => 'entries.destroy_attachment',
         'uses' => 'EntryController@destroyAttachment'
     ]);
 
     Route::get('/content/entries/create/{channelId?}', [
-        'as' => 'entries.create',
+        'as'   => 'entries.create',
         'uses' => 'EntryController@create'
     ]);
 
     Route::post('/content/entries/{channelId?}', [
-        'as' => 'entries.store',
+        'as'   => 'entries.store',
         'uses' => 'EntryController@store'
     ]);
 
     Route::post('/content/attachment/state', [
-        'as' => 'entries.attachment.state',
+        'as'   => 'entries.attachment.state',
         'uses' => 'EntryController@attachmentState'
     ]);
 
     Route::get('/content/entries/widgets', [
-        'as' => 'entries.widgets.index',
+        'as'   => 'entries.widgets.index',
         'uses' => 'EntryController@widgets'
     ]);
 
     Route::get('/content/entries/{entry}/revisions', [
-        'as' => 'entries.revisions',
+        'as'   => 'entries.revisions',
         'uses' => 'EntryController@revisions'
     ]);
 
     Route::post('/content/entries/{entry}/create-draft', [
-        'as' => 'entries.create_draft',
+        'as'   => 'entries.create_draft',
         'uses' => 'EntryController@createDraft'
     ]);
 
     Route::post('/content/entries/{entry}/restore-revision', [
-        'as' => 'entries.restore_revision',
+        'as'   => 'entries.restore_revision',
         'uses' => 'EntryController@restoreRevision'
     ]);
 });
+
 Route::group([
     'middleware' => ['web'],
-    'namespace'  => 'Modules\Content\Http\Controllers'
+    'namespace'  => 'Modules\Content\Http\Controllers\Api',
+    'prefix'     => 'api',
+    'as'         => 'api.'
 ], function () {
-    Route::get('/module-content/get-pages/{locale?}', [
-        'as' => 'api.content.get-pages',
-        'uses' => 'Api\ContentController@getPages'
+    Route::get('/content/get-pages/{locale?}', [
+        'as'   => 'content.get-pages',
+        'uses' => 'ContentController@getPages'
     ]);
 
-    Route::get('/module-content/get-page/{key}/{locale?}', [
-        'as' => 'api.content.get-page',
-        'uses' => 'Api\ContentController@getPage'
+    Route::get('/content/get-page/{key}/{locale?}', [
+        'as'   => 'content.get-page',
+        'uses' => 'ContentController@getPage'
     ]);
 });
