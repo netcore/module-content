@@ -324,22 +324,22 @@ class Entry extends Model
         }
 
         $widgets = [];
-        foreach ($translation->contentBlocks->sortBy('order') as $i => $contentBlock) {
+        foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
             $widgetKey = $contentBlock->widget;
             $widget = widgets()->where('key', $widgetKey)->first();
             $widgetFields = $widget ? $widget->fields->groupBy('is_main') : [];
-            $widgets[$i]['widget'] = $widgetKey;
-            $widgets[$i]['fields'] = [];
-            $widgets[$i]['items'] = [];
+            $widgets[$w]['widget'] = $widgetKey;
+            $widgets[$w]['fields'] = [];
+            $widgets[$w]['items'] = [];
 
             if (isset($widgetFields['1'])) {
                 foreach ($widgetFields['1'] as $field) {
                     if ($field->key === 'form') {
-                        $widgets[$i]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
+                        $widgets[$w]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
                     } elseif ($field->type !== 'file') {
-                        $widgets[$i]['fields'][$field->key] = $contentBlock->getField($field->key);
+                        $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
                     } else {
-                        $widgets[$i]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
+                        $widgets[$w]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
                     }
                 }
             }
@@ -359,7 +359,7 @@ class Entry extends Model
                     }
                 }
 
-                $widgets[$i]['items'][] = $items;
+                $widgets[$w]['items'] = $items;
             }
         }
 

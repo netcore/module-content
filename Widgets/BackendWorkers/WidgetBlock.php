@@ -419,12 +419,12 @@ class WidgetBlock implements BackendWorkerInterface
         }
 
         $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
-
+        $config = $this->config;
         $contentBlock = null;
         if($widgetBlock) {
             $contentBlock = ContentBlock::with('items')->whereData('{"widget_block_id":' . $widgetBlock->id . '}')->first();
         }
 
-        return compact('widgetBlock', 'language', 'translations', 'fields', 'maxItemsCount', 'mainFields', 'contentBlock');
+        return compact('widgetBlock', 'language', 'translations', 'fields', 'maxItemsCount', 'mainFields', 'contentBlock', 'config');
     }
 }
