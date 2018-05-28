@@ -4,12 +4,12 @@ namespace Modules\Content\Models;
 
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Content\PassThroughs\Entry\Attachments;
 use Modules\Content\PassThroughs\Entry\Revision;
 use Modules\Content\PassThroughs\Entry\Storage;
 use Modules\Content\Translations\EntryTranslation;
-use Modules\Translate\Traits\SyncTranslations;
 use Modules\Crud\Traits\CRUDModel;
+use Modules\Form\Models\Form;
+use Modules\Translate\Traits\SyncTranslations;
 
 class Entry extends Model
 {
@@ -111,11 +111,11 @@ class Entry extends Model
     /**
      * @return \Illuminate\Contracts\Routing\UrlGenerator|string
      */
-    public function geturlAttribute()
+    public function getUrlAttribute()
     {
-        $url =  $this->slug;
-        if($this->channel) {
-            $url =  $this->channel->slug . '/' . $this->slug;
+        $url = $this->slug;
+        if ($this->channel) {
+            $url = $this->channel->slug . '/' . $this->slug;
         }
 
         return url($url);
@@ -238,6 +238,9 @@ class Entry extends Model
         return $lengthOfPreview < $lengthOfPreviewPlusOne;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public function getFieldsAttribute()
     {
         $translation = $this->translations->where('locale', $this->locale())->first();
@@ -247,7 +250,6 @@ class Entry extends Model
 
         return collect([]);
     }
-
 
     /**
      * @return mixed
@@ -315,27 +317,29 @@ class Entry extends Model
             $entryFieldList = $channel->fields;
 
             foreach ($entryFieldList as $field) {
-                if ($field->type != 'file') {
+                if ($field->type !== 'file') {
                     $entryFields[$field->key] = $item->getField($field->key);
                 }
             }
         }
 
-
         $widgets = [];
-        foreach ($translation->contentBlocks->sortBy('order') as $contentBlock) {
+        foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
             $widgetKey = $contentBlock->widget;
-            $widget = widgets()->where('key', $contentBlock->widget)->first();
-            $widgetFields = $widget->fields->groupBy('is_main');
-            $widgets[$widgetKey]['fields'] = [];
-            $widgets[$widgetKey]['items'] = [];
+            $widget = widgets()->where('key', $widgetKey)->first();
+            $widgetFields = $widget ? $widget->fields->groupBy('is_main') : [];
+            $widgets[$w]['widget'] = $widgetKey;
+            $widgets[$w]['fields'] = [];
+            $widgets[$w]['items'] = [];
 
             if (isset($widgetFields['1'])) {
                 foreach ($widgetFields['1'] as $field) {
-                    if ($field->type != 'file') {
-                        $widgets[$widgetKey]['fields'][$field->key] = $contentBlock->getField($field->key);
+                    if ($field->key === 'form') {
+                        $widgets[$w]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
+                    } elseif ($field->type !== 'file') {
+                        $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
                     } else {
-                        $widgets[$widgetKey]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
+                        $widgets[$w]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
                     }
                 }
             }
@@ -344,21 +348,18 @@ class Entry extends Model
                 $widgetBlock = WidgetBlock::with('items.fields')->find(array_get($contentBlock->data,
                     'widget_block_id'));
 
-
                 $items = [];
-                $i = 0;
-                foreach ($widgetBlock->items->sortBy('order') as $widgetItem) {
+                foreach ($widgetBlock->items->sortBy('order') as $i => $widgetItem) {
                     foreach ($widgetFields['0'] as $field) {
-                        if ($field->type != 'file') {
+                        if ($field->type !== 'file') {
                             $items[$i][$field->key] = $widgetItem->getField($field->key);
                         } else {
                             $items[$i][$field->key] = $widgetItem->getStaplerObj($field->key);
                         }
                     }
-                    $i++;
                 }
-                $widgets[$widgetKey]['items'][] = $items;
 
+                $widgets[$w]['items'] = $items;
             }
         }
 
