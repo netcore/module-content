@@ -300,7 +300,7 @@ widgetDataCollectors['widget_blocks'] = function(widgetTr) {
                     ['style', ['style']],
                     ['para', ['ul', 'ol', 'paragraph']],
                     ['height', ['height']],
-                    ['insert', ['picture', 'link', 'table']],
+                    ['insert', ['picture', 'video', 'link', 'table']],
                     ['codeview', ['codeview']],
                     ['cleaner',['cleaner']]
                 ],

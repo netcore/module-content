@@ -1,4 +1,4 @@
-## Content management with widgets v1.0
+## Content management with widgets v2.1
 
 Idea behind this package is that many webpages are constructed from different sections, that
 look different in frontend, but they can use identical UI and database structure in backend.
@@ -33,13 +33,12 @@ installed:
 1. https://github.com/netcore/netcore
 2. https://github.com/netcore/module-admin
 3. https://github.com/netcore/module-translate
-4. https://github.com/nWidart/laravel-modules
 
 ## Installation
 
 Require this package with composer:
 
-    composer require netcore/module-content
+    composer require netcore/module-content:2.1.*
 
 Publish config, assets, migrations. Migrate and seed:
 
@@ -63,20 +62,17 @@ However, in most cases add this to your RouteServiceProvider.php (typically in `
 After installation, you should config ```config/netcore/module-content.php``` file.
 
 
-
 ## Updating to new version
 
-Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 is released.
+Let's imagine you have installed version v2.1.0, but a couple of days later v2.1.1 is released.
 Because we are working with https://github.com/nWidart/laravel-modules, simply doing
 ```composer require netcore/module-content``` might not be enough, because there might be
 changes in assets and/or migrations. Therefore, to install new version, you should run all the following commands:
 
-    composer require netcore/module-content:0.0.x
+    composer update netcore/module-content
     php artisan module:publish Content
     php artisan module:publish-migration Content
     php artisan migrate
-
-
 
 ## Terminology
 
@@ -88,9 +84,7 @@ For example - page "Post 1" in "Blog" channel.
 3. Section - sections are currently not used anywhere and will be deleted in version 0.1.x
 4. Widget - some sort of section that exists in page. Common examples are LargeSliderWidget, TestimonialsWidget, EmployeesWidget.
 
-
 It is better to keep everything in separated seed files, because it can get messy after some time. We recommend to create WidgetSeeder, ChannelSeeder, PageSeeder
-
 
 ## Adding a new widget
 
