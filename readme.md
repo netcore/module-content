@@ -250,6 +250,16 @@ $channels = content()->storeChannels([
 
 However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
 
+Template file looks like this
+
+```
+{{ $contentBlock->field['title'] }} //get main fields
+{{ $widgetBlock->items->sortBy('order') }} //get widget items collection
+{{ $item->field['title'] }} // To get specific item from widget item
+{{ $page->global_field['author'] }} // to get global channel field
+```
+
+
 ## Main information about versions
 
 0.1 branch contains initial version of package. It has very limited multi-language support and it is mainly intended for use in not-translatable websites.
