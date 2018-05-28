@@ -16,10 +16,10 @@
     @foreach($entryTranslation->contentBlocks->sortBy('order') as $contentBlock)
 
         @php
-        $frontendTemplate = $contentBlock->config->frontend_template;
+            $frontendTemplate = $contentBlock->config->frontend_template;
         @endphp
 
-        @include($frontendTemplate, [
+        @includeIf($frontendTemplate, [
             'contentBlock' => $contentBlock
         ])
     @endforeach

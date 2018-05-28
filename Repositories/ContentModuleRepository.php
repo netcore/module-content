@@ -188,6 +188,21 @@ class ContentModuleRepository
                 'data'       => json_encode(isset($widget['options']) ? $widget['options'] : [])
             ]);
 
+            $hasTemplatePath = isset($widget['options']) && isset($widget['options']['frontend_template']);
+            $template = $hasTemplatePath ? $widget['options']['frontend_template'] : 'widgets.' . $key;
+            $frontendTemplate = resource_path('views/'. str_replace('.', '/', $template));
+            $hasTemplate = isset($widget['options']) && isset($widget['options']['has_template']) && $widget['options']['has_template'] == false ? false : true;
+
+            if(!file_exists($frontendTemplate) && $hasTemplate) {
+                mkdir($frontendTemplate, 0755, true);
+                if($hasTemplatePath) {
+                    $templateFile = array_last(explode( '.', $widget['options']['frontend_template']));
+                    \File::put($frontendTemplate. '/'.$templateFile,'');
+                } else {
+                    \File::put($frontendTemplate. '/frontend.blade.php','');
+                }
+            }
+
             if (isset($widget['widget_fields'])) {
                 $widgetFields = $this->storeField($widget['widget_fields'], true);
                 $createdWidget->fields()->attach($widgetFields);
