@@ -62,7 +62,7 @@ class ContentModuleRepository
     public function entries()
     {
         if ($this->channel) {
-            if($this->filterByGlobal && !$this->sortByGlobal) {
+            if ($this->filterByGlobal && !$this->sortByGlobal) {
                 return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
                     $q
                         ->where('key', $this->filterByGlobal[0])
@@ -70,23 +70,44 @@ class ContentModuleRepository
                 });
             }
 
-            if($this->sortByGlobal && !$this->filterByGlobal) {
-                return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
-                    $q->orderBy('value', 'desc');
-                }, 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+            if ($this->sortByGlobal && !$this->filterByGlobal) {
+                return $this->channel->entries()->with([
+                    'translations',
+                    'translations.fields',
+                    'globalFields' => function ($q) {
+                        $q->orderBy('value', 'desc');
+                    },
+                    'attachments',
+                    'translations.contentBlocks',
+                    'translations.metaTags'
+                ]);
             }
 
-            if($this->sortByGlobal && $this->filterByGlobal) {
-                return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
-                    $q->orderBy('value', 'desc')
-                    ;
-                }, 'attachments', 'translations.contentBlocks', 'translations.metaTags'])->whereHas('globalFields', function ($q) {
+            if ($this->sortByGlobal && $this->filterByGlobal) {
+                return $this->channel->entries()->with([
+                    'translations',
+                    'translations.fields',
+                    'globalFields' => function ($q) {
+                        $q->orderBy('value', 'desc');
+                    },
+                    'attachments',
+                    'translations.contentBlocks',
+                    'translations.metaTags'
+                ])->whereHas('globalFields', function ($q) {
                     $q
                         ->where('key', $this->filterByGlobal[0])
                         ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
                 });
             }
-            return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields', 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+
+            return $this->channel->entries()->with([
+                'translations',
+                'translations.fields',
+                'globalFields',
+                'attachments',
+                'translations.contentBlocks',
+                'translations.metaTags'
+            ]);
         }
 
         return null;
@@ -133,7 +154,7 @@ class ContentModuleRepository
         $entries = cache()->rememberForever('content_entries', function () {
             return Entry::get()->map(function ($item) {
                 return [
-                    'id' => $item->id,
+                    'id'   => $item->id,
                     'slug' => $item->slug,
                 ];
             });
@@ -166,6 +187,7 @@ class ContentModuleRepository
                 'url'   => url('/')
             ];
         }
+
         return (object)[
             'title' => $entry->title,
             'url'   => url($entry->slug)
@@ -190,16 +212,16 @@ class ContentModuleRepository
 
             $hasTemplatePath = isset($widget['options']) && isset($widget['options']['frontend_template']);
             $template = $hasTemplatePath ? $widget['options']['frontend_template'] : 'widgets.' . $key;
-            $frontendTemplate = resource_path('views/'. str_replace('.', '/', $template));
+            $frontendTemplate = resource_path('views/' . str_replace('.', '/', $template));
             $hasTemplate = isset($widget['options']) && isset($widget['options']['has_template']) && $widget['options']['has_template'] == false ? false : true;
 
-            if(!file_exists($frontendTemplate) && $hasTemplate) {
+            if (!file_exists($frontendTemplate) && $hasTemplate) {
                 mkdir($frontendTemplate, 0755, true);
-                if($hasTemplatePath) {
-                    $templateFile = array_last(explode( '.', $widget['options']['frontend_template']));
-                    \File::put($frontendTemplate. '/'.$templateFile,'');
+                if ($hasTemplatePath) {
+                    $templateFile = array_last(explode('.', $widget['options']['frontend_template']));
+                    \File::put($frontendTemplate . '/' . $templateFile, '');
                 } else {
-                    \File::put($frontendTemplate. '/frontend.blade.php','');
+                    \File::put($frontendTemplate . '/frontend.blade.php', '');
                 }
             }
 
@@ -323,6 +345,7 @@ class ContentModuleRepository
         $entry->updateTranslations($entryTranslations);
 
         $this->seedEntryData($entry, $item['data']);
+
 
         if (isset($item['data']['entry_data'])) {
             foreach ($item['data']['entry_data'] as $field => $value) {
@@ -466,14 +489,13 @@ class ContentModuleRepository
 
 
                             $image = new \Symfony\Component\HttpFoundation\File\File($field);
-                            $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
-                                $image);
 
-
-                            if (isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                            if (in_array($image->getExtension(), ['png', 'jpg', 'jpeg', 'gif']) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
                                 Image::make($image->getRealPath())->resize($fieldOptions->width,
                                     $fieldOptions->height)->save($newImage);
                             } else {
+                                $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
+                                    $image);
                                 copy($image, $newImage);
                             }
                             $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
