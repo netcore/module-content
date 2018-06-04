@@ -489,13 +489,13 @@ class ContentModuleRepository
 
 
                             $image = new \Symfony\Component\HttpFoundation\File\File($field);
+                            $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
+                                $image);
 
                             if (in_array($image->getExtension(), ['png', 'jpg', 'jpeg', 'gif']) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
                                 Image::make($image->getRealPath())->resize($fieldOptions->width,
                                     $fieldOptions->height)->save($newImage);
                             } else {
-                                $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
-                                    $image);
                                 copy($image, $newImage);
                             }
                             $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
