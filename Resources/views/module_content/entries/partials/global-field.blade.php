@@ -44,6 +44,14 @@
                     <option {{  (isset($entry->globalFields) ? object_get($entry->globalFields->where('key', $fieldName)->first(), 'value', null) : null) == $id ? 'selected' : '' }} value="{{ $id }}">{{ $name }}</option>
                 @endforeach
             </select>
+        @elseif($fieldType == 'number')
+            <input
+                    type="number"
+                    name="global_field[{{ $fieldName }}]"
+                    class="form-control"
+                    value="{{ isset($entry->globalFields) ? object_get($entry->globalFields->where('key', $fieldName)->first(), 'value') : null }}"
+            >
+            <div class="error-span"></div>
         @else
             <input
                     type="text"
@@ -51,6 +59,7 @@
                     class="form-control"
                     value="{{ isset($entry->globalFields) ? object_get($entry->globalFields->where('key', $fieldName)->first(), 'value') : null }}"
             >
+            <div class="error-span"></div>
         @endif
     </div>
 
