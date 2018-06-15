@@ -35,12 +35,29 @@
                     class="js-input"
             >
         @elseif($fieldType == 'select')
+            @php
+                $data = json_decode($field->data);
+                $selectData = object_get(json_decode($field->data), 'items', []);
+
+                if(isset($data->relation) && $data->relation) {
+                    $model = $data->relation_class::get();
+
+                    if(isset($data->relation_options) && isset($data->relation_options->relation)) {
+                        $where = $data->relation_options->relation;
+                        $model = $data->relation_class::whereHas($data->relation_options->relation->name, function ($q) use ($where) {
+                            $q->where($where->where[0], $where->where[1]);
+                        })->get();
+                    }
+                    $selectData = $model->pluck($data->relation_columns[1], $data->relation_columns[0]);
+                }
+
+
+            @endphp
             <select
                     name="global_field[{{ $fieldName }}]"
                     class="form-control js-input"
             >
-                {{ print_r(json_decode($field->data)) }}
-                @foreach(object_get(json_decode($field->data), 'items', []) as $id => $name)
+                @foreach($selectData as $id => $name)
                     <option {{  (isset($entry->globalFields) ? object_get($entry->globalFields->where('key', $fieldName)->first(), 'value', null) : null) == $id ? 'selected' : '' }} value="{{ $id }}">{{ $name }}</option>
                 @endforeach
             </select>
