@@ -2,6 +2,7 @@
 
 namespace Modules\Content\Repositories;
 
+use File;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use Modules\Content\Models\Channel;
@@ -14,15 +15,26 @@ use Modules\Content\Traits\ChannelSeederTrait;
 
 class ContentModuleRepository
 {
-
     use ChannelSeederTrait;
 
+    /**
+     * @var null
+     */
     private $channel = null;
+
+    /**
+     * @var null
+     */
     private $filterByGlobal = null;
+
+    /**
+     * @var null
+     */
     private $sortByGlobal = null;
 
     /**
      * @param $pages
+     * @throws \Exception
      */
     public function storePages($pages)
     {
@@ -37,6 +49,7 @@ class ContentModuleRepository
 
     /**
      * @param $pages
+     * @throws \Exception
      */
     public function pagesSeeder($pages)
     {
@@ -64,9 +77,8 @@ class ContentModuleRepository
         if ($this->channel) {
             if ($this->filterByGlobal && !$this->sortByGlobal) {
                 return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
-                    $q
-                        ->where('key', $this->filterByGlobal[0])
-                        ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                    $q->where('key', $this->filterByGlobal[0])->where('value', $this->filterByGlobal[1],
+                        $this->filterByGlobal[2]);
                 });
             }
 
@@ -94,9 +106,8 @@ class ContentModuleRepository
                     'translations.contentBlocks',
                     'translations.metaTags'
                 ])->whereHas('globalFields', function ($q) {
-                    $q
-                        ->where('key', $this->filterByGlobal[0])
-                        ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                    $q->where('key', $this->filterByGlobal[0])->where('value', $this->filterByGlobal[1],
+                        $this->filterByGlobal[2]);
                 });
             }
 
@@ -143,11 +154,11 @@ class ContentModuleRepository
         return null;
     }
 
-
     /**
      * @param null $key
      * @param bool $findById
-     * @return null
+     * @return \Illuminate\Contracts\Routing\UrlGenerator|string
+     * @throws \Exception
      */
     public function getUrl($key = null, $findById = false)
     {
@@ -196,6 +207,7 @@ class ContentModuleRepository
 
     /**
      * @param $widgets
+     * @throws \Exception
      */
     public function storeWidgets($widgets)
     {
@@ -213,27 +225,28 @@ class ContentModuleRepository
             $hasTemplatePath = isset($widget['options']) && isset($widget['options']['frontend_template']);
             $template = $hasTemplatePath ? $widget['options']['frontend_template'] : 'widgets.' . $key;
             $frontendTemplate = resource_path('views/' . str_replace('.', '/', $template));
+            $frontendTemplateDir = str_replace('/frontend', '', $frontendTemplate);
             $hasTemplate = isset($widget['options']) && isset($widget['options']['has_template']) && $widget['options']['has_template'] == false ? false : true;
 
-            if (!file_exists($frontendTemplate) && $hasTemplate) {
-                mkdir($frontendTemplate, 0755, true);
+            if (!File::isDirectory($frontendTemplateDir) && $hasTemplate) {
+                mkdir($frontendTemplateDir, 0755, true);
+
                 if ($hasTemplatePath) {
                     $templateFile = array_last(explode('.', $widget['options']['frontend_template']));
-                    \File::put($frontendTemplate . '/' . $templateFile, '');
+                    File::put($frontendTemplateDir . '/' . $templateFile . '.blade.php', '');
                 } else {
-                    \File::put($frontendTemplate . '/frontend.blade.php', '');
+                    File::put($frontendTemplateDir . '/frontend.blade.php', '');
                 }
             }
 
             if (isset($widget['widget_fields'])) {
                 $widgetFields = $this->storeField($widget['widget_fields'], true);
                 $createdWidget->fields()->attach($widgetFields);
-
             }
+
             if (isset($widget['item_fields'])) {
                 $itemFields = $this->storeField($widget['item_fields']);
                 $createdWidget->fields()->attach($itemFields);
-
             }
         }
 
@@ -242,6 +255,7 @@ class ContentModuleRepository
 
     /**
      * @param $channels
+     * @throws \Exception
      */
     public function storeChannels($channels)
     {
@@ -266,9 +280,10 @@ class ContentModuleRepository
     }
 
     /**
-     * @param $fields
+     * @param      $fields
      * @param bool $isMain
      * @return array
+     * @throws \Exception
      */
     private function storeField($fields, $isMain = false)
     {
@@ -345,7 +360,6 @@ class ContentModuleRepository
         $entry->updateTranslations($entryTranslations);
 
         $this->seedEntryData($entry, $item['data']);
-
 
         if (isset($item['data']['entry_data'])) {
             foreach ($item['data']['entry_data'] as $field => $value) {
@@ -492,7 +506,12 @@ class ContentModuleRepository
                             $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
                                 $image);
 
-                            if (in_array($image->getExtension(), ['png', 'jpg', 'jpeg', 'gif']) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                            if (in_array($image->getExtension(), [
+                                    'png',
+                                    'jpg',
+                                    'jpeg',
+                                    'gif'
+                                ]) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
                                 Image::make($image->getRealPath())->resize($fieldOptions->width,
                                     $fieldOptions->height)->save($newImage);
                             } else {
