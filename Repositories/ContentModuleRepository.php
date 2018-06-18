@@ -62,20 +62,34 @@ class ContentModuleRepository
     public function entries()
     {
         if ($this->channel) {
-            if($this->filterByGlobal) {
+            if ($this->filterByGlobal) {
                 return $this->channel->entries()->where('is_active', 1)->whereHas('globalFields', function ($q) {
-                    $q
-                        ->where('key', $this->filterByGlobal[0])
-                        ->where('value', $this->filterByGlobal[1], $this->filterByGlobal[2]);
+                    $q->where('key', $this->filterByGlobal[0])->where('value', $this->filterByGlobal[1],
+                        $this->filterByGlobal[2]);
                 })->get();
             }
 
-            if($this->sortByGlobal) {
-                return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields' => function($q)  {
-                    $q->orderBy('value', 'desc');
-                }, 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+            if ($this->sortByGlobal) {
+                return $this->channel->entries()->with([
+                    'translations',
+                    'translations.fields',
+                    'globalFields' => function ($q) {
+                        $q->orderBy('value', 'desc');
+                    },
+                    'attachments',
+                    'translations.contentBlocks',
+                    'translations.metaTags'
+                ]);
             }
-            return $this->channel->entries()->with(['translations', 'translations.fields', 'globalFields', 'attachments', 'translations.contentBlocks', 'translations.metaTags']);
+
+            return $this->channel->entries()->with([
+                'translations',
+                'translations.fields',
+                'globalFields',
+                'attachments',
+                'translations.contentBlocks',
+                'translations.metaTags'
+            ]);
         }
 
         return null;
@@ -122,7 +136,7 @@ class ContentModuleRepository
         $entries = cache()->rememberForever('content_entries', function () {
             return Entry::get()->map(function ($item) {
                 return [
-                    'id' => $item->id,
+                    'id'   => $item->id,
                     'slug' => $item->slug,
                 ];
             });
@@ -155,6 +169,7 @@ class ContentModuleRepository
                 'url'   => url('/')
             ];
         }
+
         return (object)[
             'title' => $entry->title,
             'url'   => url($entry->slug)
@@ -218,7 +233,7 @@ class ContentModuleRepository
     }
 
     /**
-     * @param $fields
+     * @param      $fields
      * @param bool $isMain
      * @return array
      */
@@ -438,16 +453,19 @@ class ContentModuleRepository
                             $fieldObj = $widgetObject->fields->where('key', $key)->first();
                             $fieldOptions = json_decode($fieldObj->data);
 
-
                             $image = new \Symfony\Component\HttpFoundation\File\File($field);
-                            $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
-                                $image);
 
-
-                            if (isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                            if (in_array($image->getExtension(), [
+                                    'png',
+                                    'jpg',
+                                    'jpeg',
+                                    'gif'
+                                ]) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
                                 Image::make($image->getRealPath())->resize($fieldOptions->width,
                                     $fieldOptions->height)->save($newImage);
                             } else {
+                                $newImage = str_replace('.' . $image->getExtension(), '_copy.' . $image->getExtension(),
+                                    $image);
                                 copy($image, $newImage);
                             }
                             $newImage = new \Symfony\Component\HttpFoundation\File\File($newImage);
