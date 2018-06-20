@@ -259,12 +259,17 @@ class WidgetBlock implements BackendWorkerInterface
                                 $widgetField = $widget->fields->where('key', $key)->first();
                                 $fieldOptions = json_decode($widgetField->data);
 
-                                if(isset($fieldOptions->width) && isset($fieldOptions->height)) {
-                                    $newImage  = public_path('uploads/temp/' .str_random(8) . '.jpg');
+                                if (in_array($uploadedFile->getClientOriginalExtension(), ['png', 'jpg', 'jpeg', 'gif']) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
+                                    if(!file_exists(public_path('uploads/temp/'))) {
+                                        mkdir(public_path('uploads/temp/'), 0755, true);
+                                    }
+                                    $newImage  = public_path('uploads/temp/' .str_random(8) . '.' . $uploadedFile->getClientOriginalExtension());
 
                                     Image::make($uploadedFile->getRealPath())->resize($fieldOptions->width, $fieldOptions->height)->save($newImage);
-                                    $dbData['image'] = $newImage;
+                                } else {
+                                    $newImage = $uploadedFile;
                                 }
+                                $dbData['image'] = $newImage;
                             }
 
                             if(!isset($dbData['image'])) {

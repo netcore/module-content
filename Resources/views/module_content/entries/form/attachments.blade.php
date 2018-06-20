@@ -20,7 +20,7 @@
             <div class="form-group">
                 <label>Media <small>(Youtube video or iframe)</small></label>
                 <br>
-                {!! Form::text('media', null, [
+                {!! Form::text('media', '', [
                     'class' => 'form-control',
                 ]) !!}
 
