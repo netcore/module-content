@@ -46,6 +46,17 @@ class EntryController extends Controller
     public function store(EntryRequest $request, $channelId = null)
     {
         $requestData = $request->all();
+        $errors = [];
+        if (isset($requestData['global_field'])) {
+            foreach ($requestData['global_field'] as $field => $value) {
+                if ($value === null) {
+                    $errors['errors']['global_field.'.$field] = ['This field is required'];
+                }
+            }
+        }
+        if(count($errors)) {
+            return response()->json($errors, 422);
+        }
 
         $entryData = [];
         if ($channelId) {
@@ -110,6 +121,18 @@ class EntryController extends Controller
     public function update(EntryRequest $request, Entry $entry)
     {
         $requestData = $request->all();
+
+        $errors = [];
+        if (isset($requestData['global_field'])) {
+            foreach ($requestData['global_field'] as $field => $value) {
+                if ($value === null) {
+                    $errors['errors']['global_field.'.$field] = ['This field is required'];
+                }
+            }
+        }
+        if(count($errors)) {
+            return response()->json($errors, 422);
+        }
 
         $makeRevision = config('netcore.module-content.revisions_enabled', true);
         $entry->storage()->update($requestData, $makeRevision);
