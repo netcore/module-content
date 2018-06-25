@@ -300,9 +300,10 @@ class Entry extends Model
 
     /**
      * @param null $locale
+     * @param bool $withContent
      * @return array
      */
-    public function formatResponse($locale = null)
+    public function formatResponse($locale = null, $withContent = true)
     {
         $item = $this;
 
@@ -324,42 +325,74 @@ class Entry extends Model
         }
 
         $widgets = [];
-        foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
-            $widgetKey = $contentBlock->widget;
-            $widget = widgets()->where('key', $widgetKey)->first();
-            $widgetFields = $widget ? $widget->fields->groupBy('is_main') : [];
-            $widgets[$w]['widget'] = $widgetKey;
-            $widgets[$w]['fields'] = [];
-            $widgets[$w]['items'] = [];
+        if($withContent) {
+            foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
+                $widgetKey = $contentBlock->widget;
+                $widget = widgets()->where('key', $widgetKey)->first();
+                $widgetFields = $widget ? $widget->fields->groupBy('is_main') : [];
+                $widgets[$w]['widget'] = $widgetKey;
+                $widgets[$w]['fields'] = [];
+                $widgets[$w]['items'] = [];
 
-            if (isset($widgetFields['1'])) {
-                foreach ($widgetFields['1'] as $field) {
-                    if ($field->key === 'form') {
-                        $widgets[$w]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
-                    } elseif ($field->type !== 'file') {
-                        $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
-                    } else {
-                        $widgets[$w]['fields'][$field->key] = $contentBlock->getStaplerObj($field->key);
-                    }
-                }
-            }
-
-            if (isset($widgetFields['0'])) {
-                $widgetBlock = WidgetBlock::with('items.fields')->find(array_get($contentBlock->data,
-                    'widget_block_id'));
-
-                $items = [];
-                foreach ($widgetBlock->items->sortBy('order') as $i => $widgetItem) {
-                    foreach ($widgetFields['0'] as $field) {
-                        if ($field->type !== 'file') {
-                            $items[$i][$field->key] = $widgetItem->getField($field->key);
+                if (isset($widgetFields['1'])) {
+                    foreach ($widgetFields['1'] as $field) {
+                        if ($field->key === 'form') {
+                            $widgets[$w]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
+                        } elseif ($field->type !== 'file') {
+                            $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
                         } else {
-                            $items[$i][$field->key] = $widgetItem->getStaplerObj($field->key);
+                            $f = $contentBlock->items->where('key', $field->key)->first();
+                            if($f) {
+                                $widgets[$w]['fields'][$field->key] = $f->image_file_name ? $f->image : (object)[
+                                    'original' => [
+                                        'path' => null,
+                                        'url'  => null
+                                    ]
+                                ];
+                            } else {
+                                $widgets[$w]['fields'][$field->key] = (object)[
+                                    'original' => [
+                                        'path' => null,
+                                        'url'  => null
+                                    ]
+                                ];
+                            }
                         }
                     }
                 }
 
-                $widgets[$w]['items'] = $items;
+                if (isset($widgetFields['0'])) {
+                    $widgetBlock = WidgetBlock::with('items.fields')->find(array_get($contentBlock->data,
+                        'widget_block_id'));
+
+                    $items = [];
+                    foreach ($widgetBlock->items->sortBy('order') as $i => $widgetItem) {
+                        foreach ($widgetFields['0'] as $field) {
+                            if ($field->type !== 'file') {
+                                $items[$i][$field->key] = $widgetItem->getField($field->key);
+                            } else {
+                                $f = $widgetItem->fields->where('key', $field->key)->first();
+                                if($f) {
+                                    $items[$i][$field->key] = $f->image_file_name ? $f->image : (object)[
+                                        'original' => [
+                                            'path' => null,
+                                            'url'  => null
+                                        ]
+                                    ];
+                                } else {
+                                    $items[$i][$field->key] = (object)[
+                                        'original' => [
+                                            'path' => null,
+                                            'url'  => null
+                                        ]
+                                    ];
+                                }
+                            }
+                        }
+                    }
+
+                    $widgets[$w]['items'] = $items;
+                }
             }
         }
 
