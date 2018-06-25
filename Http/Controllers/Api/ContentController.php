@@ -24,7 +24,7 @@ class ContentController extends Controller
                 'translations.contentBlocks.items',
                 'translations.fields'
             ])->active()->get()->map(function ($item) use ($locale) {
-                return $item->formatResponse($locale);
+                return $item->formatResponse($locale, false);
             });
 
             return response()->json([
@@ -74,7 +74,7 @@ class ContentController extends Controller
             ]);
         } catch (\Exception $e) {
             logger()->error($e);
-            
+
             return response()->json([
                 'success' => false,
                 'data'    => []
