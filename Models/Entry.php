@@ -343,12 +343,21 @@ class Entry extends Model
                         } else {
                             $f = $contentBlock->items->where('key', $field->key)->first();
                             if($f) {
-                                $widgets[$w]['fields'][$field->key] = $f->image_file_name ? $f->image : (object)[
-                                    'original' => [
-                                        'path' => null,
-                                        'url'  => null
-                                    ]
-                                ];
+                                if($f->image_file_name) {
+                                    $widgets[$w]['fields'][$field->key] = (object)[
+                                        'original' => [
+                                            'path' => $f->image->path(),
+                                            'url'  => url($f->image->url())
+                                        ]
+                                    ];
+                                } else {
+                                    $widgets[$w]['fields'][$field->key] = (object)[
+                                        'original' => [
+                                            'path' => null,
+                                            'url'  => null
+                                        ]
+                                    ];
+                                }
                             } else {
                                 $widgets[$w]['fields'][$field->key] = (object)[
                                     'original' => [
@@ -373,12 +382,21 @@ class Entry extends Model
                             } else {
                                 $f = $widgetItem->fields->where('key', $field->key)->first();
                                 if($f) {
-                                    $items[$i][$field->key] = $f->image_file_name ? $f->image : (object)[
-                                        'original' => [
-                                            'path' => null,
-                                            'url'  => null
-                                        ]
-                                    ];
+                                    if($f->image_file_name) {
+                                        $items[$i][$field->key] = (object)[
+                                            'original' => [
+                                                'path' => $f->image->path(),
+                                                'url'  => url($f->image->url())
+                                            ]
+                                        ];
+                                    } else {
+                                        $items[$i][$field->key] = (object)[
+                                            'original' => [
+                                                'path' => null,
+                                                'url'  => null
+                                            ]
+                                        ];
+                                    }
                                 } else {
                                     $items[$i][$field->key] = (object)[
                                         'original' => [
