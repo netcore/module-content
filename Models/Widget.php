@@ -42,17 +42,17 @@ class Widget extends Model
         $mainFields = [];
         foreach ($this->fields->where('is_main', 0) as $field) {
             $fields[$field->key] = [
-                'type'  => $field->type,
-                'label' => $field->title,
-                'options' => (array) json_decode($field->data)
+                'type'    => $field->type,
+                'label'   => $field->title,
+                'options' => (array)json_decode($field->data)
             ];
         }
 
         foreach ($this->fields->where('is_main', 1)->where('is_global', 0) as $field) {
             $mainFields[$field->key] = [
-                'type'  => $field->type,
-                'label' => $field->title,
-                'options' => (array) json_decode($field->data)
+                'type'    => $field->type,
+                'label'   => $field->title,
+                'options' => (array)json_decode($field->data)
             ];
         }
 
@@ -62,6 +62,9 @@ class Widget extends Model
             'frontend_template'   => 'widgets.' . $this->key . '.frontend',
             'backend_template'    => 'content::module_content.widgets.widget_blocks.backend',
             'backend_with_border' => false,
+            'has_template'        => true,
+            'is_empty'            => false,
+            'content'             => 'This widget has no input data',
             "backend_javascript"  => "widget_blocks.js",
             "javascript_key"      => "widget_blocks",
             "backend_css"         => "widget_blocks.css",
@@ -71,8 +74,8 @@ class Widget extends Model
             'main_fields'         => $mainFields
         ];
 
-        if($this->options) {
-            foreach($this->options as $index => $value) {
+        if ($this->options) {
+            foreach ($this->options as $index => $value) {
                 $widgetData[$index] = $value;
             }
         }

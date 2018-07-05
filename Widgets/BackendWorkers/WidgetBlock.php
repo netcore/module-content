@@ -246,29 +246,36 @@ class WidgetBlock implements BackendWorkerInterface
                 $dbData = compact('key', 'value');
 
                 if ($type == 'file') {
+
                     $imageAttribute = (array)array_get($attributes, $key, []);
                     if ($imageAttribute) {
                         $name = array_get($imageAttribute, 'file');
                         $uploadedFile = request()->file($name);
+
                         if ($name AND $uploadedFile) {
                             $dbData['value'] = null;
+
                             if(isset($widget)) {
                                 $widgetField = $widget->fields->where('key', $key)->first();
                                 $fieldOptions = json_decode($widgetField->data);
+
                                 if (in_array($uploadedFile->getClientOriginalExtension(), ['png', 'jpg', 'jpeg', 'gif']) && isset($fieldOptions->width) && isset($fieldOptions->height)) {
                                     if(!file_exists(public_path('uploads/temp/'))) {
                                         mkdir(public_path('uploads/temp/'), 0755, true);
                                     }
                                     $newImage  = public_path('uploads/temp/' .str_random(8) . '.' . $uploadedFile->getClientOriginalExtension());
+
                                     Image::make($uploadedFile->getRealPath())->resize($fieldOptions->width, $fieldOptions->height)->save($newImage);
                                 } else {
                                     $newImage = $uploadedFile;
                                 }
                                 $dbData['image'] = $newImage;
                             }
+
                             if(!isset($dbData['image'])) {
                                 $dbData['image'] = $uploadedFile;
                             }
+
                         }
                     }
                 }
@@ -417,12 +424,12 @@ class WidgetBlock implements BackendWorkerInterface
         }
 
         $maxItemsCount = array_get($this->config, 'max_items_count') ?: 0;
-
+        $config = $this->config;
         $contentBlock = null;
         if($widgetBlock) {
             $contentBlock = ContentBlock::with('items')->whereData('{"widget_block_id":' . $widgetBlock->id . '}')->first();
         }
 
-        return compact('widgetBlock', 'language', 'translations', 'fields', 'maxItemsCount', 'mainFields', 'contentBlock');
+        return compact('widgetBlock', 'language', 'translations', 'fields', 'maxItemsCount', 'mainFields', 'contentBlock', 'config');
     }
 }

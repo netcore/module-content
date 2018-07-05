@@ -1,4 +1,10 @@
 <div class="" style="padding: 10px;">
+    @if($config['is_empty'] == true && isset($config['content']))
+        <div class="alert alert-info">
+            {!! $config['content'] !!}
+        </div>
+    @endif
+
     @if(isset($mainFields) && count($mainFields))
         <div class=" js-main-fields-block clearfix">
             @foreach($mainFields as $field)

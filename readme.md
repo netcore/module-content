@@ -1,4 +1,4 @@
-## Content management with widgets v1.0
+## Content management with widgets v2.1
 
 Idea behind this package is that many webpages are constructed from different sections, that
 look different in frontend, but they can use identical UI and database structure in backend.
@@ -33,13 +33,12 @@ installed:
 1. https://github.com/netcore/netcore
 2. https://github.com/netcore/module-admin
 3. https://github.com/netcore/module-translate
-4. https://github.com/nWidart/laravel-modules
 
 ## Installation
 
 Require this package with composer:
 
-    composer require netcore/module-content
+    composer require netcore/module-content:2.1.*
 
 Publish config, assets, migrations. Migrate and seed:
 
@@ -63,20 +62,17 @@ However, in most cases add this to your RouteServiceProvider.php (typically in `
 After installation, you should config ```config/netcore/module-content.php``` file.
 
 
-
 ## Updating to new version
 
-Let's imagine you have installed version v0.0.8, but a couple of days later v0.0.9 is released.
+Let's imagine you have installed version v2.1.0, but a couple of days later v2.1.1 is released.
 Because we are working with https://github.com/nWidart/laravel-modules, simply doing
 ```composer require netcore/module-content``` might not be enough, because there might be
 changes in assets and/or migrations. Therefore, to install new version, you should run all the following commands:
 
-    composer require netcore/module-content:0.0.x
+    composer update netcore/module-content
     php artisan module:publish Content
     php artisan module:publish-migration Content
     php artisan migrate
-
-
 
 ## Terminology
 
@@ -88,11 +84,11 @@ For example - page "Post 1" in "Blog" channel.
 3. Section - sections are currently not used anywhere and will be deleted in version 0.1.x
 4. Widget - some sort of section that exists in page. Common examples are LargeSliderWidget, TestimonialsWidget, EmployeesWidget.
 
-
+It is better to keep everything in separated seed files, because it can get messy after some time. We recommend to create WidgetSeeder, ChannelSeeder, PageSeeder
 
 ## Adding a new widget
 
-1. Start with seeding widget 
+1. Start with widget seeding
 ```
 content()->storeWidgets([
             'Employees widget' => [
@@ -139,9 +135,26 @@ You can customize widget options, available options:
     'backend_javascript'  => 'widget_blocks.js',
     'javascript_key'      => 'widget_blocks',
     'backend_css'         => 'widget_blocks.css',
+    'is_empty'            => false,
+    'content'             => 'This text is shown when widget has no input data'
+    'has_template'        => true,
     'backend_worker'      => \Modules\Content\Widgets\BackendWorkers\WidgetBlock::class,
     'max_items_count'     => 1, // put "0" if you want to allow unlimmited amount of items
 ]
+```
+
+You can create empty widget, which won't be configurable from Content section in admin panel, but you can display any data in frontend template. This is useful if you want to display forum thread list. Here is an example widget:
+
+```
+content()->storeWidgets([
+    'Forum threads' => [
+        'is_enabled'    => 1,
+        'options' => [
+            'is_empty' => true,
+            'content' => 'This widget is configurable from <a href="link-to-section">Forum section</a>'
+        ]
+    ]   
+]);
 ```
 
 2. In most cases you will want to customize name, key, frontend_template, javascript_key, backend_worker and fields.
@@ -236,6 +249,16 @@ $channels = content()->storeChannels([
 ```
 
 However, you need to configure and create a template for each of your channels in ```config/netcore/module-content.php```
+
+Template file looks like this
+
+```
+{{ $contentBlock->field['title'] }} //get main fields
+{{ $widgetBlock->items->sortBy('order') }} //get widget items collection
+{{ $item->field['title'] }} // To get specific item from widget item
+{{ $page->global_field['author'] }} // to get global channel field
+```
+
 
 ## Main information about versions
 
