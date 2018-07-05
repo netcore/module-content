@@ -1,11 +1,10 @@
-
 @php
     $widgetBlockId = isset($widgetBlock) ? $widgetBlock->id : 'newid';
     $viewHelper = new \Modules\Content\Widgets\BackendViewHelpers\WidgetBlock;
 @endphp
 <table
-    class="table table-bordered image-blocks-table"
-    data-image-block-id="{{ $widgetBlockId }}"
+        class="table table-bordered image-blocks-table"
+        data-image-block-id="{{ $widgetBlockId }}"
 >
     <thead>
     <tr>
@@ -61,10 +60,10 @@
                     @endphp
 
                     <td
-                        class="field {{ $fieldName == 'image' ? 'has-image' : '' }}"
-                        data-value="{{ $dataValue }}"
-                        data-field="{{ $fieldName }}"
-                        data-td-id="{{ $loop->parent->index }}-image"
+                            class="field {{ $fieldName == 'image' ? 'has-image' : '' }}"
+                            data-value="{{ $dataValue }}"
+                            data-field="{{ $fieldName }}"
+                            data-td-id="{{ $loop->parent->index }}-image"
                     >
                         @if($fieldType == 'file')
 
@@ -97,11 +96,21 @@
                             @if($fieldType == 'textarea')
                                 {!! $value !!}
                             @elseif($fieldType == 'select')
-                                @foreach($fieldOptions as $selectLabel => $selectValue)
-                                    @if($selectValue == $value)
-                                        {{ $selectLabel }}
-                                    @endif
-                                @endforeach
+                                @php
+                                    $value = $viewHelper->getValueForTd($model, $fieldName, $fieldType);
+                                @endphp
+                                @if(isset($fieldOptions['relation']))
+                                    @php
+                                        $model = $fieldOptions['relation_model']::get()->where($fieldOptions['relation_columns'][0], $value)->first();
+                                    @endphp
+                                    {{ $model ? $model->{$fieldOptions['relation_columns'][1]} : 'N/A' }}
+                                @else
+                                    @foreach($fieldOptions as $selectLabel => $selectValue)
+                                        @if($selectValue == $value)
+                                            {{ $selectLabel }}
+                                        @endif
+                                    @endforeach
+                                @endif
                             @else
                                 {{ $value }}
                             @endif
