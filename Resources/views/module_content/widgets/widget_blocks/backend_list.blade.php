@@ -90,7 +90,6 @@
 
                             @php
                                 $value = $viewHelper->getValueForTd($model, $fieldName, $fieldType);
-
                             @endphp
 
                             @if($fieldType == 'textarea')
@@ -105,8 +104,8 @@
                                     @endphp
                                     {{ $model ? $model->{$fieldOptions['relation_columns'][1]} : 'N/A' }}
                                 @else
-                                    @foreach($fieldOptions as $selectLabel => $selectValue)
-                                        @if($selectValue == $value)
+                                    @foreach($fieldOptions['items'] as $selectKey => $selectLabel)
+                                        @if($selectKey == $value)
                                             {{ $selectLabel }}
                                         @endif
                                     @endforeach
