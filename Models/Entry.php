@@ -325,7 +325,7 @@ class Entry extends Model
         }
 
         $widgets = [];
-        if($withContent) {
+        if ($withContent) {
             foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
                 $widgetKey = $contentBlock->widget;
                 $widget = widgets()->where('key', $widgetKey)->first();
@@ -337,13 +337,14 @@ class Entry extends Model
                 if (isset($widgetFields['1'])) {
                     foreach ($widgetFields['1'] as $field) {
                         if ($field->key === 'form') {
-                            $widgets[$w]['fields'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
+                            $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
+                            $widgets[$w]['fields']['form'] = ($form = Form::find($contentBlock->getField($field->key))) ? $form->formatResponse($locale) : [];
                         } elseif ($field->type !== 'file') {
                             $widgets[$w]['fields'][$field->key] = $contentBlock->getField($field->key);
                         } else {
                             $f = $contentBlock->items->where('key', $field->key)->first();
-                            if($f) {
-                                if($f->image_file_name) {
+                            if ($f) {
+                                if ($f->image_file_name) {
                                     $widgets[$w]['fields'][$field->key] = (object)[
                                         'original' => [
                                             'path' => $f->image->path(),
@@ -381,8 +382,8 @@ class Entry extends Model
                                 $items[$i][$field->key] = $widgetItem->getField($field->key);
                             } else {
                                 $f = $widgetItem->fields->where('key', $field->key)->first();
-                                if($f) {
-                                    if($f->image_file_name) {
+                                if ($f) {
+                                    if ($f->image_file_name) {
                                         $items[$i][$field->key] = (object)[
                                             'original' => [
                                                 'path' => $f->image->path(),
