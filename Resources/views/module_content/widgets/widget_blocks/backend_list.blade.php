@@ -101,9 +101,9 @@
                                 @endphp
                                 @if(isset($fieldOptions['relation']))
                                     @php
-                                        $model = $fieldOptions['relation_model']::get()->where($fieldOptions['relation_columns'][0], $value)->first();
+                                        $m = $fieldOptions['relation_model']::get()->where($fieldOptions['relation_columns'][0], $value)->first();
                                     @endphp
-                                    {{ $model ? $model->{$fieldOptions['relation_columns'][1]} : 'N/A' }}
+                                    {{ $m ? $m->{$fieldOptions['relation_columns'][1]} : 'N/A' }}
                                 @else
                                     @foreach($fieldOptions as $selectLabel => $selectValue)
                                         @if($selectValue == $value)
