@@ -43,6 +43,7 @@ class ContentModuleRepository
                 $this->createEntry($channel, $item);
             }
         }
+
         cache()->forget('content_widgets');
         cache_content_entries();
     }
@@ -191,6 +192,7 @@ class ContentModuleRepository
         $entries = cache()->rememberForever('content_entries', function () {
             return Entry::get();
         });
+
         $entry = $entries->where('key', $key)->first();
         if (!$entry) {
             return (object)[
@@ -272,10 +274,9 @@ class ContentModuleRepository
                 $fields = $this->storeField($channelData['fields']);
 
                 $channel->fields()->sync($fields);
-
-
             }
         }
+
         cache()->forget('content_widgets');
     }
 
@@ -288,6 +289,7 @@ class ContentModuleRepository
     private function storeField($fields, $isMain = false)
     {
         $fieldsIds = [];
+
         foreach ($fields as $fieldName => $field) {
             $field['key'] = str_slug($fieldName, '_');
             $field['title'] = $fieldName;
@@ -298,6 +300,7 @@ class ContentModuleRepository
             $createdField = Field::firstOrCreate(array_except($field, ['options']));
             $fieldsIds[] = $createdField->id;
         }
+
         cache()->forget('content_widgets');
 
         return $fieldsIds;
@@ -352,11 +355,10 @@ class ContentModuleRepository
         }
 
         $entryTranslations = $this->translateKeyValuePairsToAllLocales([
-            'slug'    => $itemName,
+            'slug'    => $item['slug'] ?? $itemName,
             'title'   => $itemName,
             'content' => '',
         ]);
-
         $entry->updateTranslations($entryTranslations);
 
         $this->seedEntryData($entry, $item['data']);
