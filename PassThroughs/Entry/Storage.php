@@ -328,10 +328,12 @@ class Storage extends PassThrough
                 $key = $contentBlock->widget;
                 $config = collect(config('netcore.module-content.widgets'))->where('key', $key)->first();
                 $backendWorker = array_get($config, 'backend_worker');
-                $backendWorker = new $backendWorker($config);
+                if ($backendWorker) {
+                    $backendWorker = new $backendWorker($config);
 
-                // Delete data in related tables
-                $backendWorker->delete($contentBlock);
+                    // Delete data in related tables
+                    $backendWorker->delete($contentBlock);
+                }
                 $contentBlock->delete();
             }
         }
