@@ -326,7 +326,7 @@ class Entry extends Model
 
         $widgets = [];
         if ($withContent) {
-            foreach ($translation->contentBlocks->sortBy('order') as $w => $contentBlock) {
+            foreach ($translation->contentBlocks->sortBy('order')->values() as $w => $contentBlock) {
                 $widgetKey = $contentBlock->widget;
                 $widget = widgets()->where('key', $widgetKey)->first();
                 $widgetFields = $widget ? $widget->fields->groupBy('is_main') : [];
